@@ -1,0 +1,7 @@
+*.env
+
+node_modules
+
+output
+dist
+build
