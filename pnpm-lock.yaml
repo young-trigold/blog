@@ -81,7 +81,7 @@ importers:
       '@codemirror/lang-javascript': ^6.1.0
       '@codemirror/language': ^6.2.1
       '@codemirror/state': ^6.1.2
-      '@codemirror/view': ^6.3.0
+      '@codemirror/view': ^6.3.1
       '@reduxjs/toolkit': ^1.8.6
       '@types/lodash': ^4.14.186
       '@types/react': ^18.0.21
@@ -94,7 +94,7 @@ importers:
       axios: ^0.27.2
       codemirror: ^6.0.1
       lodash: ^4.17.21
-      prosemirror-commands: ^1.3.0
+      prosemirror-commands: ^1.3.1
       prosemirror-history: ^1.3.0
       prosemirror-inputrules: ^1.2.0
       prosemirror-keymap: ^1.2.0
@@ -103,7 +103,7 @@ importers:
       prosemirror-schema-list: ^1.2.2
       prosemirror-state: ^1.4.1
       prosemirror-transform: ^1.7.0
-      prosemirror-view: ^1.28.3
+      prosemirror-view: ^1.29.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-is: ^18.2.0
@@ -111,7 +111,7 @@ importers:
       react-router-dom: ^6.4.2
       styled-components: ^5.3.6
       terser: ^5.15.1
-      vite: ^3.1.7
+      vite: ^3.1.8
     dependencies:
       '@codemirror/commands': registry.npmmirror.com/@codemirror/commands/6.1.1
       '@codemirror/lang-css': registry.npmmirror.com/@codemirror/lang-css/6.0.0_@codemirror+view@6.3.1

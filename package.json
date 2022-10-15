@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm -r dev",
-    "build": ""
+    "build": "pnpm -r build"
   },
   "keywords": [
     "博客",

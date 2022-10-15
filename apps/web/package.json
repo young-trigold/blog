@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsc && vite build"
   },
   "dependencies": {
     "@codemirror/commands": "^6.1.1",
@@ -15,11 +14,12 @@
     "@codemirror/lang-javascript": "^6.1.0",
     "@codemirror/language": "^6.2.1",
     "@codemirror/state": "^6.1.2",
-    "@codemirror/view": "^6.3.0",
+    "@codemirror/view": "^6.3.1",
     "@reduxjs/toolkit": "^1.8.6",
     "axios": "^0.27.2",
     "codemirror": "^6.0.1",
-    "prosemirror-commands": "^1.3.0",
+    "lodash": "^4.17.21",
+    "prosemirror-commands": "^1.3.1",
     "prosemirror-history": "^1.3.0",
     "prosemirror-inputrules": "^1.2.0",
     "prosemirror-keymap": "^1.2.0",
@@ -28,14 +28,13 @@
     "prosemirror-schema-list": "^1.2.2",
     "prosemirror-state": "^1.4.1",
     "prosemirror-transform": "^1.7.0",
-    "prosemirror-view": "^1.28.3",
+    "prosemirror-view": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.2",
-    "styled-components": "^5.3.6",
-    "lodash": "^4.17.21"
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.186",
@@ -47,6 +46,6 @@
     "@vitejs/plugin-legacy": "^2.2.0",
     "@vitejs/plugin-react": "^2.1.0",
     "terser": "^5.15.1",
-    "vite": "^3.1.7"
+    "vite": "^3.1.8"
   }
 }

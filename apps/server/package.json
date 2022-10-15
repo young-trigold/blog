@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node output/index.js",
     "dev": "concurrently \"tsc --watch\" \"nodemon -q output/index.js\""
   },
   "author": "trigold",
