@@ -1,9 +1,9 @@
-import { memo, useCallback, useContext, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { AppState } from '@/app/appStore';
-import { toggleThemeMode } from '@/app/slices/themeMode';
+import { AppState } from '@/app/store';
+import { toggleThemeMode } from '@/app/store/themeMode';
 import ToggleSoundSrc from '@/static/audio/toggle.mp3';
 import MoonIconSrc from '@/static/icon/moon.png';
 import SunIconSrc from '@/static/icon/sun.png';

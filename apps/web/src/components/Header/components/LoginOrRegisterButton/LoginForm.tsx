@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/tabindex-no-positive */
-import { UserInfo } from '@/app/slices/user';
+import { UserInfo } from '@/app/store/user';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';

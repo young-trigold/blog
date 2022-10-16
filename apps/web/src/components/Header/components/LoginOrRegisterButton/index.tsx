@@ -1,6 +1,4 @@
-import { AppState } from '@/app/appStore';
 import { memo, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Button } from '../../../Button';
 
 import LoginOrRegisterModal from './LoginOrRegisterModal';

@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppState } from '@/app/appStore';
-import { ContentPageContext } from '@/app/slices/contentPage';
+import { AppState } from '@/app/store';
+import { ContentPageContext } from '@/app/store/contentPage';
 import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';
 import CancelIcon from '@/static/icon/cancel.png';

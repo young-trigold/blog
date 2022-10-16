@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { toggleCatalogVisible } from '@/app/slices/contentPage';
+import { toggleCatalogVisible } from '@/app/store/contentPage';
 import { StyledFloatingActionButton } from '@/components/Button/FloatingActionButton';
 import ListIcon from '@/static/icon/list.png';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import { setModalContainerVisible } from '@/app/slices/modalContainer';
+import { setModalContainerVisible } from '@/app/store/modalContainer';
 import CancelIcon from '@/static/icon/cancel.png';
 import React, { memo, PropsWithChildren, useEffect } from 'react';
 import { createPortal } from 'react-dom';
