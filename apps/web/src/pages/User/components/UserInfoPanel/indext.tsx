@@ -9,6 +9,8 @@ import styled from 'styled-components';
 
 const StyledUserInfoPanel = styled.form`
 	padding: 1em;
+  margin: 0 auto;
+  max-width: 400px;
 `;
 
 const StyledAvatar = styled.figure`

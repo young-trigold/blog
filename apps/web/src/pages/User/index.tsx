@@ -24,7 +24,7 @@ const UserPage = () => {
 		<StyledUserPage>
 			<Header />
 			<StyledContentContainer>
-				<UserInfoPanel />
+        <UserInfoPanel />
 				<Footer />
 			</StyledContentContainer>
 		</StyledUserPage>
