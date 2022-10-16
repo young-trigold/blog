@@ -4,10 +4,8 @@ import App from './App';
 import appStore from './app/appStore';
 
 const root = document.createElement('div');
-
 root.id = 'root';
 root.style.position = 'relative';
-
 document.body.appendChild(root);
 
 ReactDOM.createRoot(root).render(
