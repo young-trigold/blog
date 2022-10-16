@@ -8,6 +8,7 @@ export interface UserInfo {
   role: string;
   name: string;
   avatar: string;
+  introduction: string;
 }
 
 interface UserState {

@@ -8,7 +8,7 @@ interface StyledInputProps {
   disabled?: boolean;
 }
 
-export interface InputProps extends StyledInputProps {
+interface InputProps extends StyledInputProps {
   tabIndex?: number;
   minLength?: number;
   maxLength?: number;
