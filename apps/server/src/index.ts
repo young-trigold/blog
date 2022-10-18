@@ -37,7 +37,7 @@ server.use('/api', noteApi);
 server.use('/api', userApi);
 server.use('/api', uploadAPI);
 
-server.get('/*', (_, res) => {
+server.get('/', (_, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 

@@ -15,7 +15,6 @@
     "@codemirror/language": "^6.2.1",
     "@codemirror/state": "^6.1.2",
     "@codemirror/view": "^6.3.1",
-    "@reduxjs/toolkit": "^1.8.6",
     "axios": "^0.27.2",
     "codemirror": "^6.0.1",
     "lodash": "^4.17.21",
@@ -33,6 +32,7 @@
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
     "react-redux": "^8.0.4",
+    "@reduxjs/toolkit": "^1.8.6",
     "react-router-dom": "^6.4.2",
     "styled-components": "^5.3.6"
   },

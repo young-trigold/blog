@@ -1,8 +1,7 @@
-/* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { EditorView } from 'prosemirror-view';
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 
 import { HeadingInfo } from '../../pages/Content/components/catalog/Catalog';
 import { CommentInfo } from '../../pages/Content/components/comment/CommentList';
