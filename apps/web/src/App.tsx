@@ -5,11 +5,11 @@ import { useEffect, useMemo } from 'react';
 import RouterPart from './app/routes';
 import { AppDispatch, AppState } from './app/store';
 import { getUserInfo } from './app/store/user';
+import watchedLocalStorage from './app/store/watchedLocalStorage';
 import GlobalStyle from './app/theme/GlobalStyle';
 import themes from './app/theme/themes';
 import { MessageContainer } from './components/Message';
 import ModalContainer from './components/Modal/ModalContainer';
-import watchedLocalStorage from './utils/watchedLocalStorage';
 
 const App = () => {
 	const themeMode = useSelector((state: AppState) => state.themeMode.themeMode);
