@@ -25,7 +25,7 @@ const StyledModalContainer = styled.div<StyledModalContainerProps>`
 `;
 
 const ModalContainer: React.FC = () => {
-	const { visible } = useSelector((state: AppState) => state.modalContainer);
+	const { visible } = useSelector((state: AppState) => state.modal.modalContainer);
 
 	return <StyledModalContainer id="modal-container" visible={visible} />;
 };

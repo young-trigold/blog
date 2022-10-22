@@ -1,36 +1,41 @@
+import { AppDispatch, AppState } from '@/app/store';
+import { setLoginModalVisible } from '@/app/store/modals';
 import { memo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Modal from '../../../Modal';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
-
-export interface LoginOrRegisterModalProps {
-  isLoginOrRegisterModalVisible: boolean;
-  setIsLoginOrRegisterModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface LoginOrRegisterModalProps {}
 
 const LoginOrRegisterModal: React.FC<LoginOrRegisterModalProps> = (props) => {
-  const { isLoginOrRegisterModalVisible, setIsLoginOrRegisterModalVisible } = props;
-  const [logging, setLogging] = useState(true);
+	const { visible } = useSelector((state: AppState) => state.modal.modals.loginModal);
+	const [logging, setLogging] = useState(true);
 
-  const modalTitle = logging ? '登录' : '注册';
+	const modalTitle = logging ? '登录' : '注册';
 
-  return (
-    <Modal
-      title={modalTitle}
-      visible={isLoginOrRegisterModalVisible}
-      setVisible={setIsLoginOrRegisterModalVisible}
-    >
-      {logging ? (
-        <LoginForm
-          setLogging={setLogging}
-          setIsLoginOrRegisterModalVisible={setIsLoginOrRegisterModalVisible}
-        />
-      ) : (
-        <RegisterForm setLogging={setLogging} />
-      )}
-    </Modal>
-  );
+	const dispatch = useDispatch<AppDispatch>();
+	const setIsLoginOrRegisterModalVisible = (visible: boolean) => {
+		dispatch(setLoginModalVisible(visible));
+	};
+
+	return (
+		<Modal
+			title={modalTitle}
+			visible={visible}
+			setVisible={setIsLoginOrRegisterModalVisible}
+		>
+			{logging ? (
+				<LoginForm
+					setLogging={setLogging}
+					setIsLoginOrRegisterModalVisible={setIsLoginOrRegisterModalVisible}
+				/>
+			) : (
+				<RegisterForm setLogging={setLogging} />
+			)}
+		</Modal>
+	);
 };
 
 export default memo(LoginOrRegisterModal);

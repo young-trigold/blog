@@ -1,7 +1,9 @@
-import { AppState } from '@/app/store';
+import { AppDispatch, AppState } from '@/app/store';
+import { setLogoutModalVisible } from '@/app/store/modals';
 import Divider from '@/components/Divider';
 import DefaultAvatarSrc from '@/static/icon/default-avatar.png';
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -61,10 +63,9 @@ const AvatarPanel: React.FC<AvatarPanelProps> = (props) => {
 		navigate('/admin');
 	};
 
-	const [confirmLogoutModalVisible, setConfirmLogoutModalVisible] = useState(false);
-
+	const dispatch = useDispatch<AppDispatch>();
 	const logout = () => {
-		setConfirmLogoutModalVisible(true);
+		dispatch(setLogoutModalVisible(true));
 	};
 
 	const toUserPage = () => {
@@ -108,10 +109,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = (props) => {
 				) : null}
 				<Divider />
 				<StyledOption onClick={logout}>退出登录</StyledOption>
-				<ConfirmLogoutModal
-					visible={confirmLogoutModalVisible}
-					setVisible={setConfirmLogoutModalVisible}
-				/>
+				<ConfirmLogoutModal />
 			</section>
 		</StyledAvatarPanelContainer>
 	);

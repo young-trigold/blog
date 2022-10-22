@@ -33,7 +33,7 @@ const StyledTogglePwdVisibleButton = styled.button`
 
 interface LoginFormProps {
 	setLogging: React.Dispatch<React.SetStateAction<boolean>>;
-	setIsLoginOrRegisterModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsLoginOrRegisterModalVisible: (visible: boolean) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = (props) => {

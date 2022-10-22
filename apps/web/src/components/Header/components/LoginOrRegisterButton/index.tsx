@@ -1,27 +1,26 @@
-import { memo, useCallback, useState } from 'react';
+import { AppDispatch, AppState } from '@/app/store';
+import { setLoginModalVisible } from '@/app/store/modals';
+import { memo, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button } from '../../../Button';
 
 import LoginOrRegisterModal from './LoginOrRegisterModal';
 
 const LoginOrRegisterButton: React.FC = () => {
-  const [isLoginOrRegisterModalVisible, setIsLoginOrRegisterModalVisible] = useState(false);
+	const dispatch = useDispatch<AppDispatch>();
+	const onClick = useCallback(() => {
+		dispatch(setLoginModalVisible(true))
+	}, []);
 
-  const handleClick = useCallback(() => {
-    setIsLoginOrRegisterModalVisible(true);
-  }, [setIsLoginOrRegisterModalVisible]);
-
-  return (
-    <>
-      <Button buttonType="outlined" onClick={handleClick}>
-        登录/注册
-      </Button>
-
-      <LoginOrRegisterModal
-        isLoginOrRegisterModalVisible={isLoginOrRegisterModalVisible}
-        setIsLoginOrRegisterModalVisible={setIsLoginOrRegisterModalVisible}
-      />
-    </>
-  );
+	return (
+		<>
+			<Button buttonType="outlined" onClick={onClick}>
+				登录/注册
+			</Button>
+			<LoginOrRegisterModal />
+		</>
+	);
 };
 
 export default memo(LoginOrRegisterButton);
