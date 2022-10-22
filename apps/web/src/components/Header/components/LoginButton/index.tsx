@@ -4,7 +4,7 @@ import { memo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '../../../Button';
 
-import LoginOrRegisterModal from '../Modals/LoginModal';
+import LoginOrRegisterModal from '../../../Modals/LoginModal';
 
 const LoginButton: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>();

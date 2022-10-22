@@ -39,7 +39,7 @@ const CommentList: React.FC = () => {
 			<CommentHeader />
 			<Divider />
 			{comments.map((comment) => (
-				<CommentCard comment={comment} />
+				<CommentCard key={comment._id} comment={comment} />
 			))}
 		</CommentListContainer>
 	);

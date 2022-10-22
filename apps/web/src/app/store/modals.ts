@@ -11,6 +11,9 @@ interface ModalState {
 		logoutModal: {
 			visible: boolean;
 		};
+		insertLinkModal: {
+			visible: boolean;
+		};
 	};
 }
 
@@ -23,6 +26,9 @@ const initialState: ModalState = {
 			visible: false,
 		},
 		logoutModal: {
+			visible: false,
+		},
+		insertLinkModal: {
 			visible: false,
 		},
 	},
@@ -40,8 +46,13 @@ const modalSlice = createSlice({
 			state.modalContainer.visible = action.payload;
 			state.modals.logoutModal.visible = action.payload;
 		},
+		setInsertLinkModalVisible: (state, action) => {
+			state.modalContainer.visible = action.payload;
+			state.modals.insertLinkModal.visible = action.payload;
+		},
 	},
 });
 
-export const { setLoginModalVisible, setLogoutModalVisible } = modalSlice.actions;
+export const { setLoginModalVisible, setLogoutModalVisible, setInsertLinkModalVisible } =
+	modalSlice.actions;
 export default modalSlice.reducer;
