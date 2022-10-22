@@ -21,7 +21,6 @@ const messagesSlice = createSlice({
       state.value.push(action.payload);
     },
     clearMessage: (state: MessagesState) => {
-      // eslint-disable-next-line no-param-reassign
       state.value = [];
     },
   },
