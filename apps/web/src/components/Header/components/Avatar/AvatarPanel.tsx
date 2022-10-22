@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import ConfirmLogoutModal from './ConfirmLogoutModal';
+import ConfirmLogoutModal from '../Modals/LogoutModal';
 
 interface StyledAvatarPanelContainerProps {
 	visible: boolean;

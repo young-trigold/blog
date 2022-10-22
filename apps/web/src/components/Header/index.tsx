@@ -2,7 +2,7 @@ import { AppState } from '@/app/store';
 import { createContext, memo, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import LoginButton from './components/LoginOrRegisterButton';
+import LoginButton from './components/LoginButton';
 
 import { throttle } from 'lodash';
 import Avatar from './components/Avatar';

@@ -33,11 +33,11 @@ const StyledTogglePwdVisibleButton = styled.button`
 
 interface LoginFormProps {
 	setLogging: React.Dispatch<React.SetStateAction<boolean>>;
-	setIsLoginOrRegisterModalVisible: (visible: boolean) => void;
+	setIsLoginModalVisible: (visible: boolean) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = (props) => {
-	const { setIsLoginOrRegisterModalVisible, setLogging } = props;
+	const { setIsLoginModalVisible, setLogging } = props;
 	const initialFormState = useMemo(
 		() => ({ password: { value: '', visible: false }, name: '' }),
 		[],
@@ -93,7 +93,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 
 			message.success('登录成功!');
 			setFormState(initialFormState);
-			setIsLoginOrRegisterModalVisible(false);
+			setIsLoginModalVisible(false);
 			watchedLocalStorage.setItem('user', res.data);
 		} catch (error) {
 			if (axios.isAxiosError(error))
@@ -101,7 +101,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 			if (error instanceof Error) return message.error(error.message);
 			return message.error(JSON.stringify(error));
 		}
-	}, [formState.name, formState.password.value, setIsLoginOrRegisterModalVisible, setFormState]);
+	}, [formState.name, formState.password.value, setIsLoginModalVisible, setFormState]);
 
 	const handleSubmit: React.MouseEventHandler<HTMLButtonElement> = useCallback(
 		(event) => {

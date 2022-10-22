@@ -1,16 +1,15 @@
-import { AppDispatch, AppState } from '@/app/store';
+import { AppDispatch } from '@/app/store';
 import { setLoginModalVisible } from '@/app/store/modals';
 import { memo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
 import { Button } from '../../../Button';
 
-import LoginOrRegisterModal from './LoginOrRegisterModal';
+import LoginOrRegisterModal from '../Modals/LoginModal';
 
-const LoginOrRegisterButton: React.FC = () => {
+const LoginButton: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const onClick = useCallback(() => {
-		dispatch(setLoginModalVisible(true))
+		dispatch(setLoginModalVisible(true));
 	}, []);
 
 	return (
@@ -23,4 +22,4 @@ const LoginOrRegisterButton: React.FC = () => {
 	);
 };
 
-export default memo(LoginOrRegisterButton);
+export default memo(LoginButton);
