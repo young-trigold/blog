@@ -6,10 +6,11 @@ import { Button, ButtonBar } from '@/components/Button';
 import { message } from '@/components/Message';
 import getUserToken from '@/utils/getUserToken';
 import { useNavigate } from 'react-router-dom';
+import AddChapterModal from 'src/pages/components/Modals/AddChapterModal';
 import { ChapterInfo } from '../../chpaters';
-import { AddChapterButton } from './AddChapter';
 import { NoteOption } from './AdminPage';
 import { StyledRow, StyledTable } from './StyledTable';
+import AddChapterButton from './AddChapterButton';
 
 const StyledChapterBody = styled.main`
 	flex: 8;
@@ -103,6 +104,7 @@ const ChapterBody: React.FC<ChapterBodyProps> = (props) => {
 				</tbody>
 			</StyledTable>
 			<AddChapterButton currentOption={noteOptions[currentIndex]} />
+			<AddChapterModal currentOption={noteOptions[currentIndex]} />
 		</StyledChapterBody>
 	);
 };

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 
-import Footer from '@/components/Footer';
+import Footer from 'src/pages/components/Footer';
 import Header, { HeaderHeight } from 'src/pages/components/Header';
 import { ChapterInfo } from '../chpaters';
 import NoteShow from './components/NoteShow';

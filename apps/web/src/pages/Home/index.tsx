@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import useLoadResource from '@/hooks/useLoadResource';
 
-import Footer from '@/components/Footer';
 import LoadingIndicator from '@/components/LodingIndicator';
+import Footer from 'src/pages/components/Footer';
 import Header from 'src/pages/components/Header';
 import { CommentInfo } from '../content/components/comment/CommentList';
 import ArticleShow from './components/ArticleShow';
