@@ -9,7 +9,7 @@ import isRelated from '../utils/isRelated.js';
 
 const getNotes = async (req: Request, res: Response) => {
   try {
-    const notes = await Note.find().populate('chapters', ['_id', 'title']);
+    const notes = await Note.find().populate('chapters', ['_id', 'title', 'views', 'likes']);
     const sortedNotes = notes.sort((a, b) => (a.sortedIndex ?? 0) - (b.sortedIndex ?? 0));
 
     if (notes) {
