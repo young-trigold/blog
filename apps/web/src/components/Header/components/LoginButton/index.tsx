@@ -2,7 +2,7 @@ import { AppDispatch } from '@/app/store';
 import { setLoginModalVisible } from '@/app/store/modals';
 import { memo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button } from '../../../../../components/Button';
+import { Button } from '../../../Button';
 
 import LoginOrRegisterModal from '../../../Modals/LoginModal';
 

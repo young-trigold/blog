@@ -4,13 +4,13 @@ import styled from 'styled-components';
 
 import { Button, ButtonBar } from '@/components/Button';
 import { message } from '@/components/Message';
+import AddChapterModal from '@/components/Modals/AddChapterModal';
 import getUserToken from '@/utils/getUserToken';
 import { useNavigate } from 'react-router-dom';
-import AddChapterModal from 'src/pages/components/Modals/AddChapterModal';
-import { ChapterInfo } from '../../chpaters';
-import { NoteOption } from './AdminPage';
-import { StyledRow, StyledTable } from './StyledTable';
-import AddChapterButton from './AddChapterButton';
+import { ChapterInfo } from '../../../chpaters';
+import { NoteOption } from '../AdminPage';
+import AddChapterButton from '../buttons/AddChapterButton';
+import { StyledRow, StyledTable } from '../StyledTable';
 
 const StyledChapterBody = styled.main`
 	flex: 8;

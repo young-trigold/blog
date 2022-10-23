@@ -8,7 +8,6 @@ import { ChapterInfo } from '../../chpaters';
 import { ArticleInfo, ArticlesByTag } from '../../home';
 import { NoteInfo } from '../../notes';
 import NewNoteOption from './AddNote/NewNoteOption';
-import NewTagOption from './AddTag/NewTagOption';
 import AdminBody from './AdminBody';
 
 const StyledAdminPage = styled.div`
@@ -131,7 +130,7 @@ const AdminPage = () => {
 								{tagOption}
 							</Option>
 						))}
-						<NewTagOption />
+						<></>
 					</OptionContainer>
 				</div>
 			</NavigationBar>

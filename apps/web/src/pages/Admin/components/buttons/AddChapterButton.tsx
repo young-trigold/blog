@@ -4,7 +4,7 @@ import { FloatingActionButton } from '@/components/Button';
 
 import CancelIcon from '@/static/icon/cancel.png';
 import AddIcon from '@/static/icon/plus.png';
-import { NoteOption } from './AdminPage';
+import { NoteOption } from '../AdminPage';
 
 export interface AddButtonProps {
 	currentOption: NoteOption;

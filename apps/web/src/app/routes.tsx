@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
-import NotFoundPage from 'src/pages/404';
+import NotFoundPage from '../pages/404';
 import LoadingPage from '../components/LodingIndicator';
 import HomePage from '../pages/home';
 

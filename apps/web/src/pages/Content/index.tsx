@@ -12,8 +12,8 @@ import {
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
-import Footer from 'src/pages/components/Footer';
-import Header from 'src/pages/components/Header';
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
 import ActionBar from './components/ActionBar';
 import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';

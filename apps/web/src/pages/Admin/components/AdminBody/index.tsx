@@ -1,6 +1,6 @@
-import { ChapterInfo } from '../../chpaters';
-import { ArticleInfo } from '../../home';
-import { NoteOption } from './AdminPage';
+import { ChapterInfo } from '../../../chpaters';
+import { ArticleInfo } from '../../../home';
+import { NoteOption } from '../AdminPage';
 import ArticleBody from './ArticleBody';
 import ChapterBody from './ChapterBody';
 

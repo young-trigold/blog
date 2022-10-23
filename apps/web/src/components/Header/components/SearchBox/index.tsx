@@ -3,8 +3,8 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import SearchImage from '@/static/icon/search.png';
-import Input from '../../../../../components/Input';
-import { message } from '../../../../../components/Message';
+import Input from '../../../Input';
+import { message } from '../../../Message';
 import SearchResult from './SearchResult';
 
 const StyledSearchBox = styled.form`

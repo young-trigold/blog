@@ -5,12 +5,12 @@ import styled from 'styled-components';
 
 import { Button, ButtonBar } from '@/components/Button';
 import { message } from '@/components/Message';
-import { StyledRow, StyledTable } from './StyledTable';
+import { StyledRow, StyledTable } from '../StyledTable';
 
+import AddArticleModal from '@/components/Modals/AddArticleModal';
 import getUserToken from '@/utils/getUserToken';
-import AddArticleModal from 'src/pages/components/Modals/AddArticleModal';
-import { ArticleInfo } from '../../home';
-import AddArticleButton from './AddArticleButton';
+import { ArticleInfo } from '../../../home';
+import AddArticleButton from '../buttons/AddArticleButton';
 
 const StyledArticleBody = styled.main`
 	flex: 8;

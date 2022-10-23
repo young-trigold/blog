@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { AppDispatch } from '@/app/store';
 import { setCurrentHeadingID } from '@/app/store/contentPage';
-import { HeaderHeight } from 'src/pages/components/Header';
+import { HeaderHeight } from '@/components/Header';
 import getCurrentHeadingID from '../editor/utils/getCurrentHeadingID';
 
 const StyledContentContainer = styled.div`

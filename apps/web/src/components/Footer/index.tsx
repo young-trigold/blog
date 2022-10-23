@@ -1,7 +1,7 @@
 import { throttle } from 'lodash';
 import { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Divider, { DividerType } from '../../../components/Divider';
+import Divider, { DividerType } from '../Divider';
 
 const StyledFooter = styled.footer`
 	min-width: 340px;

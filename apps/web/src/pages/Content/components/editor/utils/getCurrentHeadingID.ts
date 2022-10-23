@@ -1,4 +1,4 @@
-import { HeaderHeight } from 'src/pages/components/Header';
+import { HeaderHeight } from '../../../../../components/Header';
 import { MaxHeadingLevel } from '../schema/nodes';
 
 const getCurrentHeadingID = (container: HTMLElement) => {

@@ -1,6 +1,6 @@
+import Footer from '@/components/Footer';
+import Header, { HeaderHeight } from '@/components/Header';
 import { useParams } from 'react-router-dom';
-import Footer from 'src/pages/components/Footer';
-import Header, { HeaderHeight } from 'src/pages/components/Header';
 import styled from 'styled-components';
 import UserInfoPanel from './components/UserInfoPanel/indext';
 

@@ -2,9 +2,9 @@ import { memo, useCallback } from 'react';
 
 import { AppDispatch } from '@/app/store';
 import { setInsertLinkModalVisible } from '@/app/store/modals';
+import InsertLinkModal from '@/components/Modals/InsertLinkModal';
 import LinkIconSrc from '@/static/icon/link.png';
 import { useDispatch } from 'react-redux';
-import InsertLinkModal from 'src/pages/components/Modals/InsertLinkModal';
 import { StyledOption } from '.';
 
 const InsertLinkOption = () => {
