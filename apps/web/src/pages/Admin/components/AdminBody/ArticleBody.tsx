@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Button, ButtonBar } from '@/components/Button';
-import { StyledRow, StyledTable } from '../StyledTable';
 
 import AddArticleModal from '@/components/Modals/AddArticleModal';
+import { StyledRow, StyledTable } from '@/components/Table';
 import { ArticleInfo } from '../../../home';
 import AddArticleButton from '../buttons/AddArticleButton';
 import DeleteArticleButton from '../buttons/DeleteArticleButton';

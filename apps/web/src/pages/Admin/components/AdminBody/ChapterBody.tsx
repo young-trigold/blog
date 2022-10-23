@@ -5,13 +5,13 @@ import styled from 'styled-components';
 import { Button, ButtonBar } from '@/components/Button';
 import { message } from '@/components/Message';
 import AddChapterModal from '@/components/Modals/AddChapterModal';
+import { StyledRow, StyledTable } from '@/components/Table';
 import getUserToken from '@/utils/getUserToken';
 import { useNavigate } from 'react-router-dom';
 import { ChapterInfo } from '../../../chpaters';
 import { NoteOption } from '../AdminPage';
 import AddChapterButton from '../buttons/AddChapterButton';
 import DeleteChapterButton from '../buttons/DeleteChapterButton';
-import { StyledRow, StyledTable } from '../StyledTable';
 
 const StyledChapterBody = styled.main`
 	flex: 8;
