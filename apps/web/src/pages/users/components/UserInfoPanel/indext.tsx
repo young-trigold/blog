@@ -9,8 +9,10 @@ import styled from 'styled-components';
 
 const StyledUserInfoPanel = styled.form`
 	padding: 1em;
-  margin: 0 auto;
+  margin: 2em auto;
   max-width: 400px;
+  background-color: ${(props) => props.theme.foregroundColor};
+  border-radius: 6.4px;
 `;
 
 const StyledAvatar = styled.figure`

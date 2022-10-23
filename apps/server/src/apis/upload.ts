@@ -11,7 +11,7 @@ uploadAPI.post('/singleUpload', singleUpload, (req, res) => {
 
 uploadAPI.post('/multipleUpload', multipleUpload, (req, res) => {
   const { files, hostname } = req;
-	const fileURLs = files?.map((file) => `http://${hostname}/upload/${file?.filename}`);
+	const fileURLs = (files as Express.Multer.File[])?.map((file) => `http://${hostname}/upload/${file?.filename}`);
 	res.status(200).json({ message: '上传成功!', fileURLs });
 });
 
