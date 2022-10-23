@@ -4,14 +4,14 @@ import styled from 'styled-components';
 
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
+import AddArticleTagModal from '@/components/Modals/AddArticleTagModal';
+import AddNoteModal from '@/components/Modals/AddNoteModal';
 import { ChapterInfo } from '../../chpaters';
 import { ArticleInfo, ArticlesByTag } from '../../home';
 import { NoteInfo } from '../../notes';
-import NewNoteOption from './AddNote/NewNoteOption';
 import AdminBody from './AdminBody';
-import AddArticleButton from './buttons/AddArticleButton';
 import AddArticleTagButton from './buttons/AddArticleTagButton';
-import AddArticleTagModal from '@/components/Modals/AddArticleTagModal';
+import AddNoteButton from './buttons/AddNoteButton';
 
 const StyledAdminPage = styled.div`
 	height: 100vh;
@@ -119,7 +119,8 @@ const AdminPage = () => {
 								{noteOption.title}
 							</Option>
 						))}
-						<NewNoteOption />
+						<AddNoteButton />
+						<AddNoteModal />
 					</OptionContainer>
 				</div>
 				<div>
