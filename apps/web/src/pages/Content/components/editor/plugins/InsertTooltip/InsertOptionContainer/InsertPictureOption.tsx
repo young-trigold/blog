@@ -25,19 +25,20 @@ const InsertPictureOption = () => {
 		const uploadImages = async () => {
 			try {
 				const formData = new FormData();
-				formData.append('files', files[0]);
-				await axios.post('/api/upload', formData);
+				formData.append('file', files[0]);
+				const res = await axios.post<{ fileURL: string }>('/api/singleUpload', formData);
+				const { fileURL } = res.data;
+				const attrs = { src: fileURL };
+				const node = editorView.state.schema.nodes.image.create(attrs);
+				let transaction = editorView.state.tr;
+				transaction = transaction.replaceSelectionWith(node, false);
+				editorView.dispatch(transaction);
+        message.success('图片插入成功!');
 			} catch (error) {
 				if (axios.isAxiosError(error))
 					return message.error((error.response?.data as { message: string })?.message);
 				if (error instanceof Error) return message.error(error.message);
 				return message.error(JSON.stringify(error));
-			} finally {
-				const attrs = { src: `http://${window.location.hostname}:80/upload/${files[0].name}` };
-				const node = editorView.state.schema.nodes.image.create(attrs);
-				let transaction = editorView.state.tr;
-				transaction = transaction.replaceSelectionWith(node, false);
-				editorView.dispatch(transaction);
 			}
 		};
 

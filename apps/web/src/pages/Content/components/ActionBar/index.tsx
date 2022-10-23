@@ -76,7 +76,7 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 					formData.append('files', file);
 				});
 
-				const uploadImages = axios.post('/api/upload', formData);
+				const uploadImages = axios.post('/api/multiple', formData);
 				const publishContent = axios.put(
 					`/api/${isChapter ? 'notes' : 'articles'}/${itemID}`,
 					{
@@ -90,7 +90,8 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 					},
 				);
 
-				await Promise.all([uploadImages, publishContent]);
+				const res = await Promise.all([uploadImages, publishContent]);
+        
 				message.success('发布成功!');
 			} catch (error) {
 				if (axios.isAxiosError(error))

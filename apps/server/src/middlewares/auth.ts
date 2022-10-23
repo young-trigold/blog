@@ -2,7 +2,6 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import { NextFunction, Request, Response } from 'express';
 
-// eslint-disable-next-line consistent-return
 const protect = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer'))
