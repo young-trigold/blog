@@ -1,17 +1,11 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
-import LoadingIndicator from '@/components/LodingIndicator';
+import { AppState } from '@/app/store';
 import { message } from '@/components/Message';
-import AddArticleTagModal from '@/components/Modals/AddArticleTagModal';
-import AddNoteModal from '@/components/Modals/AddNoteModal';
-import { ChapterInfo } from '../../chpaters';
-import { ArticleInfo, ArticlesByTag } from '../../home';
-import { NoteInfo } from '../../notes';
+import { useSelector } from 'react-redux';
 import AdminBody from './AdminBody';
-import AddArticleTagButton from './buttons/AddArticleTagButton';
-import AddNoteButton from './buttons/AddNoteButton';
+import NavBar from './NavBar';
 
 const StyledAdminPage = styled.div`
 	height: 100vh;
@@ -60,93 +54,22 @@ const OptionContainer = styled.ol<{ currentIndex: number }>`
 	}
 `;
 
-const Option = styled.li`
-	margin-top: 0.5em;
-	padding: 6px;
-	border-bottom: 1px solid ${(props) => props.theme.borderColor};
-
-	&:hover {
-		color: ${(props) => props.theme.foregroundColor};
-		background-color: ${(props) => props.theme.hoverColor};
-	}
-
-	&:active {
-		color: ${(props) => props.theme.foregroundColor};
-		background-color: ${(props) => props.theme.activeColor};
-	}
-`;
-
 export interface NoteOption {
 	_id: string;
 	title: string;
 }
 
 const AdminPage = () => {
-	const [currentIndex, setCurrentIndex] = useState(0);
-
-	const [noteOptions, setNoteOptions] = useState<NoteOption[]>([]);
-	const [chapters, setChapters] = useState<ChapterInfo[][]>([]);
-	const [tagOptions, setTagOptions] = useState<string[]>([]);
-	const [articles, setArticles] = useState<ArticleInfo[][]>([]);
-	const [loading, setLoading] = useState(true);
+	const { error } = useSelector((state: AppState) => state.homePage);
 
 	useEffect(() => {
-		Promise.all([axios.get('/api/notes'), axios.get('/api/articles')])
-			.then((response) => {
-				setNoteOptions(
-					response[0].data?.map((note: NoteInfo) => ({ title: note.title, _id: note._id })),
-				);
-				setChapters(response[0].data?.map((note: NoteInfo) => note.chapters));
-				setTagOptions(response[1].data?.map((tag: ArticlesByTag) => tag._id));
-				setArticles(response[1].data?.map((tag: ArticlesByTag) => tag.articles));
-			})
-			.catch((error) => {
-				message.error(error?.response?.data?.message || error.message);
-			})
-			.finally(() => setLoading(false));
-	}, [setNoteOptions, setArticles, setTagOptions, setChapters, setLoading]);
-
-	if (loading) return <LoadingIndicator />;
+		if (error) message.error(error?.message ?? '请求错误!');
+	}, [error]);
 
 	return (
 		<StyledAdminPage>
-			<NavigationBar>
-				<div>
-					<NavigationBarTitle>我的笔记</NavigationBarTitle>
-					<OptionContainer currentIndex={currentIndex}>
-						{noteOptions?.map((noteOption, i) => (
-							<Option key={noteOption._id} onClick={() => setCurrentIndex(i)}>
-								{noteOption.title}
-							</Option>
-						))}
-						<AddNoteButton />
-						<AddNoteModal />
-					</OptionContainer>
-				</div>
-				<div>
-					<NavigationBarTitle>我的文章</NavigationBarTitle>
-					<OptionContainer currentIndex={currentIndex - noteOptions.length}>
-						{tagOptions.map((tagOption, i) => (
-							<Option
-								key={i.toString() + Math.random().toString()}
-								onClick={() => setCurrentIndex(i + noteOptions.length)}
-							>
-								{tagOption}
-							</Option>
-						))}
-						<AddArticleTagButton />
-						<AddArticleTagModal />
-					</OptionContainer>
-				</div>
-			</NavigationBar>
-			<AdminBody
-				currentIndex={currentIndex}
-				noteOptionsLength={noteOptions.length}
-				tagOptions={tagOptions}
-				articles={articles}
-				noteOptions={noteOptions}
-				chapters={chapters}
-			/>
+			<NavBar />
+			<AdminBody />
 		</StyledAdminPage>
 	);
 };

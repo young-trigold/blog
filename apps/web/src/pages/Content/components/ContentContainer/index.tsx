@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import { AppDispatch } from '@/app/store';
-import { setCurrentHeadingID } from '@/app/store/contentPage';
+import { setCurrentHeadingID } from '@/app/store/pages/contentPage';
 import { HeaderHeight } from '@/components/Header';
 import getCurrentHeadingID from '../editor/utils/getCurrentHeadingID';
 

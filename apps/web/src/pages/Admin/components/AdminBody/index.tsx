@@ -1,20 +1,20 @@
-import { ChapterInfo } from '../../../chpaters';
-import { ArticleInfo } from '../../../home';
-import { NoteOption } from '../AdminPage';
+import { AppState } from '@/app/store';
+import { memo } from 'react';
+import { useSelector } from 'react-redux';
 import ArticleBody from './ArticleBody';
 import ChapterBody from './ChapterBody';
 
-export interface AdminBodyProps {
-	currentIndex: number;
-	noteOptionsLength: number;
-	articles: ArticleInfo[][];
-	chapters: ChapterInfo[][];
-	tagOptions: string[];
-	noteOptions: NoteOption[];
-}
+interface AdminBodyProps {}
 
-function AdminBody(props: AdminBodyProps) {
-	const { currentIndex, noteOptionsLength, articles, chapters, tagOptions, noteOptions } = props;
+const AdminBody: React.FC<AdminBodyProps> = (props) => {
+	const { currentIndex } = useSelector((state: AppState) => state.adminPage);
+	const { articlesByTag } = useSelector((state: AppState) => state.homePage);
+	const tagOptions = articlesByTag.map((tag) => tag._id);
+	const articles = articlesByTag.map((tag) => tag.articles);
+	const { notes } = useSelector((state: AppState) => state.notePage);
+	const noteOptions = notes.map((note) => ({ _id: note._id, title: note.title }));
+	const { length: noteOptionsLength } = noteOptions;
+	const chapters = notes.map((note) => note.chapters);
 
 	if (currentIndex < noteOptionsLength) {
 		return (
@@ -28,6 +28,6 @@ function AdminBody(props: AdminBodyProps) {
 			tagOptions={tagOptions}
 		/>
 	);
-}
+};
 
-export default AdminBody;
+export default memo(AdminBody);

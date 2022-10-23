@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { AppState } from '@/app/store';
-import { ContentPageContext } from '@/app/store/contentPage';
+import { ContentPageContext } from '@/app/store/pages/contentPage';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';

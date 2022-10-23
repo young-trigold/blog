@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NoteInfo } from '..';
 
@@ -69,4 +69,4 @@ const Note = (props: NoteProps) => {
   );
 };
 
-export default React.memo(Note);
+export default memo(Note);

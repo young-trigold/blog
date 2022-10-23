@@ -5,10 +5,10 @@ import styled from 'styled-components';
 
 import { AppDispatch, AppState } from '@/app/store';
 import {
-	ContentPageContext,
-	fetchContentPageDataByID,
-	setCurrentHeadingID,
-} from '@/app/store/contentPage';
+  ContentPageContext,
+  fetchContentPageDataByID,
+  setCurrentHeadingID
+} from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';

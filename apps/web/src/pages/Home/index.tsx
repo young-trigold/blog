@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import useDocumentTitle from '@/hooks/useDocumentTitle';
-import useLoadResource from '@/hooks/useLoadResource';
 
+import { AppState } from '@/app/store';
 import LoadingIndicator from '@/components/LodingIndicator';
+import { message } from '@/components/Message';
+import { useSelector } from 'react-redux';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import { CommentInfo } from '../content/components/comment/CommentList';
@@ -39,24 +41,25 @@ export interface ArticlesByTag {
 }
 
 const HomePage = () => {
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const { resource: articlesByTag } = useLoadResource<ArticlesByTag[]>('/api/articles');
+	const { loading, error, articlesByTag, tagIndex } = useSelector(
+		(state: AppState) => state.homePage,
+	);
 
 	useDocumentTitle('欢迎来到前端小站');
+
+	useEffect(() => {
+		if (error) message.error(error?.message ?? '请求错误!');
+	}, [error]);
 
 	return (
 		<StyledHomePage>
 			<Header />
-			<TagContainer
-				currentIndex={currentIndex}
-				setCurrentIndex={setCurrentIndex}
-				tags={articlesByTag?.map((articleTag) => articleTag._id)}
-			/>
+			<TagContainer tagIndex={tagIndex} tags={articlesByTag.map((tag) => tag._id)}/>
 			<StyledMainContainer>
-				{articlesByTag ? (
-					<ArticleShow articlesByTag={articlesByTag} currentIndex={currentIndex} />
-				) : (
+				{loading ? (
 					<LoadingIndicator />
+				) : (
+					<ArticleShow articlesByTag={articlesByTag} tagIndex={tagIndex} />
 				)}
 				<Footer />
 			</StyledMainContainer>

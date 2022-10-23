@@ -2,6 +2,7 @@ import CancelIcon from '@/static/icon/cancel.png';
 import React, { memo, PropsWithChildren, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
+import { modalContainerId } from './ModalContainer';
 
 interface StyledModalProps {
 	visible: boolean;

@@ -1,5 +1,5 @@
 import { AppDispatch, AppState } from '@/app/store';
-import { setInsertTooltip } from '@/app/store/contentPage';
+import { setInsertTooltip } from '@/app/store/pages/contentPage';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';

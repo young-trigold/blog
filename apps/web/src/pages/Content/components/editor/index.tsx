@@ -8,11 +8,11 @@ import styled from 'styled-components';
 
 import { AppDispatch, AppState } from '@/app/store';
 import {
-	setCurrentHeadingID,
-	setEditorView,
-	setInsertTooltip,
-	setSelectionTooltip,
-} from '@/app/store/contentPage';
+  setCurrentHeadingID,
+  setEditorView,
+  setInsertTooltip,
+  setSelectionTooltip
+} from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
 import nodeViews from './nodeViews';
 import plugins from './plugins';

@@ -1,33 +1,33 @@
 import { Navigate } from 'react-router-dom';
 
 import { AppDispatch, AppState } from '@/app/store';
-import { UserInfo } from '@/app/store/user';
+import { setLoginModalVisible } from '@/app/store/modals';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AdminPage from './components/AdminPage';
-import { useDispatch } from 'react-redux';
-import { setLoginModalVisible } from '@/app/store/modals';
 
 const ProtectPage: React.FC = () => {
 	useDocumentTitle('博客后台');
-	const user = useSelector((state: AppState) => state.user);
-	const { hasLogin, info } = user;
+	const { hasLogin, info } = useSelector((state: AppState) => state.user);
 
-  const dispatch = useDispatch<AppDispatch>();
-
-	if (hasLogin) {
-		if ((info as UserInfo).role === 'admin') return <AdminPage />;
-		else {
-      dispatch(setLoginModalVisible(true));
-			message.warn('权限不足，请重新登录!');
-			return <Navigate to="/" />;
+	const dispatch = useDispatch<AppDispatch>();
+  
+	useEffect(() => {
+		if (hasLogin) {
+			if (info?.role !== 'admin') {
+				dispatch(setLoginModalVisible(true));
+				message.warn('权限不足，请重新登录!');
+			}
+		} else {
+			dispatch(setLoginModalVisible(true));
+			message.warn('请先登录');
 		}
-	} else {
-    dispatch(setLoginModalVisible(true));
-		message.warn('请先登录');
-		return <Navigate to="/" />;
-	}
+	}, []);
+
+	if (hasLogin && info?.role === 'admin') return <AdminPage />;
+	return <Navigate to="/articles" />;
 };
 
 export default ProtectPage;

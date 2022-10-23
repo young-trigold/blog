@@ -10,6 +10,8 @@ import GlobalStyle from './app/theme/GlobalStyle';
 import themes from './app/theme/themes';
 import { MessageContainer } from './components/Message';
 import ModalContainer from './components/Modal/ModalContainer';
+import { fetchArticles } from './app/store/pages/homePage';
+import { fetchNotes } from './app/store/pages/notePage';
 
 const App = () => {
 	const themeMode = useSelector((state: AppState) => state.themeMode.themeMode);
@@ -20,6 +22,11 @@ const App = () => {
 		const user = watchedLocalStorage.getItem<{ token: string }>('user');
 		if (user) dispatch(getUserInfo());
 	}, []);
+
+  useEffect(() => {
+    dispatch(fetchArticles());
+    dispatch(fetchNotes());
+  }, []);
 
 	return (
 		<ThemeProvider theme={theme}>

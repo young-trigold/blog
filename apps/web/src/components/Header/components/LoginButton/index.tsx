@@ -4,8 +4,6 @@ import { memo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '../../../Button';
 
-import LoginOrRegisterModal from '../../../Modals/LoginModal';
-
 const LoginButton: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const onClick = useCallback(() => {
@@ -17,7 +15,6 @@ const LoginButton: React.FC = () => {
 			<Button buttonType="outlined" onClick={onClick}>
 				登录/注册
 			</Button>
-			<LoginOrRegisterModal />
 		</>
 	);
 };

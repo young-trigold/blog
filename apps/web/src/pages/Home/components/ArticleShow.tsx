@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import styled from 'styled-components';
 
 import { ArticlesByTag } from '..';
@@ -22,25 +23,24 @@ const StyledArticleContainer = styled.div`
 	justify-content: center;
 `;
 
-export interface ArticleShowProps {
-	articlesByTag: ArticlesByTag[] | undefined;
-	currentIndex: number;
+interface ArticleShowProps {
+	articlesByTag: ArticlesByTag[];
+	tagIndex: number;
 }
 
-const ArticleShow = (props: ArticleShowProps) => {
-	const { articlesByTag, currentIndex } = props;
+const ArticleShow: React.FC<ArticleShowProps> = (props: ArticleShowProps) => {
+	const { articlesByTag, tagIndex } = props;
 
 	return (
 		<StyledArticleShow>
-			{articlesByTag
-				? articlesByTag[currentIndex]?.articles?.map((article) => (
-						<StyledArticleContainer key={article._id}>
-							<Article article={article} />
-						</StyledArticleContainer>
-				  ))
-				: null}
+			{articlesByTag.length &&
+				articlesByTag[tagIndex]?.articles?.map((article) => (
+					<StyledArticleContainer key={article._id}>
+						<Article article={article} />
+					</StyledArticleContainer>
+				))}
 		</StyledArticleShow>
 	);
 };
 
-export default ArticleShow;
+export default memo(ArticleShow);

@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
+import { AppState } from '@/app/store';
 import LoadingIndicator from '@/components/LodingIndicator';
-import useLoadResource from '@/hooks/useLoadResource';
-import { NoteInfo } from '..';
+import { message } from '@/components/Message';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Note from './Note';
 
 const StyledNoteShow = styled.section`
@@ -20,18 +22,24 @@ const StyledNoteContainer = styled.div`
 `;
 
 const NoteShow = () => {
-	const { resource: notes } = useLoadResource<NoteInfo[]>('/api/notes');
+	const { notes, loading, error } = useSelector((state: AppState) => state.notePage);
 
-	return notes ? (
+	useEffect(() => {
+		if (error) message.error(error?.message ?? '请求错误!');
+	}, [error]);
+
+	return (
 		<StyledNoteShow>
-			{notes.map((note) => (
-				<StyledNoteContainer key={note._id}>
-					<Note note={note} />
-				</StyledNoteContainer>
-			))}
+			{loading ? (
+				<LoadingIndicator text="笔记马上就好" />
+			) : (
+				notes.map((note) => (
+					<StyledNoteContainer key={note._id}>
+						<Note note={note} />
+					</StyledNoteContainer>
+				))
+			)}
 		</StyledNoteShow>
-	) : (
-		<LoadingIndicator text="笔记马上就好" />
 	);
 };
 

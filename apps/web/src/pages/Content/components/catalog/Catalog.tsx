@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { AppState } from '@/app/store';
-import { setCurrentHeadingID, setHeadings } from '@/app/store/contentPage';
+import { setCurrentHeadingID, setHeadings } from '@/app/store/pages/contentPage';
 import { useEffect } from 'react';
 import schema from '../editor/schema';
 import CatalogItem from './CatalogItem';

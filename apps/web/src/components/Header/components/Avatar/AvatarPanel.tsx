@@ -6,7 +6,6 @@ import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import ConfirmLogoutModal from '../../../Modals/LogoutModal';
 
 interface StyledAvatarPanelContainerProps {
 	visible: boolean;
@@ -108,7 +107,6 @@ const AvatarPanel: React.FC<AvatarPanelProps> = (props) => {
 				) : null}
 				<Divider />
 				<StyledOption onClick={logout}>退出登录</StyledOption>
-				<ConfirmLogoutModal />
 			</section>
 		</StyledAvatarPanelContainer>
 	);

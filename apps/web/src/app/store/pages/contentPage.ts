@@ -3,15 +3,15 @@ import axios from 'axios';
 import { EditorView } from 'prosemirror-view';
 import { createContext } from 'react';
 
-import { HeadingInfo } from '../../pages/content/components/catalog/Catalog';
-import { CommentInfo } from '../../pages/content/components/comment/CommentList';
+import { HeadingInfo } from '../../../pages/content/components/catalog/Catalog';
+import { CommentInfo } from '../../../pages/content/components/comment/CommentList';
 
 export const ContentPageContext = createContext({
 	editable: false,
 	isChapter: false,
 });
 
-export interface ContentPageState {
+interface ContentPageState {
 	title: string;
 	catalog: {
 		visible: boolean;
