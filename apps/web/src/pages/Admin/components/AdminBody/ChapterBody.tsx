@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { Button, ButtonBar } from '@/components/Button';
 import { message } from '@/components/Message';
 import AddChapterModal from '@/components/Modals/AddChapterModal';
-import { StyledRow, StyledTable } from '@/components/Table';
 import getUserToken from '@/utils/getUserToken';
 import { useNavigate } from 'react-router-dom';
 import { ChapterInfo } from '../../../chpaters';
@@ -72,7 +71,7 @@ const ChapterBody: React.FC<ChapterBodyProps> = (props) => {
 
 	return (
 		<StyledChapterBody>
-			<StyledTable>
+			<table>
 				<thead>
 					<tr>
 						<th>项目</th>
@@ -81,7 +80,7 @@ const ChapterBody: React.FC<ChapterBodyProps> = (props) => {
 				</thead>
 				<tbody>
 					{chapters[currentIndex]?.map((chapter) => (
-						<StyledRow key={chapter._id}>
+						<tr key={chapter._id}>
 							<td>{chapter.title}</td>
 							<td>
 								<ButtonBar>
@@ -97,10 +96,10 @@ const ChapterBody: React.FC<ChapterBodyProps> = (props) => {
 									</Button>
 								</ButtonBar>
 							</td>
-						</StyledRow>
+						</tr>
 					))}
 				</tbody>
-			</StyledTable>
+			</table>
 			<AddChapterButton currentOption={noteOptions[currentIndex]} />
 			<AddChapterModal currentOption={noteOptions[currentIndex]} />
 		</StyledChapterBody>

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { Button, ButtonBar } from '@/components/Button';
 
 import AddArticleModal from '@/components/Modals/AddArticleModal';
-import { StyledRow, StyledTable } from '@/components/Table';
 import { ArticleInfo } from '../../../home';
 import AddArticleButton from '../buttons/AddArticleButton';
 import DeleteArticleButton from '../buttons/DeleteArticleButton';
@@ -32,7 +31,7 @@ function ArticleBody(props: ArticleBodyProps) {
 
 	return (
 		<StyledArticleBody>
-			<StyledTable>
+			<table>
 				<thead>
 					<tr>
 						<th>项目</th>
@@ -41,7 +40,7 @@ function ArticleBody(props: ArticleBodyProps) {
 				</thead>
 				<tbody>
 					{articles[currentIndex]?.map((article) => (
-						<StyledRow key={article._id}>
+						<tr key={article._id}>
 							<td>{article.title}</td>
 							<td>
 								<ButtonBar>
@@ -54,10 +53,10 @@ function ArticleBody(props: ArticleBodyProps) {
 									</Button>
 								</ButtonBar>
 							</td>
-						</StyledRow>
+						</tr>
 					))}
 				</tbody>
-			</StyledTable>
+			</table>
 			<AddArticleButton />
 			<AddArticleModal currentOption={tagOptions[currentIndex]} />
 		</StyledArticleBody>

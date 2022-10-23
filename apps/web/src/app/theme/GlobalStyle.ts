@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
     position: relative;
   }
 
-  // ====================================链接==================================================
+  // ==================================== 链接 ===============================================
   a {
     transition: ${(props) => props.theme.transition};
     color: ${(props) => props.theme.hoverColor};
@@ -30,6 +30,46 @@ const GlobalStyle = createGlobalStyle`
   a:hover, a:active {
     color: ${(props) => props.theme.activeColor};
   }
+
+	// ==================================== 表格 ===============================================
+	td,
+	th {
+		padding: 8px;
+	}
+
+	tbody > tr:hover {
+		background-color: ${(props) => props.theme.surfaceColor};
+		transition: ${(props) => props.theme.transition};
+	}
+
+	thead > tr:hover {
+		background-color: ${(props) => props.theme.hoverColor};
+		transition: ${(props) => props.theme.transition};
+	}
+
+	thead {
+		color: ${(props) => props.theme.foregroundColor};
+		background-color: ${(props) => props.theme.primaryColor};
+		transition: ${(props) => props.theme.transition};
+	}
+
+	table {
+		border-collapse: collapse;
+		border-radius: 6.4px;
+		width: 100%;
+		text-align: center;
+		table-layout: fixed;
+		margin: auto;
+		background-color: ${(props) => props.theme.foregroundColor};
+		margin: 1em 0;
+		box-shadow: 0 0 4px ${(props) => props.theme.shadowColor};
+		transition: ${(props) => props.theme.transition};
+
+		tr:nth-of-type(even) {
+			background-color: ${(props) => props.theme.backgroundColor};
+			transition: ${(props) => props.theme.transition};
+		}
+	}
 
   // =============================================滚动条===========================================
   ::-webkit-scrollbar {
