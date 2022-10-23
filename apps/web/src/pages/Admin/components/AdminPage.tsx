@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import { ChapterInfo } from '../../chpaters';
 import { ArticleInfo, ArticlesByTag } from '../../home';

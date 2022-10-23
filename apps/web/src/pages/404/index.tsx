@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
-import useDocumentTitle from '../hooks/useDocumentTitle';
+import useDocumentTitle from '@/hooks/useDocumentTitle';
 
 const StyledNotFoundPage = styled.div`
   height: 100vh;

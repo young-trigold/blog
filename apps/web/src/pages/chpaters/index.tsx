@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Footer from '@/components/Footer';
 import Header, { HeaderHeight } from '@/components/Header';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/LodingIndicator';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import useLoadResource from '@/hooks/useLoadResource';
 import { CommentInfo } from '../content/components/comment/CommentList';

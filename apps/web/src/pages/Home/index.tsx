@@ -6,7 +6,7 @@ import useLoadResource from '@/hooks/useLoadResource';
 
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/LodingIndicator';
 import { CommentInfo } from '../content/components/comment/CommentList';
 import ArticleShow from './components/ArticleShow';
 import TagContainer from './components/TagContainer';

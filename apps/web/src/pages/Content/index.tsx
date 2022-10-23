@@ -11,7 +11,7 @@ import {
 } from '@/app/store/contentPage';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import ActionBar from './components/ActionBar';

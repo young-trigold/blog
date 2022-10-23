@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/LodingIndicator';
 import useLoadResource from '@/hooks/useLoadResource';
 import { NoteInfo } from '..';
 import Note from './Note';
