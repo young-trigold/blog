@@ -3,13 +3,15 @@ import { memo, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AppState } from '@/app/store';
+import { AppDispatch, AppState } from '@/app/store';
 import { ContentPageContext } from '@/app/store/pages/contentPage';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';
 import CancelIcon from '@/static/icon/cancel.png';
 import PublishIcon from '@/static/icon/publish.png';
+import { useDispatch } from 'react-redux';
+import { setLoginModalVisible } from '@/app/store/modals';
 
 interface ActionBarProps {}
 
@@ -18,10 +20,18 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 	const { isChapter } = useContext(ContentPageContext);
 	const { editorView } = useSelector((state: AppState) => state.contentPage.editor);
 	const { hasLogin, info } = useSelector((state: AppState) => state.user);
-
+  const dispatch = useDispatch<AppDispatch>();
 	const handlePublish = () => {
-		if (!hasLogin) return message.warn('请先登录');
-		if (info?.role !== 'admin') return message.warn('权限不足');
+		if (!hasLogin)  {
+      dispatch(setLoginModalVisible(true));
+      message.warn('请先登录!');
+      return;
+    }
+		if (info?.role !== 'admin') {
+      dispatch(setLoginModalVisible(true));
+      message.warn('权限不足, 请重新登录!');
+      return;
+    }
 		if (!editorView) return;
 		const user = watchedLocalStorage.getItem<{ token: string }>('user');
 		const updateItem = async () => {
