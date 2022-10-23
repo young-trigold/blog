@@ -2,7 +2,6 @@ import axios from 'axios';
 import { memo, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { AppState } from '@/app/store';
 import { ContentPageContext } from '@/app/store/pages/contentPage';
@@ -11,30 +10,8 @@ import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';
 import CancelIcon from '@/static/icon/cancel.png';
 import PublishIcon from '@/static/icon/publish.png';
-import dataURLtoFile from '@/utils/dataURLToFile';
-import schema from '../editor/schema';
 
-const StyledActionBar = styled.div`
-	/* @media (max-width: 530px) {
-    padding: 0 1em;
-    justify-content: space-between;
-    width: 100%;
-    left: unset;
-    bottom: 0;
-    top: unset;
-    flex-direction: row;
-    position: fixed !important;
-    background-color: ${(props) => props.theme.foregroundColor};
-    flex-direction: row;
-    box-shadow: 0px 0px 3px rgb(0 0 0 / 0.5);
-
-    & > * {
-      margin: 0 1em;
-    }
-  } */
-`;
-
-export interface ActionBarProps {}
+interface ActionBarProps {}
 
 const ActionBar: React.FC<ActionBarProps> = (props) => {
 	const { itemID } = useParams();
@@ -49,38 +26,10 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 		const user = watchedLocalStorage.getItem<{ token: string }>('user');
 		const updateItem = async () => {
 			try {
-				// 图片
-				let transaction = editorView.state.tr;
-				const files: File[] = [];
-
-				editorView.state.doc.descendants((node, position) => {
-					if (!(node.type === schema.nodes.image)) return;
-					const { src } = node.attrs;
-					if (!(src as string).includes('base64')) return;
-					const filename = `${isChapter ? 0 : 1}_${itemID}_${Number(new Date())}.png`;
-					const file = dataURLtoFile(src, filename);
-					files.push(file);
-					transaction = transaction.setNodeMarkup(position, node.type, {
-						...node.attrs,
-						src: `http://${window.location.hostname}:80/upload/${filename}`,
-						// src: `http://${window.location.origin}/upload/${filename}`,
-					});
-				});
-
-				const newState = editorView.state.apply(transaction);
-				const newContent = JSON.stringify(newState.doc.toJSON());
-
-				const formData = new FormData();
-
-				files.forEach((file) => {
-					formData.append('files', file);
-				});
-
-				const uploadImages = axios.post('/api/multiple', formData);
-				const publishContent = axios.put(
+				await axios.put(
 					`/api/${isChapter ? 'notes' : 'articles'}/${itemID}`,
 					{
-						content: newContent,
+						content: JSON.stringify(editorView.state.doc.toJSON()),
 					},
 					{
 						headers: {
@@ -89,9 +38,6 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 						},
 					},
 				);
-
-				const res = await Promise.all([uploadImages, publishContent]);
-        
 				message.success('发布成功!');
 			} catch (error) {
 				if (axios.isAxiosError(error))
@@ -111,7 +57,7 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 	};
 
 	return (
-		<StyledActionBar>
+		<aside>
 			<FloatingActionButton
 				onClick={handleCancel}
 				rect={{ right: 32, bottom: 230 }}
@@ -124,7 +70,7 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 				icon={PublishIcon}
 				description="发布"
 			/>
-		</StyledActionBar>
+		</aside>
 	);
 };
 
