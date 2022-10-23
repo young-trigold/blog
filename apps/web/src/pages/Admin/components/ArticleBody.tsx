@@ -7,8 +7,8 @@ import { Button, ButtonBar } from '@/components/Button';
 import { message } from '@/components/Message';
 import { StyledRow, StyledTable } from './StyledTable';
 
-import AddArticleModal from '@/components/Modals/AddArticleModal';
 import getUserToken from '@/utils/getUserToken';
+import AddArticleModal from 'src/pages/components/Modals/AddArticleModal';
 import { ArticleInfo } from '../../home';
 import AddArticleButton from './AddArticleButton';
 

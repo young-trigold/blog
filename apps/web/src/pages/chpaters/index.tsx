@@ -2,10 +2,10 @@ import { useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Footer from '@/components/Footer';
-import Header, { HeaderHeight } from '@/components/Header';
 import LoadingIndicator from '@/components/LodingIndicator';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import useLoadResource from '@/hooks/useLoadResource';
+import Header, { HeaderHeight } from 'src/pages/components/Header';
 import { CommentInfo } from '../content/components/comment/CommentList';
 import Chapter from './components/Chapter';
 

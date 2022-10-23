@@ -10,10 +10,10 @@ import {
 	setCurrentHeadingID,
 } from '@/app/store/contentPage';
 import Footer from '@/components/Footer';
-import Header from '@/components/Header';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
+import Header from 'src/pages/components/Header';
 import ActionBar from './components/ActionBar';
 import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';

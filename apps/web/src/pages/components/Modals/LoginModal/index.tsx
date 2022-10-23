@@ -3,7 +3,7 @@ import { setLoginModalVisible } from '@/app/store/modals';
 import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Modal from '../../Modal';
+import Modal from '../../../../components/Modal';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 interface LoginModalProps {}

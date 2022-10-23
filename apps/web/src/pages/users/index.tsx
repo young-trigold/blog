@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
-import Header, { HeaderHeight } from '@/components/Header';
 import { useParams } from 'react-router-dom';
+import Header, { HeaderHeight } from 'src/pages/components/Header';
 import styled from 'styled-components';
 import UserInfoPanel from './components/UserInfoPanel/indext';
 
@@ -24,7 +24,7 @@ const UserPage = () => {
 		<StyledUserPage>
 			<Header />
 			<StyledContentContainer>
-        <UserInfoPanel />
+				<UserInfoPanel />
 				<Footer />
 			</StyledContentContainer>
 		</StyledUserPage>
