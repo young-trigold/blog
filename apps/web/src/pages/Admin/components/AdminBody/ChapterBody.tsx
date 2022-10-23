@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChapterInfo } from '../../../chpaters';
 import { NoteOption } from '../AdminPage';
 import AddChapterButton from '../buttons/AddChapterButton';
+import DeleteChapterButton from '../buttons/DeleteChapterButton';
 import { StyledRow, StyledTable } from '../StyledTable';
 
 const StyledChapterBody = styled.main`
@@ -84,13 +85,10 @@ const ChapterBody: React.FC<ChapterBodyProps> = (props) => {
 							<td>{chapter.title}</td>
 							<td>
 								<ButtonBar>
-									<Button
-										onClick={() => deleteItem(chapter._id)}
-										state="dange"
-										size={window.matchMedia('(max-width: 400px)').matches ? 'small' : 'middle'}
-									>
-										删除
-									</Button>
+									<DeleteChapterButton
+										chapterId={chapter._id}
+										noteId={noteOptions[currentIndex]._id}
+									/>
 									<Button
 										onClick={() => updateItem(chapter._id)}
 										size={window.matchMedia('(max-width: 400px)').matches ? 'small' : 'middle'}
