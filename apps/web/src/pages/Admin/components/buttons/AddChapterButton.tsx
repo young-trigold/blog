@@ -1,32 +1,36 @@
-import React, { useCallback, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 
 import { FloatingActionButton } from '@/components/Button';
 
-import CancelIcon from '@/static/icon/cancel.png';
+import { AppDispatch } from '@/app/store';
+import { setAddChapterModalVisible } from '@/app/store/modals';
 import AddIcon from '@/static/icon/plus.png';
+import { useDispatch } from 'react-redux';
 import { NoteOption } from '../AdminPage';
 
-export interface AddButtonProps {
+interface AddButtonProps {
 	currentOption: NoteOption;
 }
 
-const AddChapterButton = React.memo((props: AddButtonProps) => {
-	const [isModalVisible, setIsModalVisible] = useState(false);
-
+const AddChapterButton: React.FC<AddButtonProps> = (props) => {
+	const dispatch = useDispatch<AppDispatch>();
 	const handleClick = useCallback(() => {
-		setIsModalVisible(!isModalVisible);
-	}, [setIsModalVisible, isModalVisible]);
+		dispatch(setAddChapterModalVisible(true));
+	}, []);
 
 	return (
 		<>
 			<FloatingActionButton
 				rect={{ bottom: 64, right: 32 }}
-				icon={isModalVisible ? CancelIcon : AddIcon}
+				icon={AddIcon}
 				description="添加"
 				onClick={handleClick}
 			/>
 		</>
 	);
-});
+};
 
-export default AddChapterButton;
+export default memo(
+	AddChapterButton,
+	(pre, cur) => pre.currentOption._id === cur.currentOption._id,
+);

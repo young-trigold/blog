@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { AppDispatch } from '@/app/store';
@@ -31,9 +31,10 @@ const AddArticleTagButton = () => {
 	const setVisible = useCallback((visible: boolean) => {
 		dispatch(setAddArticleTagModalVisible(visible));
 	}, []);
-	const onClick = () => {
+
+	const onClick = useCallback(() => {
 		setVisible(true);
-	};
+	}, [setVisible]);
 
 	return (
 		<StyledAddArticleTagButton type="button" onClick={onClick}>
@@ -42,4 +43,4 @@ const AddArticleTagButton = () => {
 	);
 };
 
-export default AddArticleTagButton;
+export default memo(AddArticleTagButton);

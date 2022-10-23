@@ -4,7 +4,7 @@ import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
 import axios from 'axios';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 const AddArticleTagForm = () => {
@@ -65,10 +65,16 @@ const AddArticleTagForm = () => {
 		() => title.replace(/\s+/g, '') === '' || tag.replace(/\s+/g, '') === '',
 		[title, tag],
 	);
+	
+	const tagInputRef = useRef<HTMLInputElement>(null);
+	useEffect(() => {
+		tagInputRef.current?.focus();
+	}, []);
 
 	return (
 		<form>
 			<Input
+				ref={tagInputRef}
 				value={tag}
 				onChange={handleTagInputChange}
 				placeholder="标签名称"
