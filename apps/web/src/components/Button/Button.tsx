@@ -33,7 +33,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 		})()};
 	border: ${(props) =>
 		(() => {
-			if (props.buttonType === 'outlined') return `1.5px solid ${props.theme.borderColor}`;
+			if (props.buttonType === 'outlined') return `1px solid ${props.theme.borderColor}`;
 			return 'none';
 		})()};
 	font-size: ${(props) =>
@@ -50,6 +50,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 	color: ${(props) =>
 		(() => {
 			if (props.buttonType === 'elevated') return props.theme.backgroundColor;
+			else if (props.buttonType === 'outlined') return props.theme.primaryColor;
 			switch (props.state) {
 				case 'dange':
 					return props.theme.dangeColor;
@@ -65,11 +66,11 @@ const StyledButton = styled.button<StyledButtonProps>`
 		(() => {
 			switch (props.size) {
 				case 'large':
-					return '6.4px 15px';
+					return '0.5em 1em';
 				case 'small':
-					return '0 7px';
+					return '0 0.5em';
 				default:
-					return '4px 15px';
+					return '0.25em 1em';
 			}
 		})()};
 	border-radius: ${(props) =>
@@ -80,7 +81,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 				case 'circular':
 					return '50%';
 				default:
-					return '6.4px';
+					return '4px';
 			}
 		})()};
 	transition: ${(props) => props.theme.transition};
@@ -96,17 +97,6 @@ const StyledButton = styled.button<StyledButtonProps>`
 
 	&:hover,
 	&:focus {
-		color: ${(props) =>
-			(() => {
-				switch (props.buttonType) {
-					case 'elevated':
-						return props.theme.backgroundColor;
-					case 'outlined':
-						return props.theme.hoverColor;
-					default:
-						return props.theme.textColor;
-				}
-			})()};
 		border-color: ${(props) => (props.buttonType === 'outlined' ? props.theme.hoverColor : 'none')};
 		background-color: ${(props) =>
 			props.buttonType !== 'outlined' ? props.theme.hoverColor : 'unset'};
@@ -128,7 +118,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 			props.buttonType === 'outlined' ? props.theme.activeColor : 'none'};
 		background-color: ${(props) =>
 			props.buttonType === 'elevated' ? props.theme.activeColor : 'unset'};
-		translate: 0 2px;
+		transform: translateY(2px);
 	}
 `;
 

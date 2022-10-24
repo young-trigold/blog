@@ -25,15 +25,15 @@ const StyledInput = styled.input<StyledInputProps>`
   width: 100%;
   font-size: 16px;
   caret-color: ${(props) => props.theme.warnColor};
-  border: 1.5px solid ${(props) => props.theme.borderColor};
+  border: 1px solid ${(props) => props.theme.borderColor};
   background-color: transparent;
   border-radius: ${(props) =>
     (() => {
       switch (props.shape) {
         case 'rounded':
-          return '1em';
+          return '0.5em';
         default:
-          return '6.4px';
+          return '0.25em';
       }
     })()};
   padding: 0.25em 0.5em;

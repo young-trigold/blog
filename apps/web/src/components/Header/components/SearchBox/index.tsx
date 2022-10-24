@@ -22,17 +22,13 @@ const SearchImg = styled.img`
 const SearchBox: React.FC = () => {
 	const [isVisible, setIsVisible] = useState(false);
 	const [searchKeyword, setSearchKeyword] = useState('');
-
 	const [results, setResults] = useState([]);
 
-	const onChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-		(event) => {
-			const searchValue = event.target.value;
-			setSearchKeyword(searchValue);
-			if (!searchValue) setResults([]);
-		},
-		[setSearchKeyword],
-	);
+	const onChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
+		const searchValue = event.target.value;
+		setSearchKeyword(searchValue);
+		if (!searchValue) setResults([]);
+	}, []);
 
 	useEffect(() => {
 		if (!searchKeyword.replace(/\s+/g, '')) return;
@@ -54,10 +50,10 @@ const SearchBox: React.FC = () => {
 			if (error instanceof Error) return message.error(error.message);
 			return message.error(JSON.stringify(error));
 		}
-	}, [searchKeyword, setResults]);
+	}, [searchKeyword]);
 
-	const onSearchBoxFocus = () => setIsVisible(true);
-	const onSearchBoxBlur = () => setIsVisible(false);
+	const onSearchBoxFocus = useCallback(() => setIsVisible(true), []);
+	const onSearchBoxBlur = useCallback(() => setIsVisible(false), []);
 
 	return (
 		<div style={{ position: 'relative', margin: '0 1.5em' }}>

@@ -12,7 +12,7 @@ const LoginButton: React.FC = () => {
 
 	return (
 		<>
-			<Button buttonType="outlined" onClick={onClick}>
+			<Button buttonType="elevated" onClick={onClick}>
 				登录/注册
 			</Button>
 		</>
