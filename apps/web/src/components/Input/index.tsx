@@ -31,7 +31,7 @@ const StyledInput = styled.input<StyledInputProps>`
     (() => {
       switch (props.shape) {
         case 'rounded':
-          return '0.5em';
+          return '1em';
         default:
           return '0.25em';
       }

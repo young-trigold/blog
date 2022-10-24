@@ -15,7 +15,7 @@ export const StyledIconButton = styled.button<StyledIconButtonProps>`
   position: relative;
   background-color: ${(props) => props.theme.foregroundColor};
   border: none;
-  border-radius: 6px;
+  border-radius: 6.4px;
   padding: 3px;
   width: ${(props) =>
     (() => {
@@ -101,4 +101,4 @@ const IconButton: React.FC<IconButtonProps> = memo((props) => {
   );
 });
 
-export default IconButton;
+export default memo(IconButton);

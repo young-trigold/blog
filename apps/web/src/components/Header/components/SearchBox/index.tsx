@@ -16,7 +16,7 @@ const StyledSearchBox = styled.form`
 
 const SearchImg = styled.img`
 	position: absolute;
-	right: 0.5em;
+	right: 1em;
 `;
 
 const SearchBox: React.FC = () => {

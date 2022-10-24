@@ -100,4 +100,4 @@ const FloatingActionButton: React.FC<PropsWithChildren<FloatingActionButtonProps
   },
 );
 
-export default FloatingActionButton;
+export default memo(FloatingActionButton);
