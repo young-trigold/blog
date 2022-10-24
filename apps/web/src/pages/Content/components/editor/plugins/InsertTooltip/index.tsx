@@ -1,7 +1,6 @@
-import { AppDispatch, AppState } from '@/app/store';
-import { setInsertTooltip } from '@/app/store/pages/contentPage';
-import { memo, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from '@/app/store';
+import { memo, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import InsertOptionContainer from './InsertOptionContainer';
@@ -28,8 +27,9 @@ const StyledInsertTooltip = styled.div<StyledInsertTooltipProps>`
 	background-color: ${(props) => props.theme.surfaceColor};
 	transition: ${(props) => props.theme.transition};
 	user-select: none;
-	z-index: ${(props) => (props.visible ? 4 : -1)};
+	z-index: 1;
 	opacity: ${(props) => (props.visible ? 1 : 0)};
+	visibility: ${(props) => (props.visible ? 'unset' : 'hidden')};
 `;
 
 interface InsertTooltipProps {}
@@ -38,8 +38,6 @@ const InsertTooltip = (props: InsertTooltipProps) => {
 	const { insertTooltip } = useSelector((state: AppState) => state.contentPage.editor.plugin);
 	const { visible, position } = insertTooltip;
 	const [insertOptionContainerVisible, setInsertOptionContainerVisible] = useState(false);
-	const dispatch = useDispatch<AppDispatch>();
-	const ref = useRef<HTMLElement>(null);
 
 	useEffect(() => {
 		setInsertOptionContainerVisible(false);
@@ -47,12 +45,6 @@ const InsertTooltip = (props: InsertTooltipProps) => {
 
 	const handleInsertTooltipClicked: React.MouseEventHandler = (event) => {
 		event.stopPropagation();
-		dispatch(
-			setInsertTooltip({
-				...insertTooltip,
-				visible: false,
-			}),
-		);
 		setInsertOptionContainerVisible(true);
 	};
 
@@ -75,7 +67,7 @@ const InsertTooltip = (props: InsertTooltipProps) => {
 				position={position}
 				onClick={handleInsertTooltipClicked}
 			>
-				✛
+				<span>✛</span>
 			</StyledInsertTooltip>
 			{insertOptionContainerVisible && <InsertOptionContainer />}
 		</>

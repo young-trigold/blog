@@ -17,7 +17,7 @@ const StyledSelectionCommentTooltip = styled.div<StyledSelectionCommentTooltipPr
 	cursor: pointer;
 	width: 36px;
 	height: 36px;
-	z-index: ${(props) => (props.visible ? 4 : -1)};
+	visibility: ${(props) => (props.visible ? 'unset' : 'hidden')};
 	opacity: ${(props) => (props.visible ? 1 : 0)};
 	top: ${(props) => `${props.position.top - 40}px`};
 	left: ${(props) => `${props.position.left - 18}px`};
@@ -28,6 +28,7 @@ const StyledSelectionCommentTooltip = styled.div<StyledSelectionCommentTooltipPr
 	transition: ${(props) => props.theme.transition};
 	user-select: none;
 	padding: 6px;
+	z-index: 1;
 
 	&:active {
 		transform: translateY(2px);

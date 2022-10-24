@@ -18,7 +18,7 @@ const StyledSelectionTooltip = styled.div<StyledSelectionTooltipProps>`
 	align-items: center;
 	justify-content: space-between;
 	width: 300px;
-	z-index: ${(props) => (props.visible ? 4 : -1)};
+	visibility: ${(props) => props.visible ? 'unset' : 'hidden'};
 	opacity: ${(props) => (props.visible ? 1 : 0)};
 	top: ${(props) => `${props.position.top - 38}px`};
 	left: ${(props) => `${props.position.left - 121}px`};
@@ -29,6 +29,7 @@ const StyledSelectionTooltip = styled.div<StyledSelectionTooltipProps>`
 	transition: ${(props) => props.theme.transition};
 	user-select: none;
 	padding: 1px;
+	z-index: 1;
 `;
 
 const StyledOption = styled.div`

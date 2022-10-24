@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { AppDispatch, AppState } from '@/app/store';
+import store, { AppDispatch, AppState } from '@/app/store';
 import {
   setCurrentHeadingID,
   setEditorView,
@@ -22,6 +22,9 @@ import SelectionTooltip from './plugins/selectionTooltip';
 import schema from './schema';
 import addHeadingID from './utils/addHeadingID';
 import getCurrentHeadingID from './utils/getCurrentHeadingID';
+import getUniqueID from '@/utils/getUniqueID';
+
+export const EditorContainerId = getUniqueID();
 
 const EditorContainer = styled.article`
 	flex: 1 1 760px;
@@ -200,6 +203,8 @@ const Editor: React.FC<EditorProps> = (props) => {
 				},
 			}),
 		);
+
+		console.debug(store.getState());
 	};
 
 	// =============================== 初始化 editorView ===============================
@@ -272,7 +277,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 	};
 
 	return (
-		<EditorContainer ref={editorContainerRef} id="editor-container" onBlur={onEditorContainerBlur}>
+		<EditorContainer ref={editorContainerRef} id={EditorContainerId} onBlur={onEditorContainerBlur}>
 			{editable && (
 				<>
 					<InsertTooltip />
