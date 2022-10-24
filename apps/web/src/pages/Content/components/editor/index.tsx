@@ -244,6 +244,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 
 		editorViewRef.current = initialEditorView;
 		dispatch(setEditorView(initialEditorView));
+    dispatch(setCurrentHeadingID(getCurrentHeadingID(editorContainerRef.current!)));
     updateTooltipPluginState(initialEditorView);
 
 		return () => {
@@ -254,11 +255,6 @@ const Editor: React.FC<EditorProps> = (props) => {
 			dispatch(setCurrentHeadingID(''));
 		};
 	}, []);
-
-	useEffect(() => {
-		if (!editorContainerRef.current) return;
-		dispatch(setCurrentHeadingID(getCurrentHeadingID(editorContainerRef.current)));
-	}, [editorViewRef.current, editorContainerRef.current]);
 
   useEffect(() => {
     editorViewRef.current?.focus();
