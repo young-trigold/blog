@@ -49,18 +49,16 @@ const StyledButton = styled.button<StyledButtonProps>`
 		})()};
 	color: ${(props) =>
 		(() => {
-			if (props.buttonType === 'elevated') return props.theme.backgroundColor;
-			else if (props.buttonType === 'outlined') return props.theme.primaryColor;
-			switch (props.state) {
+      switch (props.state) {
 				case 'dange':
 					return props.theme.dangeColor;
 				case 'success':
 					return props.theme.successColor;
 				case 'warn':
 					return props.theme.warnColor;
-				default:
-					return props.theme.textColor;
 			}
+			if (props.buttonType === 'elevated') return props.theme.backgroundColor;
+			else if (props.buttonType === 'outlined') return props.theme.primaryColor;			
 		})()};
 	padding: ${(props) =>
 		(() => {
