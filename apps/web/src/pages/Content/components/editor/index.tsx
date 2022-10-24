@@ -2,7 +2,7 @@ import { throttle } from 'lodash';
 import { DOMParser, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -166,22 +166,14 @@ const Editor: React.FC<EditorProps> = (props) => {
 	const dispatch = useDispatch<AppDispatch>();
 	const editorViewRef = useRef<EditorView | null>(null);
 
-	// ==================== 处理每次用户和 editor 的交互 transaction 回调
-	const dispatchTransaction = (transaction: Transaction) => {
-		const { current: editorView } = editorViewRef;
-		if (!editorView) return;
-		// 加 heading id
-		const newEditorState = addHeadingID(editorView.state, transaction);
-		editorView.updateState(newEditorState);
-
-		dispatch(setEditorView(editorView));
-
-		// 更新 insert tooltip
-		const { selection } = newEditorState;
+  // 更新插件 state
+  const updateTooltipPluginState = useCallback((view: EditorView) => {
+    		// 更新 insert tooltip
+		const { selection } = view.state;
 		const { $head, empty } = selection;
 		const { nodeAfter, nodeBefore } = $head;
 		const canInsertBlock = nodeAfter === null || nodeBefore === null;
-		const cursorPositionToViewPort = editorView.coordsAtPos($head.pos);
+		const cursorPositionToViewPort = view.coordsAtPos($head.pos);
 		const editorContainerPositionToViewPort = editorContainerRef.current!.getBoundingClientRect();
 		dispatch(
 			setInsertTooltip({
@@ -203,6 +195,16 @@ const Editor: React.FC<EditorProps> = (props) => {
 				},
 			}),
 		);
+  }, [editorContainerRef.current]);
+
+	// ==================== 处理每次用户和 editor 的交互 transaction 回调
+	const dispatchTransaction = (transaction: Transaction) => {
+		const { current: editorView } = editorViewRef;
+		if (!editorView) return;
+		// 加 heading id
+		const newEditorState = addHeadingID(editorView.state, transaction);
+		editorView.updateState(newEditorState);
+    updateTooltipPluginState(editorView);
 	};
 
 	// =============================== 初始化 editorView ===============================
@@ -242,6 +244,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 
 		editorViewRef.current = initialEditorView;
 		dispatch(setEditorView(initialEditorView));
+    updateTooltipPluginState(initialEditorView);
 
 		return () => {
 			const { current: editorView } = editorViewRef;
@@ -256,6 +259,10 @@ const Editor: React.FC<EditorProps> = (props) => {
 		if (!editorContainerRef.current) return;
 		dispatch(setCurrentHeadingID(getCurrentHeadingID(editorContainerRef.current)));
 	}, [editorViewRef.current, editorContainerRef.current]);
+
+  useEffect(() => {
+    editorViewRef.current?.focus();
+  }, [editorViewRef.current]);
 
 	// ========================================= 处理 编辑器 blur =============================
 	const onEditorContainerBlur = () => {
