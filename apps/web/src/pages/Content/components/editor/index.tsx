@@ -203,8 +203,6 @@ const Editor: React.FC<EditorProps> = (props) => {
 				},
 			}),
 		);
-
-		console.debug(store.getState());
 	};
 
 	// =============================== 初始化 editorView ===============================

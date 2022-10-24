@@ -74,7 +74,7 @@ const initialState: ContentPageState = {
 		},
 	},
 	error: null,
-	loading: true,
+	loading: false,
 };
 
 interface ItemInfo {
@@ -128,7 +128,7 @@ const ContentPageSlice = createSlice({
 	extraReducers(builder) {
 		builder
 			.addCase(fetchContentPageDataByID.pending, (state) => {
-				state.loading = initialState.loading;
+				state.loading = true;
 			})
 			.addCase(fetchContentPageDataByID.fulfilled, (state, action) => {
 				state.loading = false;

@@ -1,6 +1,7 @@
 import { AppState } from '@/app/store';
 import CommentIcon from '@/static/icon/comment.png';
 import { TextSelection } from 'prosemirror-state';
+import { memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -41,7 +42,7 @@ const SelectionCommentTooltip = () => {
 	);
 	const { editorView } = useSelector((state: AppState) => state.contentPage.editor);
 
-	const onClick = () => {
+	const onClick = useCallback(() => {
 		if (!editorView) return;
 		const { selection, doc } = editorView.state;
 		if (selection instanceof TextSelection) {
@@ -49,7 +50,7 @@ const SelectionCommentTooltip = () => {
 			console.debug(editorView.coordsAtPos(from));
 			console.debug(doc.content.textBetween(from, to));
 		}
-	};
+	}, [editorView]);
 
 	return (
 		<StyledSelectionCommentTooltip visible={visible} position={position} onClick={onClick}>
@@ -58,4 +59,4 @@ const SelectionCommentTooltip = () => {
 	);
 };
 
-export default SelectionCommentTooltip;
+export default memo(SelectionCommentTooltip);

@@ -5,9 +5,9 @@ import styled from 'styled-components';
 
 import { AppDispatch, AppState } from '@/app/store';
 import {
-  ContentPageContext,
-  fetchContentPageDataByID,
-  setCurrentHeadingID
+	ContentPageContext,
+	fetchContentPageDataByID,
+	setCurrentHeadingID,
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
@@ -89,7 +89,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 						<Catalog />
 						<Editor content={content} editable={editable} />
 						<CommentList />
-						{editable ? <ActionBar /> : null}
+						{editable && <ActionBar />}
 						<CatalogButton />
 					</MainContainer>
 					<Footer />
