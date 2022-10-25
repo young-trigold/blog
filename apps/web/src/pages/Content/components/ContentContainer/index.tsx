@@ -1,4 +1,3 @@
-import { throttle } from 'lodash';
 import { memo, PropsWithChildren, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -22,15 +21,11 @@ const ContentContainer: React.FC<PropsWithChildren> = (props) => {
 	useEffect(() => {
 		if (!ref.current) return;
 
-		const onScroll = throttle(
-			() => {
-				if (!ref.current) return;
-				const currentHeadingID = getCurrentHeadingID(ref.current);
-				if (currentHeadingID) dispatch(setCurrentHeadingID(currentHeadingID));
-			},
-			60,
-			{ trailing: true },
-		);
+		const onScroll = () => window.requestAnimationFrame(() => {
+			if (!ref.current) return;
+			const currentHeadingID = getCurrentHeadingID(ref.current);
+			if (currentHeadingID) dispatch(setCurrentHeadingID(currentHeadingID));
+		});
 
 		ref.current.addEventListener('scroll', onScroll);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -87,7 +87,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						<Editor content={content} editable={editable} />
+						<Editor content={content} editable={editable} autoFocus />
 						<CommentList />
 						{editable && <ActionBar />}
 						<CatalogButton />
@@ -99,4 +99,4 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	);
 };
 
-export default ContentPage;
+export default memo(ContentPage);

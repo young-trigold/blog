@@ -1,18 +1,18 @@
-import { throttle } from 'lodash';
 import { DOMParser, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import store, { AppDispatch, AppState } from '@/app/store';
+import { AppDispatch, AppState } from '@/app/store';
 import {
-  setCurrentHeadingID,
-  setEditorView,
-  setInsertTooltip,
-  setSelectionTooltip
+	setCurrentHeadingID,
+	setEditorView,
+	setInsertTooltip,
+	setSelectionTooltip,
 } from '@/app/store/pages/contentPage';
+import getUniqueID from '@/utils/getUniqueID';
 import px from '@/utils/realPixel';
 import nodeViews from './nodeViews';
 import plugins from './plugins';
@@ -22,7 +22,6 @@ import SelectionTooltip from './plugins/selectionTooltip';
 import schema from './schema';
 import addHeadingID from './utils/addHeadingID';
 import getCurrentHeadingID from './utils/getCurrentHeadingID';
-import getUniqueID from '@/utils/getUniqueID';
 
 export const EditorContainerId = getUniqueID();
 
@@ -153,22 +152,23 @@ const EditorContainer = styled.article`
 	}
 `;
 
-export interface EditorProps {
+interface EditorProps {
 	content: string | undefined;
 	editable: boolean;
+	autoFocus?: boolean;
 }
 
 const Editor: React.FC<EditorProps> = (props) => {
-	const { content, editable } = props;
+	const { content, editable, autoFocus = true } = props;
 	const editorContainerRef = useRef<HTMLDivElement>(null);
 
 	const { plugin } = useSelector((state: AppState) => state.contentPage.editor);
 	const dispatch = useDispatch<AppDispatch>();
 	const editorViewRef = useRef<EditorView | null>(null);
 
-  // 更新插件 state
-  const updateTooltipPluginState = useCallback((view: EditorView) => {
-    		// 更新 insert tooltip
+	// 更新插件 state
+	const updateTooltipPluginState = useCallback((view: EditorView) => {
+		// 更新 insert tooltip
 		const { selection } = view.state;
 		const { $head, empty } = selection;
 		const { nodeAfter, nodeBefore } = $head;
@@ -195,7 +195,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 				},
 			}),
 		);
-  }, [editorContainerRef.current]);
+	}, []);
 
 	// ==================== 处理每次用户和 editor 的交互 transaction 回调
 	const dispatchTransaction = (transaction: Transaction) => {
@@ -204,22 +204,11 @@ const Editor: React.FC<EditorProps> = (props) => {
 		// 加 heading id
 		const newEditorState = addHeadingID(editorView.state, transaction);
 		editorView.updateState(newEditorState);
-    updateTooltipPluginState(editorView);
+		updateTooltipPluginState(editorView);
 	};
 
 	// =============================== 初始化 editorView ===============================
 	useEffect(() => {
-		// 滚动时 同步当前标题 id
-		const updateCurrentHeadingIDWhileScroll = throttle(
-			() => {
-				if (!editorContainerRef.current) return;
-				const currentHeadingID = getCurrentHeadingID(editorContainerRef.current);
-				if (currentHeadingID) dispatch(setCurrentHeadingID(currentHeadingID));
-			},
-			60,
-			{ trailing: true },
-		);
-
 		//  ==================== editor state
 		const doc = content
 			? ProseMirrorNode.fromJSON(schema, JSON.parse(content))
@@ -237,31 +226,27 @@ const Editor: React.FC<EditorProps> = (props) => {
 			nodeViews,
 			editable: () => editable,
 			dispatchTransaction,
-			handleDOMEvents: {
-				wheel: updateCurrentHeadingIDWhileScroll,
-			},
 		});
 
 		editorViewRef.current = initialEditorView;
 		dispatch(setEditorView(initialEditorView));
-    dispatch(setCurrentHeadingID(getCurrentHeadingID(editorContainerRef.current!)));
-    updateTooltipPluginState(initialEditorView);
+		dispatch(setCurrentHeadingID(getCurrentHeadingID(editorContainerRef.current!)));
+		autoFocus && updateTooltipPluginState(initialEditorView);
 
 		return () => {
-			const { current: editorView } = editorViewRef;
-			if (!editorView) return;
-			editorView.destroy();
+			initialEditorView.destroy();
 			dispatch(setEditorView(null));
 			dispatch(setCurrentHeadingID(''));
 		};
 	}, []);
 
-  useEffect(() => {
-    editorViewRef.current?.focus();
-  }, [editorViewRef.current]);
+	useEffect(() => {
+		const { current: editorView } = editorViewRef;
+		if (!editorView) return;
+		autoFocus && editorView.focus();
+	}, []);
 
-	// ========================================= 处理 编辑器 blur =============================
-	const onEditorContainerBlur = () => {
+	const onEditorContainerBlur = useCallback(() => {
 		const { insertTooltip, selectionTooltip } = plugin;
 		dispatch(
 			setInsertTooltip({
@@ -275,10 +260,14 @@ const Editor: React.FC<EditorProps> = (props) => {
 				visible: false,
 			}),
 		);
-	};
+	}, [plugin]);
 
 	return (
-		<EditorContainer ref={editorContainerRef} id={EditorContainerId} onBlur={onEditorContainerBlur}>
+		<EditorContainer
+			ref={editorContainerRef}
+			id={EditorContainerId}
+			onBlur={onEditorContainerBlur}
+		>
 			{editable && (
 				<>
 					<InsertTooltip />
@@ -290,4 +279,4 @@ const Editor: React.FC<EditorProps> = (props) => {
 	);
 };
 
-export default Editor;
+export default memo(Editor);
