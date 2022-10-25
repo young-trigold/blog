@@ -23,6 +23,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: '../server/build/public',
     rollupOptions: {
       output: {
         chunkFileNames: 'assets/js/[name]-[hash].js',

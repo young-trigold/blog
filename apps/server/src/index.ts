@@ -30,7 +30,7 @@ server.use(morgan('dev'));
 server.use(compression());
 server.use(express.urlencoded({ extended: true, limit: '50mb' }));
 server.use(express.json({ limit: '50mb' }));
-server.use(express.static(path.join(__dirname, 'dist')));
+server.use(express.static(path.join(__dirname, 'public')));
 
 server.use('/api', articleApi);
 server.use('/api', noteApi);
@@ -38,7 +38,7 @@ server.use('/api', userApi);
 server.use('/api', uploadAPI);
 
 server.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const port = process.env.PORT;

@@ -6,7 +6,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const storage = multer.diskStorage({
 	destination(req, file, callback) {
-		callback(null, path.join(__dirname, '../dist/upload'));
+		callback(null, path.join(__dirname, '../public/upload'));
 	},
 	filename(_, file, callback) {
     const fileName = [file.originalname.split('.')[0], Date.now()].join('_') + path.extname(file.originalname);
