@@ -6,9 +6,7 @@ import styled from 'styled-components';
 
 import { AppDispatch, AppState } from '@/app/store';
 import {
-	initialState,
 	setCurrentHeadingID,
-	setEditorState,
 	setEditorView,
 	setInsertTooltip,
 	setSelectionTooltip,
@@ -170,19 +168,13 @@ const Editor: React.FC<EditorProps> = (props) => {
 	const dispatch = useDispatch<AppDispatch>();
 	const editorViewRef = useRef<EditorView | null>(null);
 
-	const { state, ...restProps } = props;
-	editorViewRef.current?.updateState(state);
+	const { state, onChange, autoFocus, editable } = props;
 	editorViewRef.current?.setProps({
-		...restProps,
-		editable() {
-			return restProps.editable;
-		},
+		state,
 		dispatchTransaction(tr) {
-			restProps.onChange?.(tr);
+			onChange?.(tr);
 		},
 	});
-
-	const { autoFocus, editable } = props;
 
 	// ============================== 初始化 editorView ===============================
 	useEffect(() => {
