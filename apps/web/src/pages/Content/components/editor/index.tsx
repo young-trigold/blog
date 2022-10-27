@@ -6,7 +6,9 @@ import styled from 'styled-components';
 
 import { AppDispatch, AppState } from '@/app/store';
 import {
+	initialState,
 	setCurrentHeadingID,
+	setEditorState,
 	setEditorView,
 	setInsertTooltip,
 	setSelectionTooltip,
@@ -165,8 +167,6 @@ const Editor: React.FC<EditorProps> = (props) => {
 	const initialPropsRef = useRef(props);
 
 	const editorContainerRef = useRef<HTMLDivElement>(null);
-
-	const { plugin } = useSelector((state: AppState) => state.contentPage.editor);
 	const dispatch = useDispatch<AppDispatch>();
 	const editorViewRef = useRef<EditorView | null>(null);
 
@@ -203,8 +203,6 @@ const Editor: React.FC<EditorProps> = (props) => {
 
 		return () => {
 			initialEditorView.destroy();
-			dispatch(setEditorView(null));
-			dispatch(setCurrentHeadingID(''));
 		};
 	}, []);
 
@@ -214,6 +212,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 		autoFocus && editorView.focus();
 	}, []);
 
+	const { plugin } = useSelector((state: AppState) => state.contentPage.editor);
 	const onEditorContainerBlur = useCallback(() => {
 		const { insertTooltip, selectionTooltip } = plugin;
 		dispatch(

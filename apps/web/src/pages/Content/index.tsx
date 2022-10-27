@@ -7,10 +7,11 @@ import { AppDispatch, AppState } from '@/app/store';
 import {
 	ContentPageContext,
 	fetchContentPageDataByID,
+	initialState, resetContentPage,
 	setCurrentHeadingID,
 	setEditorState,
 	setInsertTooltip,
-	setSelectionTooltip,
+	setSelectionTooltip
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
@@ -79,6 +80,13 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		if (!currentHeadingID) return;
 		setCurrentHeadingIDSearchParam({ currentHeadingID }, { replace: true });
 	}, [currentHeadingID]);
+
+	// unmount
+	useEffect(() => {
+		return () => {
+			dispatch(resetContentPage(initialState));
+		};
+	}, []);
 
 	if (error) message.error(error.message ?? '');
 

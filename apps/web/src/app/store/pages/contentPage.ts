@@ -45,7 +45,7 @@ interface ContentPageState {
 	error: null | SerializedError;
 }
 
-const initialState: ContentPageState = {
+export const initialState: ContentPageState = {
 	title: '',
 	catalog: {
 		visible: false,
@@ -131,6 +131,14 @@ const ContentPageSlice = createSlice({
 		setEditorState: (state, action) => {
 			state.editor.editorState = action.payload;
 		},
+		resetContentPage: (state, action) => {
+			const { catalog, comment, editor, title, error } = action.payload;
+			state.catalog = catalog;
+			state.comment = comment;
+			state.editor = editor;
+			state.title = title;
+			state.error = error;
+		},
 	},
 	extraReducers(builder) {
 		builder
@@ -140,7 +148,7 @@ const ContentPageSlice = createSlice({
 			.addCase(fetchContentPageDataByID.fulfilled, (state, action) => {
 				state.title = action.payload.title;
 				state.comment.comments = action.payload.comments;
-				const  { content } = action.payload;
+				const { content } = action.payload;
 				const doc = content
 					? ProseMirrorNode.fromJSON(schema, JSON.parse(content))
 					: DOMParser.fromSchema(schema).parse(document.createTextNode(''));
@@ -170,6 +178,7 @@ export const {
 	setSelectionTooltip,
 	setEditorView,
 	setEditorState,
+	resetContentPage,
 } = ContentPageSlice.actions;
 
 export default ContentPageSlice.reducer;

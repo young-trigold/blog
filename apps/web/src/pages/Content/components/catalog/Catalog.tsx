@@ -41,6 +41,7 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
 		bottom: 160px;
 		right: 50%;
 		max-height: 450px;
+		max-width: 350px;
 		transform: translate(50%, 0) ${(props) => (props.catalogVisible ? '' : 'scaleY(0)')};
 		opacity: ${(props) => (props.catalogVisible ? 1 : 0)};
 		background-color: ${(props) => props.theme.foregroundColor};
