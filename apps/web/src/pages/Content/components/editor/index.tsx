@@ -171,6 +171,9 @@ const Editor: React.FC<EditorProps> = (props) => {
 	const { state, onChange, autoFocus, editable } = props;
 	editorViewRef.current?.setProps({
 		state,
+		editable() {
+			return editable;
+		},
 		dispatchTransaction(tr) {
 			onChange?.(tr);
 		},
