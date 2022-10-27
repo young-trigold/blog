@@ -13,10 +13,12 @@ import {
 } from '@/app/store/pages/contentPage';
 import getUniqueID from '@/utils/getUniqueID';
 import px from '@/utils/realPixel';
+import { omit } from 'lodash';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
 import SelectionTooltip from './tooltips/selectionTooltip';
 import getCurrentHeadingID from './utils/getCurrentHeadingID';
+import nodeViews from './nodeViews';
 
 export const EditorContainerId = getUniqueID();
 
@@ -178,6 +180,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 			dispatchTransaction(tr) {
 				initialPropsRef.current.onChange?.(tr);
 			},
+			nodeViews,
 		});
 
 		editorViewRef.current = initialEditorView;
@@ -199,6 +202,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 		dispatchTransaction(tr) {
 			onChange?.(tr);
 		},
+		nodeViews,
 	});
 
 	useEffect(() => {
