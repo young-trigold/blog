@@ -28,7 +28,6 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
 	position: sticky;
 	transition: ${(props) => props.theme.transition};
 	overflow-y: auto;
-	z-index: 3;
 	margin: 0 1em;
 	top: 2em;
 	overscroll-behavior: contain;
