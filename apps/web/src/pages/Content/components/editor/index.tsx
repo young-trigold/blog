@@ -168,20 +168,8 @@ const Editor: React.FC<EditorProps> = (props) => {
 	const dispatch = useDispatch<AppDispatch>();
 	const editorViewRef = useRef<EditorView | null>(null);
 
-	const { state, onChange, autoFocus, editable } = props;
-	editorViewRef.current?.setProps({
-		state,
-		editable() {
-			return editable;
-		},
-		dispatchTransaction(tr) {
-			onChange?.(tr);
-		},
-	});
-
-	// ============================== 初始化 editorView ===============================
 	useEffect(() => {
-		//  ==================== editor view
+		// ============================== 初始化 editorView ===============================
 		const initialEditorView = new EditorView(editorContainerRef.current, {
 			state: initialPropsRef.current.state,
 			editable() {
@@ -194,17 +182,27 @@ const Editor: React.FC<EditorProps> = (props) => {
 
 		editorViewRef.current = initialEditorView;
 		dispatch(setEditorView(initialEditorView));
-		dispatch(setCurrentHeadingID(getCurrentHeadingID(editorContainerRef.current!)));
+		dispatch(setCurrentHeadingID(getCurrentHeadingID(initialEditorView.dom.parentElement!)));
 
 		return () => {
 			initialEditorView.destroy();
 		};
 	}, []);
 
+	// 更新 editor props
+	const { state, onChange, autoFocus, editable } = props;
+	editorViewRef.current?.setProps({
+		state,
+		editable() {
+			return editable;
+		},
+		dispatchTransaction(tr) {
+			onChange?.(tr);
+		},
+	});
+
 	useEffect(() => {
-		const { current: editorView } = editorViewRef;
-		if (!editorView) return;
-		autoFocus && editorView.focus();
+		autoFocus && editorViewRef.current?.focus();
 	}, []);
 
 	const { plugin } = useSelector((state: AppState) => state.contentPage.editor);
