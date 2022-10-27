@@ -1,11 +1,11 @@
-import { AppDispatch, AppState } from "@/app/store";
-import { setInsertLinkModalVisible } from "@/app/store/modals";
-import { Button, ButtonBar } from "@/components/Button";
-import Input from "@/components/Input";
-import { message } from "@/components/Message";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { AppDispatch, AppState } from '@/app/store';
+import { setInsertLinkModalVisible } from '@/app/store/modals';
+import { setEditorState } from '@/app/store/pages/contentPage';
+import { Button, ButtonBar } from '@/components/Button';
+import Input from '@/components/Input';
+import { message } from '@/components/Message';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const InsertLinkForm = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -19,7 +19,6 @@ const InsertLinkForm = () => {
 
 	const [link, setLink] = useState('');
 
-
 	const handleLinkChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
 		const { value } = event.target;
 		setLink(value);
@@ -31,16 +30,17 @@ const InsertLinkForm = () => {
 		dispatch(setInsertLinkModalVisible(false));
 	}, [setInsertLinkModalVisible]);
 
-	const { editorView } = useSelector((state: AppState) => state.contentPage.editor);
+	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
 
 	const handleOK = useCallback(() => {
-		if (!editorView) return;
+		if (!editorState) return;
 		const attrs = { title, href: link };
-		const { schema } = editorView.state;
+		const { schema } = editorState;
 		const node = schema.text(attrs.title, [schema.marks.link.create(attrs)]);
-		editorView.dispatch(editorView.state.tr.replaceSelectionWith(node, false));
+		const newEditorState = editorState.apply(editorState.tr.replaceSelectionWith(node, false));
+		dispatch(setEditorState(newEditorState));
 		dispatch(setInsertLinkModalVisible(false));
-	}, [editorView, setInsertLinkModalVisible]);
+	}, [editorState, setInsertLinkModalVisible, link, title]);
 
 	const disabled = useMemo(() => {
 		let pass = true;
@@ -56,12 +56,7 @@ const InsertLinkForm = () => {
 			const { key } = event;
 			if (key === 'Enter') {
 				if (disabled) return message.warn('所填字段不满足要求');
-				if (!editorView) return;
-				const attrs = { title, href: link };
-				const { schema } = editorView.state;
-				const node = schema.text(attrs.title, [schema.marks.link.create(attrs)]);
-				editorView.dispatch(editorView.state.tr.replaceSelectionWith(node, false));
-				dispatch(setInsertLinkModalVisible(false));
+				handleOK();
 			}
 		};
 
