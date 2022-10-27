@@ -56,13 +56,13 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 	// =============================== heading ===============================
 	const { catalog, editor } = useSelector((state: AppState) => state.contentPage);
 	const { headings } = catalog;
-	const { editorView } = editor;
+	const { editorState } = editor;
 
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (!editorView) return;
-		const { doc } = editorView.state;
+		if (!editorState) return;
+		const { doc } = editorState;
 		const currentHeadings: HeadingInfo[] = [];
 
 		doc.descendants((node) => {
@@ -75,7 +75,7 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 		if (!new window.URL(window.location.href).searchParams.get('currentHeadingID')) {
 			dispatch(setCurrentHeadingID(currentHeadings[0]?.headingID));
 		}
-	}, [editorView?.state.doc]);
+	}, [editorState]);
 
 	return (
 		<StyledCatalog catalogVisible={catalogVisible}>

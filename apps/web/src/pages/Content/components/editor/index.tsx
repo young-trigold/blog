@@ -1,4 +1,3 @@
-import { DOMParser, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { memo, useCallback, useEffect, useRef } from 'react';
@@ -14,13 +13,9 @@ import {
 } from '@/app/store/pages/contentPage';
 import getUniqueID from '@/utils/getUniqueID';
 import px from '@/utils/realPixel';
-import nodeViews from './nodeViews';
-import plugins from './plugins';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
 import SelectionTooltip from './tooltips/selectionTooltip';
-import schema from './schema';
-import addHeadingID from './utils/addHeadingID';
 import getCurrentHeadingID from './utils/getCurrentHeadingID';
 
 export const EditorContainerId = getUniqueID();
@@ -152,86 +147,59 @@ const EditorContainer = styled.article`
 	}
 `;
 
+type ExtensionNames = 'bold' | 'italic';
+
+type Extensions = {
+	[K in ExtensionNames]?: boolean;
+};
+
 interface EditorProps {
-	content: string | undefined;
+	state: EditorState;
 	editable: boolean;
 	autoFocus?: boolean;
+	onChange?: (transaction: Transaction) => void;
+	extensions?: Extensions;
 }
 
 const Editor: React.FC<EditorProps> = (props) => {
-	const { content, editable, autoFocus = true } = props;
+	const initialPropsRef = useRef(props);
+
 	const editorContainerRef = useRef<HTMLDivElement>(null);
 
 	const { plugin } = useSelector((state: AppState) => state.contentPage.editor);
 	const dispatch = useDispatch<AppDispatch>();
 	const editorViewRef = useRef<EditorView | null>(null);
 
-	// 更新插件 state
-	const updateTooltipPluginState = useCallback((view: EditorView) => {
-		// 更新 insert tooltip
-		const { selection } = view.state;
-		const { $head, empty } = selection;
-		const { nodeAfter, nodeBefore } = $head;
-		const canInsertBlock = nodeAfter === null || nodeBefore === null;
-		const cursorPositionToViewPort = view.coordsAtPos($head.pos);
-		const editorContainerPositionToViewPort = editorContainerRef.current!.getBoundingClientRect();
-		dispatch(
-			setInsertTooltip({
-				visible: empty,
-				canInsertBlock,
-				position: {
-					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-					bottom: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
-				},
-			}),
-		);
+	const { state, ...restProps } = props;
+	editorViewRef.current?.updateState(state);
+	editorViewRef.current?.setProps({
+		...restProps,
+		editable() {
+			return restProps.editable;
+		},
+		dispatchTransaction(tr) {
+			restProps.onChange?.(tr);
+		},
+	});
 
-		dispatch(
-			setSelectionTooltip({
-				visible: !empty,
-				position: {
-					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-					top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
-				},
-			}),
-		);
-	}, []);
+	const { autoFocus, editable } = props;
 
-	// ==================== 处理每次用户和 editor 的交互 transaction 回调
-	const dispatchTransaction = (transaction: Transaction) => {
-		const { current: editorView } = editorViewRef;
-		if (!editorView) return;
-		// 加 heading id
-		const newEditorState = addHeadingID(editorView.state, transaction);
-		editorView.updateState(newEditorState);
-		updateTooltipPluginState(editorView);
-	};
-
-	// =============================== 初始化 editorView ===============================
+	// ============================== 初始化 editorView ===============================
 	useEffect(() => {
-		//  ==================== editor state
-		const doc = content
-			? ProseMirrorNode.fromJSON(schema, JSON.parse(content))
-			: DOMParser.fromSchema(schema).parse(document.createTextNode(''));
-
-		const state = EditorState.create({
-			schema,
-			doc,
-			plugins,
-		});
-
 		//  ==================== editor view
 		const initialEditorView = new EditorView(editorContainerRef.current, {
-			state,
-			nodeViews,
-			editable: () => editable,
-			dispatchTransaction,
+			state: initialPropsRef.current.state,
+			editable() {
+				return initialPropsRef.current.editable;
+			},
+			dispatchTransaction(tr) {
+				initialPropsRef.current.onChange?.(tr);
+			},
 		});
 
 		editorViewRef.current = initialEditorView;
 		dispatch(setEditorView(initialEditorView));
 		dispatch(setCurrentHeadingID(getCurrentHeadingID(editorContainerRef.current!)));
-		autoFocus && updateTooltipPluginState(initialEditorView);
 
 		return () => {
 			initialEditorView.destroy();
@@ -263,11 +231,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 	}, [plugin]);
 
 	return (
-		<EditorContainer
-			ref={editorContainerRef}
-			id={EditorContainerId}
-			onBlur={onEditorContainerBlur}
-		>
+		<EditorContainer ref={editorContainerRef} id={EditorContainerId} onBlur={onEditorContainerBlur}>
 			{editable && (
 				<>
 					<InsertTooltip />

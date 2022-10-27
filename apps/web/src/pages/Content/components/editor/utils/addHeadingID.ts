@@ -3,8 +3,8 @@ import getUniqueID from '@/utils/getUniqueID';
 import schema from '../schema';
 
 // 给 heading node 加上 id
-const addHeadingID = (editorState: EditorState, transaction: Transaction) => {
-  let tr = transaction;
+const addHeadingID = (editorState: EditorState) => {
+  let tr = editorState.tr;
 
   editorState.doc.descendants((node, position) => {
     if (node.type !== schema.nodes.heading) return;

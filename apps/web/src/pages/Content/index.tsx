@@ -8,10 +8,14 @@ import {
 	ContentPageContext,
 	fetchContentPageDataByID,
 	setCurrentHeadingID,
+	setEditorState,
+	setInsertTooltip,
+	setSelectionTooltip,
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
+import { Transaction } from 'prosemirror-state';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ActionBar from './components/ActionBar';
@@ -19,6 +23,7 @@ import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';
 import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
+import addHeadingID from './components/editor/utils/addHeadingID';
 import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';
 
 const StyledContentPage = styled.div`
@@ -35,7 +40,7 @@ const MainContainer = styled.main`
 	align-items: flex-start;
 `;
 
-export interface ContentPageProps {
+interface ContentPageProps {
 	isChapter: boolean;
 	editable: boolean;
 }
@@ -54,7 +59,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		(state: AppState) => state.contentPage,
 	);
 	useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${title}`, [title]);
-	const { content } = editor;
 	const { currentHeadingID } = catalog;
 
 	const [currentHeadingIDSearchParam, setCurrentHeadingIDSearchParam] = useSearchParams();
@@ -75,10 +79,45 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		if (!currentHeadingID) return;
 		setCurrentHeadingIDSearchParam({ currentHeadingID }, { replace: true });
 	}, [currentHeadingID]);
-	const initialContentPageContext = useMemo(() => ({ editable, isChapter }), [editable, isChapter]);
 
 	if (error) message.error(error.message ?? '');
-	if (loading) return <LoadingIndicator />;
+
+	const onChange = (tr: Transaction) => {
+		const { editorView } = editor;
+		if (!editorView) return;
+		const newState = addHeadingID(editorView.state.apply(tr));
+		// 更新 insert tooltip
+		const { selection } = newState;
+		const { $head, empty } = selection;
+		const { nodeAfter, nodeBefore } = $head;
+		const canInsertBlock = nodeAfter === null || nodeBefore === null;
+		const cursorPositionToViewPort = editorView.coordsAtPos($head.pos);
+		const editorContainerPositionToViewPort = editorView.dom.parentElement!.getBoundingClientRect();
+		dispatch(
+			setInsertTooltip({
+				visible: empty,
+				canInsertBlock,
+				position: {
+					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+					bottom: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
+				},
+			}),
+		);
+
+		dispatch(
+			setSelectionTooltip({
+				visible: !empty,
+				position: {
+					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+					top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
+				},
+			}),
+		);
+		dispatch(setEditorState(newState));
+	};
+
+	const initialContentPageContext = useMemo(() => ({ editable, isChapter }), [editable, isChapter]);
+	if (loading || !editor.editorState) return <LoadingIndicator />;
 
 	return (
 		<ContentPageContext.Provider value={initialContentPageContext}>
@@ -87,7 +126,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						<Editor content={content} editable={editable} autoFocus />
+						<Editor state={editor.editorState} editable={editable} onChange={onChange} autoFocus />
 						<CommentList />
 						{editable && <ActionBar />}
 						<CatalogButton />

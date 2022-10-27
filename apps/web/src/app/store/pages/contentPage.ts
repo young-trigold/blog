@@ -1,7 +1,11 @@
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { DOMParser, Node as ProseMirrorNode } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { createContext } from 'react';
+import plugins from '../../../pages/content/components/editor/plugins';
+import schema from '../../../pages/content/components/editor/schema';
 
 import { HeadingInfo } from '../../../pages/content/components/catalog/Catalog';
 import { CommentInfo } from '../../../pages/content/components/comment/CommentList';
@@ -23,8 +27,8 @@ interface ContentPageState {
 		comments: CommentInfo[];
 	};
 	editor: {
+		editorState: EditorState | null;
 		editorView: EditorView | null;
-		content: string | undefined;
 		plugin: {
 			insertTooltip: {
 				visible: boolean;
@@ -54,7 +58,7 @@ const initialState: ContentPageState = {
 	},
 	editor: {
 		editorView: null,
-		content: '',
+		editorState: null,
 		plugin: {
 			insertTooltip: {
 				visible: false,
@@ -124,6 +128,9 @@ const ContentPageSlice = createSlice({
 		setEditorView: (state, action) => {
 			state.editor.editorView = action.payload;
 		},
+		setEditorState: (state, action) => {
+			state.editor.editorState = action.payload;
+		},
 	},
 	extraReducers(builder) {
 		builder
@@ -131,10 +138,20 @@ const ContentPageSlice = createSlice({
 				state.loading = true;
 			})
 			.addCase(fetchContentPageDataByID.fulfilled, (state, action) => {
-				state.loading = false;
 				state.title = action.payload.title;
 				state.comment.comments = action.payload.comments;
-				state.editor.content = action.payload.content;
+				const  { content } = action.payload;
+				const doc = content
+					? ProseMirrorNode.fromJSON(schema, JSON.parse(content))
+					: DOMParser.fromSchema(schema).parse(document.createTextNode(''));
+				const initialEditorState = EditorState.create({
+					schema,
+					doc,
+					plugins,
+				});
+
+				state.editor.editorState = initialEditorState as any;
+				state.loading = false;
 			})
 			.addCase(fetchContentPageDataByID.rejected, (state, action) => {
 				state.loading = false;
@@ -152,6 +169,7 @@ export const {
 	setInsertTooltip,
 	setSelectionTooltip,
 	setEditorView,
+	setEditorState,
 } = ContentPageSlice.actions;
 
 export default ContentPageSlice.reducer;
