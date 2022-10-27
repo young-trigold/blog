@@ -10,24 +10,22 @@ import axios from 'axios';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-const StyledTogglePwdVisibleButton = styled.button`
-	background-color: transparent;
-	padding: 0;
+export const StyledPasswordButton = styled.div`
+	background-color: ${(props) => props.theme.surfaceColor};
 	position: absolute;
-	width: 16px;
-	height: 16px;
-	border-radius: 4px;
+	width: 20px;
+	height: 20px;
+	padding: 2px;
+	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	top: 0.5em;
+  top: 4px;
 	right: 1em;
-	border: none;
-	cursor: pointer;
+  transition: ${(props) => props.theme.transition};
 
-	&:hover,
-	&:active {
-		background-color: ${(props) => props.theme.surfaceColor};
+	&:hover {
+		background-color: ${(props) => props.theme.foregroundColor};
 	}
 `;
 
@@ -45,13 +43,21 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 
 	const [formState, setFormState] = useState(initialFormState);
 
-	const togglePwdVisible = useCallback(() => {
+	const showPassword = useCallback(() => {
 		const newFormState = {
 			name: formState.name,
-			password: { visible: !formState.password.visible, value: formState.password.value },
+			password: { visible: true, value: formState.password.value },
 		};
 		setFormState(newFormState);
-	}, [setFormState, formState.password.visible, formState.password.value, formState.name]);
+	}, [formState.password.visible, formState.password.value, formState.name]);
+
+	const hidePassword = useCallback(() => {
+		const newFormState = {
+			name: formState.name,
+			password: { visible: false, value: formState.password.value },
+		};
+		setFormState(newFormState);
+	}, [formState.password.visible, formState.password.value, formState.name]);
 
 	const handleNameChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
 		(event) => {
@@ -61,7 +67,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 			};
 			setFormState(newFormState);
 		},
-		[setFormState, formState.password.value, formState.password.visible],
+		[formState.password.value, formState.password.visible],
 	);
 
 	const handlePwdChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -72,12 +78,12 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 			};
 			setFormState(newFormState);
 		},
-		[setFormState, formState.password.visible, formState.name],
+		[formState.password.visible, formState.name],
 	);
 
 	const toggleLogging: React.MouseEventHandler<HTMLButtonElement> = useCallback(() => {
 		setLogging(false);
-	}, [setLogging]);
+	}, []);
 
 	const login = useCallback(async () => {
 		try {
@@ -171,9 +177,9 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 					onChange={handlePwdChange}
 					style={{ marginBottom: '1em' }}
 				/>
-				<StyledTogglePwdVisibleButton type="button" onClick={togglePwdVisible}>
+				<StyledPasswordButton onMouseEnter={showPassword} onMouseLeave={hidePassword}>
 					<img alt="眼睛开合" src={formState.password.visible ? EyeOpen : EyeClose} width="16" />
-				</StyledTogglePwdVisibleButton>
+				</StyledPasswordButton>
 			</div>
 			<ButtonBar>
 				<Button tabIndex={4} onClick={toggleLogging}>
