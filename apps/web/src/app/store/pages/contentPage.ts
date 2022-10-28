@@ -27,6 +27,7 @@ interface ContentPageState {
 		comments: CommentInfo[];
 	};
 	editor: {
+		editorContent: string;
 		editorState: EditorState | null;
 		editorView: EditorView | null;
 		plugin: {
@@ -57,6 +58,7 @@ export const initialState: ContentPageState = {
 		comments: [],
 	},
 	editor: {
+		editorContent: '',
 		editorView: null,
 		editorState: null,
 		plugin: {
@@ -128,8 +130,12 @@ const ContentPageSlice = createSlice({
 		setEditorView: (state, action) => {
 			state.editor.editorView = action.payload;
 		},
+		setEditorContent: (state, action) => {
+			state.editor.editorContent = action.payload;
+		},
 		setEditorState: (state, action) => {
 			state.editor.editorState = action.payload;
+			state.editor.editorContent = JSON.stringify(action.payload.doc.toJSON());
 		},
 		resetContentPage: (state, action) => {
 			const { catalog, comment, editor, title, error } = action.payload;
@@ -148,17 +154,7 @@ const ContentPageSlice = createSlice({
 			.addCase(fetchContentPageDataByID.fulfilled, (state, action) => {
 				state.title = action.payload.title;
 				state.comment.comments = action.payload.comments;
-				const { content } = action.payload;
-				const doc = content
-					? ProseMirrorNode.fromJSON(schema, JSON.parse(content))
-					: DOMParser.fromSchema(schema).parse(document.createTextNode(''));
-				const initialEditorState = EditorState.create({
-					schema,
-					doc,
-					plugins,
-				});
-
-				state.editor.editorState = initialEditorState as any;
+				state.editor.editorContent = action.payload.content;
 				state.loading = false;
 			})
 			.addCase(fetchContentPageDataByID.rejected, (state, action) => {
@@ -177,6 +173,7 @@ export const {
 	setInsertTooltip,
 	setSelectionTooltip,
 	setEditorView,
+	setEditorContent,
 	setEditorState,
 	resetContentPage,
 } = ContentPageSlice.actions;

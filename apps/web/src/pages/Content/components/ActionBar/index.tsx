@@ -21,6 +21,7 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 	const { editorView } = useSelector((state: AppState) => state.contentPage.editor);
 	const { hasLogin, info } = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
+
 	const handlePublish = () => {
 		if (!hasLogin)  {
       dispatch(setLoginModalVisible(true));
@@ -61,7 +62,6 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 	};
 
 	const navigate = useNavigate();
-
 	const handleCancel = () => {
 		navigate(`/${isChapter ? 'chapters' : 'articles'}/${itemID}`);
 	};

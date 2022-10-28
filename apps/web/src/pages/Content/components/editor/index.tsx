@@ -1,5 +1,5 @@
 import { EditorState, Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { DirectEditorProps, EditorView, NodeViewConstructor } from 'prosemirror-view';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -13,12 +13,10 @@ import {
 } from '@/app/store/pages/contentPage';
 import getUniqueID from '@/utils/getUniqueID';
 import px from '@/utils/realPixel';
-import { omit } from 'lodash';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
 import SelectionTooltip from './tooltips/selectionTooltip';
 import getCurrentHeadingID from './utils/getCurrentHeadingID';
-import nodeViews from './nodeViews';
 
 export const EditorContainerId = getUniqueID();
 
@@ -160,8 +158,25 @@ interface EditorProps {
 	editable: boolean;
 	autoFocus?: boolean;
 	onChange?: (transaction: Transaction) => void;
-	extensions?: Extensions;
+	nodeViews?: {
+		[node: string]: NodeViewConstructor;
+	};
 }
+
+const transformProps = (originProps: EditorProps): DirectEditorProps => {
+	const { state, editable, nodeViews, onChange } = originProps;
+
+	return {
+		editable() {
+			return editable;
+		},
+		dispatchTransaction(tr) {
+			onChange?.(tr);
+		},
+		state,
+		nodeViews,
+	};
+};
 
 const Editor: React.FC<EditorProps> = (props) => {
 	const initialPropsRef = useRef(props);
@@ -172,16 +187,10 @@ const Editor: React.FC<EditorProps> = (props) => {
 
 	useEffect(() => {
 		// ============================== 初始化 editorView ===============================
-		const initialEditorView = new EditorView(editorContainerRef.current, {
-			state: initialPropsRef.current.state,
-			editable() {
-				return initialPropsRef.current.editable;
-			},
-			dispatchTransaction(tr) {
-				initialPropsRef.current.onChange?.(tr);
-			},
-			nodeViews,
-		});
+		const initialEditorView = new EditorView(
+			editorContainerRef.current,
+			transformProps(initialPropsRef.current),
+		);
 
 		editorViewRef.current = initialEditorView;
 		dispatch(setEditorView(initialEditorView));
@@ -193,18 +202,9 @@ const Editor: React.FC<EditorProps> = (props) => {
 	}, []);
 
 	// 更新 editor props
-	const { state, onChange, autoFocus, editable } = props;
-	editorViewRef.current?.setProps({
-		state,
-		editable() {
-			return editable;
-		},
-		dispatchTransaction(tr) {
-			onChange?.(tr);
-		},
-		nodeViews,
-	});
+	editorViewRef.current?.setProps(transformProps(props));
 
+	const { autoFocus, editable } = props;
 	useEffect(() => {
 		autoFocus && editorViewRef.current?.focus();
 	}, []);
