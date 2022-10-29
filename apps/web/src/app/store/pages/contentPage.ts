@@ -1,18 +1,20 @@
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { DOMParser, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { createContext } from 'react';
-import plugins from '../../../pages/content/components/editor/plugins';
-import schema from '../../../pages/content/components/editor/schema';
+import React, { createContext } from 'react';
 
 import { HeadingInfo } from '../../../pages/content/components/catalog/Catalog';
 import { CommentInfo } from '../../../pages/content/components/comment/CommentList';
 
-export const ContentPageContext = createContext({
+export const ContentPageContext = createContext<{
+	editable: boolean;
+	isChapter: boolean;
+	editorViewRef: React.MutableRefObject<EditorView | null>;
+}>({
 	editable: false,
 	isChapter: false,
+	editorViewRef: React.createRef(),
 });
 
 interface ContentPageState {
@@ -29,7 +31,6 @@ interface ContentPageState {
 	editor: {
 		editorContent: string;
 		editorState: EditorState | null;
-		editorView: EditorView | null;
 		plugin: {
 			insertTooltip: {
 				visible: boolean;
@@ -59,7 +60,6 @@ export const initialState: ContentPageState = {
 	},
 	editor: {
 		editorContent: '',
-		editorView: null,
 		editorState: null,
 		plugin: {
 			insertTooltip: {
@@ -127,15 +127,11 @@ const ContentPageSlice = createSlice({
 		setSelectionTooltip: (state, action) => {
 			state.editor.plugin.selectionTooltip = action.payload;
 		},
-		setEditorView: (state, action) => {
-			state.editor.editorView = action.payload;
-		},
 		setEditorContent: (state, action) => {
 			state.editor.editorContent = action.payload;
 		},
 		setEditorState: (state, action) => {
 			state.editor.editorState = action.payload;
-			state.editor.editorContent = JSON.stringify(action.payload.doc.toJSON());
 		},
 		resetContentPage: (state, action) => {
 			const { catalog, comment, editor, title, error } = action.payload;
@@ -172,7 +168,6 @@ export const {
 	setCurrentHeadingID,
 	setInsertTooltip,
 	setSelectionTooltip,
-	setEditorView,
 	setEditorContent,
 	setEditorState,
 	resetContentPage,

@@ -1,5 +1,5 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
-import React, { memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useContext, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -19,6 +19,7 @@ import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ActionBar from './components/ActionBar';
@@ -60,22 +61,18 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const { loading, editor, error, catalog, title } = useSelector(
 		(state: AppState) => state.contentPage,
 	);
+	const editorViewRef = useRef<EditorView | null>(null);
+	const initialContentPageContext = useMemo(
+		() => ({ editable, isChapter, editorViewRef }),
+		[editable, isChapter, editorViewRef],
+	);
+	if (error) message.error(error.message ?? '');
 	useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${title}`, [title]);
 
 	useEffect(() => {
 		dispatch(fetchContentPageDataByID({ itemID, isChapter }));
 	}, [itemID, isChapter, fetchContentPageDataByID]);
 
-	useEffect(() => {
-		if (!editor.editorContent) return;
-		const doc = ProseMirrorNode.fromJSON(schema, JSON.parse(editor.editorContent));
-		const editorState = EditorState.create({
-			schema,
-			doc,
-			plugins,
-		});
-		dispatch(setEditorState(editorState));
-	}, [loading]);
 	const [currentHeadingIDSearchParam, setCurrentHeadingIDSearchParam] = useSearchParams();
 	const isFirstRef = useRef(true);
 	useEffect(() => {
@@ -103,9 +100,10 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	}, []);
 
 	const onChange = (tr: Transaction) => {
-		const { editorView } = editor;
-		if (!editorView) return;
-		const newState = addHeadingID(editorView.state.apply(tr));
+		const { current: editorView } = editorViewRef;
+		const { editorState } = editor;
+		if (!editorView || !editorState) return;
+		const newState = addHeadingID(editorState.apply(tr));
 		// 更新 insert tooltip
 		const { selection } = newState;
 		const { $head, empty } = selection;
@@ -136,10 +134,19 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		dispatch(setEditorState(newState));
 	};
 
-	const initialContentPageContext = useMemo(() => ({ editable, isChapter }), [editable, isChapter]);
-	if (error) message.error(error.message ?? '');
-	if (loading) return <LoadingIndicator />;
+	useEffect(() => {
+		if (!editor.editorContent) return;
+		const doc = ProseMirrorNode.fromJSON(schema, JSON.parse(editor.editorContent));
+		const initialEditorState = EditorState.create({
+			schema,
+			doc,
+			plugins,
+		});
+		dispatch(setEditorState(initialEditorState));
+	}, [loading]);
 
+	const { editorState } = editor;
+	if (loading) return <LoadingIndicator />;
 	return (
 		<ContentPageContext.Provider value={initialContentPageContext}>
 			<StyledContentPage>
@@ -147,9 +154,9 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						{editor.editorState && (
+						{editorState && (
 							<Editor
-								state={editor.editorState}
+								state={editorState}
 								nodeViews={nodeViews}
 								editable={editable}
 								onChange={onChange}
