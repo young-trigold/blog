@@ -2,17 +2,19 @@ import { AppState } from '@/app/store';
 import { Button } from '@/components/Button';
 import Input from '@/components/Input';
 import TextArea from '@/components/Input/TextArea';
+import { message } from '@/components/Message';
 import DefaultAvatarSrc from '@/static/icon/default-avatar.png';
+import axios from 'axios';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const StyledUserInfoPanel = styled.form`
 	padding: 1em;
-  margin: 2em auto;
-  max-width: 400px;
-  background-color: ${(props) => props.theme.foregroundColor};
-  border-radius: 6.4px;
+	margin: 2em auto;
+	max-width: 400px;
+	background-color: ${(props) => props.theme.foregroundColor};
+	border-radius: 6.4px;
 `;
 
 const StyledAvatar = styled.figure`
@@ -40,7 +42,19 @@ const UserInfoPanel = () => {
 
 	const onIntroInputChange = () => {};
 
-	const updateUserInfo = () => {};
+	const updateUserInfo = () => {
+		const updateUserById = async () => {
+			await axios.put(`/api/users/${info?.id}`, {
+				name: userInfoFormState.name,
+				introduction: userInfoFormState.introduction,
+			});
+		};
+
+		try {
+			updateUserById();
+			message.success('修改成功!');
+		} catch (error) {}
+	};
 
 	const disabled =
 		userInfoFormState.name === info?.name || userInfoFormState.introduction === info?.introduction;
