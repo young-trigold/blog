@@ -18,9 +18,10 @@ interface ActionBarProps {}
 const ActionBar: React.FC<ActionBarProps> = (props) => {
 	const { itemID } = useParams();
 	const { isChapter } = useContext(ContentPageContext);
-	const { editorView } = useSelector((state: AppState) => state.contentPage.editor);
+	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
 	const { hasLogin, info } = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
+
 	const handlePublish = () => {
 		if (!hasLogin)  {
       dispatch(setLoginModalVisible(true));
@@ -32,14 +33,14 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
       message.warn('权限不足, 请重新登录!');
       return;
     }
-		if (!editorView) return;
+		if (!editorState) return;
 		const user = watchedLocalStorage.getItem<{ token: string }>('user');
 		const updateItem = async () => {
 			try {
 				await axios.put(
 					`/api/${isChapter ? 'notes' : 'articles'}/${itemID}`,
 					{
-						content: JSON.stringify(editorView.state.doc.toJSON()),
+						content: JSON.stringify(editorState.doc.toJSON()),
 					},
 					{
 						headers: {
@@ -61,7 +62,6 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 	};
 
 	const navigate = useNavigate();
-
 	const handleCancel = () => {
 		navigate(`/${isChapter ? 'chapters' : 'articles'}/${itemID}`);
 	};

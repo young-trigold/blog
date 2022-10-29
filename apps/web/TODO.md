@@ -6,17 +6,13 @@
 - extension 可以用以下方式配置化地安装到一个编辑器。
 
 ```tsx
-type Extensions = Record<keyof ExtensionNames, boolean>;
-
 interface EditorProps {
-	extensions: Extensions;
+	extensions: EditorExtension[];
 }
 
-<Editor extensions={
-	bold: true,
-	italic: true,
-	table: false,
-} />
+const extensions = [new BoldExtension(), new ItalicExtension()];
+
+<Editor extensions={extensions} />
 ```
 
 ## 实现

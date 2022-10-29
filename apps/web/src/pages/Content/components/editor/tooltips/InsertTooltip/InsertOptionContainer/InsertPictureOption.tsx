@@ -2,9 +2,11 @@ import axios from 'axios';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 
-import { AppState } from '@/app/store';
+import { AppDispatch, AppState } from '@/app/store';
+import { setEditorState } from '@/app/store/pages/contentPage';
 import { message } from '@/components/Message';
 import PictureIconSrc from '@/static/icon/picture.png';
+import { useDispatch } from 'react-redux';
 import { StyledOption } from '.';
 
 const InsertPictureOption = () => {
@@ -15,12 +17,12 @@ const InsertPictureOption = () => {
 		inputFileRef.current.click();
 	};
 
-	const { editorView } = useSelector((state: AppState) => state.contentPage.editor);
-
+	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
+	const dispatch = useDispatch<AppDispatch>();
 	const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
 		const { files } = event.target;
 		if (!files || files.length === 0) return;
-		if (!editorView) return;
+		if (!editorState) return;
 
 		const uploadImages = async () => {
 			try {
@@ -29,11 +31,11 @@ const InsertPictureOption = () => {
 				const res = await axios.post<{ fileURL: string }>('/api/singleUpload', formData);
 				const { fileURL } = res.data;
 				const attrs = { src: fileURL };
-				const node = editorView.state.schema.nodes.image.create(attrs);
-				let transaction = editorView.state.tr;
-				transaction = transaction.replaceSelectionWith(node, false);
-				editorView.dispatch(transaction);
-        message.success('图片插入成功!');
+				const node = editorState.schema.nodes.image.create(attrs);
+				const transaction = editorState.tr.replaceSelectionWith(node, false);
+				const newState = editorState.apply(transaction);
+				dispatch(setEditorState(newState));
+				message.success('图片插入成功!');
 			} catch (error) {
 				if (axios.isAxiosError(error))
 					return message.error((error.response?.data as { message: string })?.message);

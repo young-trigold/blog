@@ -1,19 +1,32 @@
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { DOMParser, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { createContext } from 'react';
-import plugins from '../../../pages/content/components/editor/plugins';
-import schema from '../../../pages/content/components/editor/schema';
+import React, { createContext } from 'react';
 
 import { HeadingInfo } from '../../../pages/content/components/catalog/Catalog';
 import { CommentInfo } from '../../../pages/content/components/comment/CommentList';
 
-export const ContentPageContext = createContext({
+export const ContentPageContext = createContext<{
+	editable: boolean;
+	isChapter: boolean;
+	editorViewRef: React.MutableRefObject<EditorView | null>;
+}>({
 	editable: false,
 	isChapter: false,
+	editorViewRef: React.createRef(),
 });
+
+export type InsertTooltipState = {
+	visible: boolean;
+	canInsertBlock: boolean;
+	position: Pick<DOMRect, 'left' | 'top'>;
+};
+
+export type SelectionTooltipState = {
+	visible: boolean;
+	position: Pick<DOMRect, 'left' | 'top'>;
+};
 
 interface ContentPageState {
 	title: string;
@@ -27,18 +40,11 @@ interface ContentPageState {
 		comments: CommentInfo[];
 	};
 	editor: {
+		editorContent: string;
 		editorState: EditorState | null;
-		editorView: EditorView | null;
 		plugin: {
-			insertTooltip: {
-				visible: boolean;
-				canInsertBlock: boolean;
-				position: Pick<DOMRect, 'left' | 'bottom'>;
-			};
-			selectionTooltip: {
-				visible: boolean;
-				position: Pick<DOMRect, 'left' | 'top'>;
-			};
+			insertTooltip: InsertTooltipState;
+			selectionTooltip: SelectionTooltipState;
 		};
 	};
 	loading: boolean;
@@ -57,7 +63,7 @@ export const initialState: ContentPageState = {
 		comments: [],
 	},
 	editor: {
-		editorView: null,
+		editorContent: '',
 		editorState: null,
 		plugin: {
 			insertTooltip: {
@@ -65,7 +71,7 @@ export const initialState: ContentPageState = {
 				canInsertBlock: false,
 				position: {
 					left: 0,
-					bottom: 0,
+					top: 0,
 				},
 			},
 			selectionTooltip: {
@@ -107,37 +113,38 @@ const ContentPageSlice = createSlice({
 		toggleCatalogVisible: (state) => {
 			state.catalog.visible = !state.catalog.visible;
 		},
-		setCommentVisible: (state, action) => {
+		setCommentVisible: (state, action: PayloadAction<boolean>) => {
 			state.comment.visible = action.payload;
 		},
-		setComments: (state, action) => {
+		setComments: (state, action: PayloadAction<CommentInfo[]>) => {
 			state.comment.comments = action.payload;
 		},
-		setHeadings: (state, action) => {
+		setHeadings: (state, action: PayloadAction<HeadingInfo[]>) => {
 			state.catalog.headings = action.payload;
 		},
-		setCurrentHeadingID: (state, action) => {
+		setCurrentHeadingID: (state, action: PayloadAction<string>) => {
 			state.catalog.currentHeadingID = action.payload;
 		},
-		setInsertTooltip: (state, action) => {
+		setInsertTooltip: (state, action: PayloadAction<InsertTooltipState>) => {
 			state.editor.plugin.insertTooltip = action.payload;
 		},
-		setSelectionTooltip: (state, action) => {
+		setSelectionTooltip: (state, action: PayloadAction<SelectionTooltipState>) => {
 			state.editor.plugin.selectionTooltip = action.payload;
 		},
-		setEditorView: (state, action) => {
-			state.editor.editorView = action.payload;
+		setEditorContent: (state, action: PayloadAction<string>) => {
+			state.editor.editorContent = action.payload;
 		},
-		setEditorState: (state, action) => {
-			state.editor.editorState = action.payload;
+		setEditorState: (state, action: PayloadAction<EditorState>) => {
+			state.editor.editorState = action.payload as any;
 		},
-		resetContentPage: (state, action) => {
-			const { catalog, comment, editor, title, error } = action.payload;
+		resetContentPage: (state) => {
+			const { catalog, comment, editor, title, error, loading } = initialState;
 			state.catalog = catalog;
 			state.comment = comment;
-			state.editor = editor;
+			state.editor = editor as any;
 			state.title = title;
 			state.error = error;
+			state.loading = loading;
 		},
 	},
 	extraReducers(builder) {
@@ -148,17 +155,7 @@ const ContentPageSlice = createSlice({
 			.addCase(fetchContentPageDataByID.fulfilled, (state, action) => {
 				state.title = action.payload.title;
 				state.comment.comments = action.payload.comments;
-				const { content } = action.payload;
-				const doc = content
-					? ProseMirrorNode.fromJSON(schema, JSON.parse(content))
-					: DOMParser.fromSchema(schema).parse(document.createTextNode(''));
-				const initialEditorState = EditorState.create({
-					schema,
-					doc,
-					plugins,
-				});
-
-				state.editor.editorState = initialEditorState as any;
+				state.editor.editorContent = action.payload.content;
 				state.loading = false;
 			})
 			.addCase(fetchContentPageDataByID.rejected, (state, action) => {
@@ -176,7 +173,7 @@ export const {
 	setCurrentHeadingID,
 	setInsertTooltip,
 	setSelectionTooltip,
-	setEditorView,
+	setEditorContent,
 	setEditorState,
 	resetContentPage,
 } = ContentPageSlice.actions;

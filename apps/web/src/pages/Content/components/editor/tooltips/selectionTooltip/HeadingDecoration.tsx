@@ -1,6 +1,7 @@
-import { AppState } from '@/app/store';
+import store, { AppState } from '@/app/store';
+import { setEditorState } from '@/app/store/pages/contentPage';
 import getUniqueID from '@/utils/getUniqueID';
-import { EditorView } from 'prosemirror-view';
+import { EditorState } from 'prosemirror-state';
 import { memo, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -63,30 +64,31 @@ const StyledSpan = styled.span`
 	}
 `;
 
-const getSetFunctionByLevel = (level: number, editorView: EditorView) => {
+const getSetFunctionByLevel = (level: number, editorState: EditorState | null) => {
 	return () => {
-		if (!editorView) return;
-		const { selection } = editorView.state;
+		if (!editorState) return;
+		const { selection } = editorState;
 
-		const transaction = editorView.state.tr.setBlockType(
+		const transaction = editorState.tr.setBlockType(
 			selection.from,
 			selection.to,
 			schema.nodes.heading,
 			{ level, headingID: getUniqueID() },
 		);
 
-		editorView.dispatch(transaction);
+		const newState = editorState.apply(transaction);
+		store.dispatch(setEditorState(newState));
 	};
 };
 
 const HeadingDecoration = () => {
-	const { editorView } = useSelector((state: AppState) => state.contentPage.editor);
+	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
 	const [styledHeadingOptionContainerVisible, setStyledHeadingOptionContainerVisible] =
 		useState(false);
 
-	const toggleHeadingLevel1 = useCallback(getSetFunctionByLevel(1, editorView!), [editorView]);
-	const toggleHeadingLevel2 = useCallback(getSetFunctionByLevel(2, editorView!), [editorView]);
-	const toggleHeadingLevel3 = useCallback(getSetFunctionByLevel(3, editorView!), [editorView]);
+	const toggleHeadingLevel1 = useCallback(getSetFunctionByLevel(1, editorState), [editorState]);
+	const toggleHeadingLevel2 = useCallback(getSetFunctionByLevel(2, editorState), [editorState]);
+	const toggleHeadingLevel3 = useCallback(getSetFunctionByLevel(3, editorState), [editorState]);
 
 	return (
 		<StyledHeadingDecoration

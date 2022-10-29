@@ -7,19 +7,26 @@ import InsertOptionContainer from './InsertOptionContainer';
 
 interface StyledInsertTooltipProps {
 	visible: boolean;
-	position: Pick<DOMRect, 'left' | 'bottom'>;
+	position: Pick<DOMRect, 'left' | 'top'>;
 }
+
+export const InsertTooltipWidth = 14;
+export const InsertTooltipHeight = 14;
 
 const StyledInsertTooltip = styled.div<StyledInsertTooltipProps>`
 	position: absolute;
+	width: ${() => `${InsertTooltipWidth}px`};
+	height: ${() => `${InsertTooltipHeight}px`};
+	left: 0;
+	top: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	top: ${(props) => `${props.position.bottom}px`};
-	left: ${(props) => `${props.position.left - 7}px`};
-	width: 14px;
-	height: 14px;
+	opacity: ${(props) => (props.visible ? 1 : 0)};
+	visibility: ${(props) => (props.visible ? 'unset' : 'hidden')};
+	transform: ${(props) =>
+		`translate(${props.position.left - InsertTooltipWidth / 2}px, ${props.position.top + 2}px)`};
 	border-radius: 50%;
 	border: 1px solid ${(props) => props.theme.borderColor};
 	box-shadow: 0 0 2px ${(props) => props.theme.shadowColor};
@@ -28,8 +35,6 @@ const StyledInsertTooltip = styled.div<StyledInsertTooltipProps>`
 	transition: ${(props) => props.theme.transition};
 	user-select: none;
 	z-index: 1;
-	opacity: ${(props) => (props.visible ? 1 : 0)};
-	visibility: ${(props) => (props.visible ? 'unset' : 'hidden')};
 `;
 
 interface InsertTooltipProps {}
