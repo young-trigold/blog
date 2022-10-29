@@ -1,9 +1,10 @@
 import { toggleMark } from 'prosemirror-commands';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { AppState } from '@/app/store';
+import { ContentPageContext } from '@/app/store/pages/contentPage';
 import schema from '../../schema';
 import HeadingDecoration from './HeadingDecoration';
 
@@ -12,16 +13,22 @@ interface StyledSelectionTooltipProps {
 	position: Pick<DOMRect, 'left' | 'top'>;
 }
 
+export const SelectionTooltipWidth = 300;
+export const SelectionTooltipHeight = 34;
+
 const StyledSelectionTooltip = styled.div<StyledSelectionTooltipProps>`
 	position: absolute;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	width: 300px;
-	visibility: ${(props) => props.visible ? 'unset' : 'hidden'};
+	width: ${() => `${SelectionTooltipWidth}px`};
+	height: ${() => `${SelectionTooltipHeight}px`};
+	top: 0;
+	left: 0;
+	transform: ${(props) =>
+		`translate(${props.position.left - SelectionTooltipWidth/2}px, ${props.position.top - SelectionTooltipHeight - 4}px)`};
+	visibility: ${(props) => (props.visible ? 'unset' : 'hidden')};
 	opacity: ${(props) => (props.visible ? 1 : 0)};
-	top: ${(props) => `${props.position.top - 38}px`};
-	left: ${(props) => `${props.position.left - 121}px`};
 	border-radius: 6.4px;
 	border: 1px solid ${(props) => props.theme.borderColor};
 	box-shadow: 0 0 6px ${(props) => props.theme.shadowColor};
@@ -63,7 +70,8 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 		(state: AppState) => state.contentPage.editor.plugin.selectionTooltip,
 	);
 
-	const { editorView } = useSelector((state: AppState) => state.contentPage.editor);
+	const { editorViewRef } = useContext(ContentPageContext);
+	const { current: editorView } = editorViewRef;
 
 	const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(
 		(event) => {

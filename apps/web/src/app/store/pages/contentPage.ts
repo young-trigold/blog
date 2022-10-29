@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
@@ -17,6 +17,17 @@ export const ContentPageContext = createContext<{
 	editorViewRef: React.createRef(),
 });
 
+export type InsertTooltipState = {
+	visible: boolean;
+	canInsertBlock: boolean;
+	position: Pick<DOMRect, 'left' | 'top'>;
+};
+
+export type SelectionTooltipState = {
+	visible: boolean;
+	position: Pick<DOMRect, 'left' | 'top'>;
+};
+
 interface ContentPageState {
 	title: string;
 	catalog: {
@@ -32,15 +43,8 @@ interface ContentPageState {
 		editorContent: string;
 		editorState: EditorState | null;
 		plugin: {
-			insertTooltip: {
-				visible: boolean;
-				canInsertBlock: boolean;
-				position: Pick<DOMRect, 'left' | 'bottom'>;
-			};
-			selectionTooltip: {
-				visible: boolean;
-				position: Pick<DOMRect, 'left' | 'top'>;
-			};
+			insertTooltip: InsertTooltipState;
+			selectionTooltip: SelectionTooltipState;
 		};
 	};
 	loading: boolean;
@@ -67,7 +71,7 @@ export const initialState: ContentPageState = {
 				canInsertBlock: false,
 				position: {
 					left: 0,
-					bottom: 0,
+					top: 0,
 				},
 			},
 			selectionTooltip: {
@@ -109,37 +113,38 @@ const ContentPageSlice = createSlice({
 		toggleCatalogVisible: (state) => {
 			state.catalog.visible = !state.catalog.visible;
 		},
-		setCommentVisible: (state, action) => {
+		setCommentVisible: (state, action: PayloadAction<boolean>) => {
 			state.comment.visible = action.payload;
 		},
-		setComments: (state, action) => {
+		setComments: (state, action: PayloadAction<CommentInfo[]>) => {
 			state.comment.comments = action.payload;
 		},
-		setHeadings: (state, action) => {
+		setHeadings: (state, action: PayloadAction<HeadingInfo[]>) => {
 			state.catalog.headings = action.payload;
 		},
-		setCurrentHeadingID: (state, action) => {
+		setCurrentHeadingID: (state, action: PayloadAction<string>) => {
 			state.catalog.currentHeadingID = action.payload;
 		},
-		setInsertTooltip: (state, action) => {
+		setInsertTooltip: (state, action: PayloadAction<InsertTooltipState>) => {
 			state.editor.plugin.insertTooltip = action.payload;
 		},
-		setSelectionTooltip: (state, action) => {
+		setSelectionTooltip: (state, action: PayloadAction<SelectionTooltipState>) => {
 			state.editor.plugin.selectionTooltip = action.payload;
 		},
-		setEditorContent: (state, action) => {
+		setEditorContent: (state, action: PayloadAction<string>) => {
 			state.editor.editorContent = action.payload;
 		},
-		setEditorState: (state, action) => {
-			state.editor.editorState = action.payload;
+		setEditorState: (state, action: PayloadAction<EditorState>) => {
+			state.editor.editorState = action.payload as any;
 		},
-		resetContentPage: (state, action) => {
-			const { catalog, comment, editor, title, error } = action.payload;
+		resetContentPage: (state) => {
+			const { catalog, comment, editor, title, error, loading } = initialState;
 			state.catalog = catalog;
 			state.comment = comment;
-			state.editor = editor;
+			state.editor = editor as any;
 			state.title = title;
 			state.error = error;
+			state.loading = loading;
 		},
 	},
 	extraReducers(builder) {

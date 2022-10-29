@@ -1,5 +1,5 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
-import React, { memo, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,7 +8,6 @@ import { AppDispatch, AppState } from '@/app/store';
 import {
 	ContentPageContext,
 	fetchContentPageDataByID,
-	initialState,
 	resetContentPage,
 	setCurrentHeadingID,
 	setEditorState,
@@ -82,7 +81,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		if (currentHeadingElement) {
 			currentHeadingElement.scrollIntoView();
 			isFirstRef.current = false;
-			dispatch(setCurrentHeadingID(initialHeadingIDFromURL));
+			dispatch(setCurrentHeadingID(initialHeadingIDFromURL!));
 		}
 	});
 
@@ -95,7 +94,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	// unmount
 	useEffect(() => {
 		return () => {
-			dispatch(resetContentPage(initialState));
+			dispatch(resetContentPage());
 		};
 	}, []);
 
@@ -117,7 +116,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				canInsertBlock,
 				position: {
 					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-					bottom: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
+					top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
 				},
 			}),
 		);

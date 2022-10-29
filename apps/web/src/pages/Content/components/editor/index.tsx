@@ -172,7 +172,8 @@ const Editor: React.FC<EditorProps> = (props) => {
 
 		initialPropsRef.current = null;
 		editorViewRef.current = initialEditorView;
-		dispatch(setCurrentHeadingID(getCurrentHeadingID(initialEditorView.dom.parentElement!)));
+		const currentHeadingId = getCurrentHeadingID(editorContainerRef.current!);
+		currentHeadingId && dispatch(setCurrentHeadingID(currentHeadingId));
 
 		return () => {
 			initialEditorView.destroy();

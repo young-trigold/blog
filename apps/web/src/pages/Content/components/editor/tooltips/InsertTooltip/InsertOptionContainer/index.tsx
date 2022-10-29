@@ -14,9 +14,11 @@ const StyledInsertOptionContainer = styled.div<StyledInsertOptionContainerProps>
 	border-radius: 6.4px;
 	box-shadow: 0 0 6px ${(props) => props.theme.shadowColor};
 	background-color: ${(props) => props.theme.foregroundColor};
-	top: ${(props) => `${props.position.bottom}px`};
-	left: ${(props) => `${props.position.left}px`};
+	top: 0;
+	left: 0;
 	width: 150px;
+	transform: ${(props) =>
+		`translate(${props.position.left}px, ${props.position.top}px)`};
 	transition: ${(props) => props.theme.transition};
 	user-select: none;
 `;
