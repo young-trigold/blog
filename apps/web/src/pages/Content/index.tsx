@@ -1,5 +1,5 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
-import React, { memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -61,7 +61,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		(state: AppState) => state.contentPage,
 	);
 	const editorViewRef = useRef<EditorView | null>(null);
-	const initialContentPageContext = useMemo(
+	const contentPageContext = useMemo(
 		() => ({ editable, isChapter, editorViewRef }),
 		[editable, isChapter, editorViewRef],
 	);
@@ -98,40 +98,46 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		};
 	}, []);
 
-	const onChange = (tr: Transaction) => {
-		const { current: editorView } = editorViewRef;
-		const { editorState } = editor;
-		if (!editorView || !editorState) return;
-		const newState = addHeadingID(editorState.apply(tr));
-		// 更新 insert tooltip
-		const { selection } = newState;
-		const { $head, empty } = selection;
-		const { nodeAfter, nodeBefore } = $head;
-		const canInsertBlock = nodeAfter === null || nodeBefore === null;
-		const cursorPositionToViewPort = editorView.coordsAtPos($head.pos);
-		const editorContainerPositionToViewPort = editorView.dom.parentElement!.getBoundingClientRect();
-		dispatch(
-			setInsertTooltip({
-				visible: empty,
-				canInsertBlock,
-				position: {
-					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-					top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
-				},
-			}),
-		);
+	const { editorState } = editor;
+	const onChange = useCallback(
+		(tr: Transaction) => {
+			window.requestAnimationFrame(() => {
+				const { current: editorView } = editorViewRef;
+				if (!editorView || !editorState) return;
+				const newState = addHeadingID(editorState.apply(tr));
+				// 更新 insert tooltip
+				const { selection } = newState;
+				const { $head, empty } = selection;
+				const { nodeAfter, nodeBefore } = $head;
+				const canInsertBlock = nodeAfter === null || nodeBefore === null;
+				const cursorPositionToViewPort = editorView.coordsAtPos($head.pos);
+				const editorContainerPositionToViewPort =
+					editorView.dom.parentElement!.getBoundingClientRect();
+				dispatch(
+					setInsertTooltip({
+						visible: empty,
+						canInsertBlock,
+						position: {
+							left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+							top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
+						},
+					}),
+				);
 
-		dispatch(
-			setSelectionTooltip({
-				visible: !empty,
-				position: {
-					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-					top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
-				},
-			}),
-		);
-		dispatch(setEditorState(newState));
-	};
+				dispatch(
+					setSelectionTooltip({
+						visible: !empty,
+						position: {
+							left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+							top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
+						},
+					}),
+				);
+				dispatch(setEditorState(newState));
+			});
+		},
+		[editorState, editorViewRef, addHeadingID],
+	);
 
 	useEffect(() => {
 		if (!editor.editorContent) return;
@@ -142,12 +148,15 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 			plugins,
 		});
 		dispatch(setEditorState(initialEditorState));
-	}, [loading]);
+	}, [editor.editorContent]);
 
-	const { editorState } = editor;
+	useEffect(() => {
+		console.debug(editorState);
+	}, [editorState]);
+
 	if (loading) return <LoadingIndicator />;
 	return (
-		<ContentPageContext.Provider value={initialContentPageContext}>
+		<ContentPageContext.Provider value={contentPageContext}>
 			<StyledContentPage>
 				<Header />
 				<ContentContainer>
