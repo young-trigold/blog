@@ -99,7 +99,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	}, []);
 
 	const { editorState } = editor;
-	const onChange = useCallback(
+	const dispatchTransaction = useCallback(
 		(tr: Transaction) => {
 			window.requestAnimationFrame(() => {
 				const { current: editorView } = editorViewRef;
@@ -167,7 +167,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 								state={editorState}
 								nodeViews={nodeViews}
 								editable={editable}
-								onChange={onChange}
+								dispatchTransaction={dispatchTransaction}
 								autoFocus
 							/>
 						)}

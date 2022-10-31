@@ -1,5 +1,5 @@
 import { EditorState, Transaction } from 'prosemirror-state';
-import { EditorView, NodeViewConstructor } from 'prosemirror-view';
+import { DirectEditorProps, EditorView, NodeViewConstructor } from 'prosemirror-view';
 import { memo, useCallback, useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -145,14 +145,9 @@ const EditorContainer = styled.article`
 	}
 `;
 
-export interface EditorProps {
-	state: EditorState;
+export interface EditorProps extends Omit<DirectEditorProps, 'editable'> {
 	editable: boolean;
 	autoFocus?: boolean;
-	onChange?: (transaction: Transaction) => void;
-	nodeViews?: {
-		[node: string]: NodeViewConstructor;
-	};
 }
 
 const Editor: React.FC<EditorProps> = (props) => {

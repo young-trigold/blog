@@ -1,18 +1,14 @@
-import { DirectEditorProps } from "prosemirror-view";
-import { EditorProps } from "..";
+import { DirectEditorProps } from 'prosemirror-view';
+import { EditorProps } from '..';
 
 const transformEditorProps = (originProps: EditorProps): DirectEditorProps => {
-	const { state, editable, nodeViews, onChange } = originProps;
+	const { editable, ...restProps } = originProps;
 
 	return {
 		editable() {
 			return editable;
 		},
-		dispatchTransaction(tr) {
-			onChange?.(tr);
-		},
-		state,
-		nodeViews,
+		...restProps,
 	};
 };
 
