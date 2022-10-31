@@ -150,10 +150,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		dispatch(setEditorState(initialEditorState));
 	}, [editor.editorContent]);
 
-	useEffect(() => {
-		console.debug(editorState);
-	}, [editorState]);
-
 	if (loading) return <LoadingIndicator />;
 	return (
 		<ContentPageContext.Provider value={contentPageContext}>
