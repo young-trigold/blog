@@ -96,6 +96,11 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const ref = useRef<{ view: EditorView | null }>({ view: null });
 	const [state, setState] = useState<EditorState | null>(null);
 
+	const { editorState } = editor;
+	useEffect(() => {
+		editorState && setState(editorState);
+	}, [editorState]);
+
 	const onChange = useCallback(
 		(tr: Transaction, state: EditorState) => {
 			window.requestAnimationFrame(() => {
