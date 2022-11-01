@@ -1,17 +1,16 @@
-import { EditorState, Transaction } from 'prosemirror-state';
-import { DirectEditorProps, EditorView, NodeViewConstructor } from 'prosemirror-view';
-import { memo, useCallback, useContext, useEffect, useRef } from 'react';
+import { DirectEditorProps, EditorView } from 'prosemirror-view';
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { AppDispatch, AppState } from '@/app/store';
 import {
-	ContentPageContext,
 	setCurrentHeadingID,
 	setInsertTooltip,
 	setSelectionTooltip,
 } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
+import { EditorState, Transaction } from 'prosemirror-state';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
 import SelectionTooltip from './tooltips/selectionTooltip';
@@ -145,19 +144,21 @@ const EditorContainer = styled.article`
 	}
 `;
 
-export interface EditorProps extends Omit<DirectEditorProps, 'editable'> {
+export interface EditorProps extends Omit<DirectEditorProps, 'editable' | 'dispatchTransaction'> {
 	editable: boolean;
 	autoFocus?: boolean;
+	onChange?: (tr: Transaction, state: EditorState) => void;
 }
 
-const Editor: React.FC<EditorProps> = (props) => {
+const Editor = forwardRef<{ view: EditorView | null }, EditorProps>((props, ref) => {
 	const initialPropsRef = useRef<EditorProps | null>(props);
-	const { editorViewRef } = useContext(ContentPageContext);
+	const editorViewRef = useRef<EditorView | null>(null);
 	// 更新 editor props
 	editorViewRef.current?.setProps(transformEditorProps(props));
 
 	const editorContainerRef = useRef<HTMLDivElement>(null);
 	const dispatch = useDispatch<AppDispatch>();
+
 	useEffect(() => {
 		// ============================== 初始化 editorView ===============================
 		const initialEditorView = new EditorView(
@@ -174,6 +175,12 @@ const Editor: React.FC<EditorProps> = (props) => {
 			initialEditorView.destroy();
 		};
 	}, []);
+
+	useImperativeHandle(ref, () => ({
+		get view() {
+			return editorViewRef.current;
+		},
+	}));
 
 	const { autoFocus, editable } = props;
 	useEffect(() => {
@@ -208,6 +215,6 @@ const Editor: React.FC<EditorProps> = (props) => {
 			{!editable && <SelectionCommentTooltip />}
 		</EditorContainer>
 	);
-};
+});
 
 export default memo(Editor);

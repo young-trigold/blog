@@ -70,8 +70,7 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 		(state: AppState) => state.contentPage.editor.plugin.selectionTooltip,
 	);
 
-	const { editorViewRef } = useContext(ContentPageContext);
-	const { current: editorView } = editorViewRef;
+	const { editorView } = useContext(ContentPageContext);
 
 	const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(
 		(event) => {

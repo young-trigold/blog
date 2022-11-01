@@ -1,5 +1,5 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -60,11 +60,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const { loading, editor, error, catalog, title } = useSelector(
 		(state: AppState) => state.contentPage,
 	);
-	const editorViewRef = useRef<EditorView | null>(null);
-	const contentPageContext = useMemo(
-		() => ({ editable, isChapter, editorViewRef }),
-		[editable, isChapter, editorViewRef],
-	);
 	if (error) message.error(error.message ?? '');
 	useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${title}`, [title]);
 
@@ -98,21 +93,22 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		};
 	}, []);
 
-	const { editorState } = editor;
-	const dispatchTransaction = useCallback(
-		(tr: Transaction) => {
+	const ref = useRef<{ view: EditorView | null }>({ view: null });
+	const [state, setState] = useState<EditorState | null>(null);
+
+	const onChange = useCallback(
+		(tr: Transaction, state: EditorState) => {
 			window.requestAnimationFrame(() => {
-				const { current: editorView } = editorViewRef;
-				if (!editorView || !editorState) return;
-				const newState = addHeadingID(editorState.apply(tr));
+				const { view } = ref.current;
+				if (!view || !state) return;
+				const newState = addHeadingID(state.apply(tr));
 				// 更新 insert tooltip
 				const { selection } = newState;
 				const { $head, empty } = selection;
 				const { nodeAfter, nodeBefore } = $head;
 				const canInsertBlock = nodeAfter === null || nodeBefore === null;
-				const cursorPositionToViewPort = editorView.coordsAtPos($head.pos);
-				const editorContainerPositionToViewPort =
-					editorView.dom.parentElement!.getBoundingClientRect();
+				const cursorPositionToViewPort = view.coordsAtPos($head.pos);
+				const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
 				dispatch(
 					setInsertTooltip({
 						visible: empty,
@@ -133,10 +129,11 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 						},
 					}),
 				);
+				setState(newState);
 				dispatch(setEditorState(newState));
 			});
 		},
-		[editorState, editorViewRef, addHeadingID],
+		[ref.current.view, addHeadingID],
 	);
 
 	useEffect(() => {
@@ -147,8 +144,14 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 			doc,
 			plugins,
 		});
+		setState(initialEditorState);
 		dispatch(setEditorState(initialEditorState));
 	}, [editor.editorContent]);
+
+	const contentPageContext = useMemo(
+		() => ({ editable, isChapter, editorView: ref.current.view }),
+		[editable, isChapter, ref.current.view],
+	);
 
 	if (loading) return <LoadingIndicator />;
 	return (
@@ -158,12 +161,13 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						{editorState && (
+						{state && (
 							<Editor
-								state={editorState}
+								ref={ref}
+								state={state}
 								nodeViews={nodeViews}
 								editable={editable}
-								dispatchTransaction={dispatchTransaction}
+								onChange={onChange}
 								autoFocus
 							/>
 						)}

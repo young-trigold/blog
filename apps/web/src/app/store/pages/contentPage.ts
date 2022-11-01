@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction, SerializedError } from '@
 import axios from 'axios';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 
 import { HeadingInfo } from '../../../pages/content/components/catalog/Catalog';
 import { CommentInfo } from '../../../pages/content/components/comment/CommentList';
@@ -10,11 +10,11 @@ import { CommentInfo } from '../../../pages/content/components/comment/CommentLi
 export const ContentPageContext = createContext<{
 	editable: boolean;
 	isChapter: boolean;
-	editorViewRef: React.MutableRefObject<EditorView | null>;
+	editorView: EditorView | null;
 }>({
 	editable: false,
 	isChapter: false,
-	editorViewRef: React.createRef(),
+	editorView: null,
 });
 
 export type InsertTooltipState = {
