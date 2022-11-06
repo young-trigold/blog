@@ -16,6 +16,8 @@ import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
 import SelectionTooltip from './tooltips/selectionTooltip';
 import getCurrentHeadingID from './utils/getCurrentHeadingID';
 import transformEditorProps from './utils/transformEditorProps';
+import useEditorStore from './store/useEditorStore';
+import BoldExtension from './extensions/boldExtension';
 
 const EditorContainer = styled.article`
 	flex: 1 1 760px;
@@ -150,6 +152,8 @@ export interface EditorProps extends Omit<DirectEditorProps, 'editable' | 'dispa
 	onChange?: (tr: Transaction, state: EditorState) => void;
 }
 
+const extensions = [new BoldExtension()];
+
 const Editor = forwardRef<{ view: EditorView | null }, EditorProps>((props, ref) => {
 	const initialPropsRef = useRef<EditorProps | null>(props);
 	const editorViewRef = useRef<EditorView | null>(null);
@@ -203,6 +207,10 @@ const Editor = forwardRef<{ view: EditorView | null }, EditorProps>((props, ref)
 			}),
 		);
 	}, [plugin]);
+
+	// const {} = useEditorStore({
+	// 	extensions,
+	// });
 
 	return (
 		<EditorContainer ref={editorContainerRef} onBlur={onEditorContainerBlur}>
