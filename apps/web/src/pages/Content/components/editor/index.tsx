@@ -11,13 +11,12 @@ import {
 } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
 import { EditorState, Transaction } from 'prosemirror-state';
+import BoldExtension from './extensions/markExtensions/boldExtension';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
 import SelectionTooltip from './tooltips/selectionTooltip';
 import getCurrentHeadingID from './utils/getCurrentHeadingID';
 import transformEditorProps from './utils/transformEditorProps';
-import useEditorStore from './store/useEditorStore';
-import BoldExtension from './extensions/boldExtension';
 
 const EditorContainer = styled.article`
 	flex: 1 1 760px;

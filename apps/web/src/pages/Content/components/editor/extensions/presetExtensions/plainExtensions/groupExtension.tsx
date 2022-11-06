@@ -1,14 +1,11 @@
-import { PlainExtension } from "../extension";
+import { PlainExtension } from '../..';
 
 class GroupExtension extends PlainExtension {
 	get name() {
 		return 'group' as const;
 	}
 
-	onEditorStoreCreate?(): void {
-
-	}
-
+	onEditorStoreCreate?(): void {}
 }
 
 export default GroupExtension;

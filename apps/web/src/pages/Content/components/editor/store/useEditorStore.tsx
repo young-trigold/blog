@@ -1,7 +1,7 @@
 import { Selection } from 'prosemirror-state';
 import { useMemo, useRef, useState } from 'react';
-import SchemaExtension from '../extensions/preset/schemaExtension';
-import TagExtension from '../extensions/preset/groupExtension';
+import TagExtension from '../extensions/presetExtensions/plainExtensions/groupExtension';
+import SchemaExtension from '../extensions/presetExtensions/plainExtensions/schemaExtension';
 import EditorStore from './EditorStore';
 
 interface EditorStoreConfig {

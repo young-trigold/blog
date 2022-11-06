@@ -1,4 +1,4 @@
-import { PlainExtension } from '../extension';
+import { PlainExtension } from '../..';
 
 class PluginExtension extends PlainExtension {
 	get name() {

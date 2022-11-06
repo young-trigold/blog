@@ -1,6 +1,6 @@
-import { Schema, Node as ProseMirrorNode } from 'prosemirror-model';
+import { Node as ProseMirrorNode, Schema } from 'prosemirror-model';
 import { EditorState, Plugin, Selection } from 'prosemirror-state';
-import { Extension, MarkExtension, NodeExtension, PlainExtension } from '../extensions/extension';
+import { Extension, MarkExtension, NodeExtension, PlainExtension } from '../extensions';
 
 export enum EditorStoreState {
 	Init,
@@ -38,7 +38,9 @@ class EditorStore {
 		const editorState = EditorState.create({
 			schema: this.schema,
 			plugins: this.plugins,
-			doc: doc ? ProseMirrorNode.fromJSON(this.schema, JSON.parse(doc)) : this.schema.nodes.doc.createAndFill()!,
+			doc: doc
+				? ProseMirrorNode.fromJSON(this.schema, JSON.parse(doc))
+				: this.schema.nodes.doc.createAndFill()!,
 			selection,
 		});
 
