@@ -23,6 +23,7 @@ class SchemaExtension extends PlainExtension {
 		});
 		console.debug(marks, nodes);
 		// const mySchema = new Schema({
+			
 		// 	marks,
 		// 	nodes,
 		// 	topNode: 'doc',

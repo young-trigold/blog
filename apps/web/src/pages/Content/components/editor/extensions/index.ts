@@ -9,6 +9,8 @@ export abstract class Extension {
 	onEditorViewCreate?(): void;
 
 	createSpecCommonAttrs?(): Record<string, string>[];
+	createTags?(): string[];
+	tags: string[] = [];
 }
 
 export abstract class MarkExtension extends Extension {

@@ -9,6 +9,10 @@ class BoldExtension extends MarkExtension {
 		return 'bold' as const;
 	}
 
+	createTags() {
+		return [];
+	}
+
 	createMarkSpec(): MarkSpec {
 		const boldMarkSpec: MarkSpec = {
 			parseDOM: [

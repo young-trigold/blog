@@ -1,7 +1,6 @@
 import { Selection } from 'prosemirror-state';
 import { useMemo, useRef, useState } from 'react';
-import TagExtension from '../extensions/presetExtensions/plainExtensions/groupExtension';
-import SchemaExtension from '../extensions/presetExtensions/plainExtensions/schemaExtension';
+import presetExtensions from '../extensions/presetExtensions';
 import EditorStore from './EditorStore';
 
 interface EditorStoreConfig {
@@ -9,8 +8,6 @@ interface EditorStoreConfig {
 	doc?: string;
 	selection?: Selection;
 }
-
-const presetExtensions = [new TagExtension(), new SchemaExtension()];
 
 const useEditorStore = (editorStoreConfig: EditorStoreConfig) => {
 	const { extensions = [], doc = '', selection } = editorStoreConfig;
