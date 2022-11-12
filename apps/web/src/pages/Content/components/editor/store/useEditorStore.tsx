@@ -13,7 +13,6 @@ const useEditorStore = (editorStoreConfig: EditorStoreConfig) => {
 	const { extensions = [], doc = '', selection } = editorStoreConfig;
 
 	const editorStoreRef = useRef<EditorStore>(new EditorStore([...extensions, ...presetExtensions]));
-	const { current: editorStore } = editorStoreRef;
 
 	const [editorState, setEditorState] = useState(() =>
 		editorStoreRef.current.createEditorState(doc, selection),

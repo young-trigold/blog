@@ -138,7 +138,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				dispatch(setEditorState(newState));
 			});
 		},
-		[ref.current.view, addHeadingID],
+		[ref.current?.view, addHeadingID],
 	);
 
 	useEffect(() => {
@@ -154,8 +154,8 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	}, [editor.editorContent]);
 
 	const contentPageContext = useMemo(
-		() => ({ editable, isChapter, editorView: ref.current.view }),
-		[editable, isChapter, ref.current.view],
+		() => ({ editable, isChapter, editorView: ref.current?.view }),
+		[editable, isChapter, ref.current?.view],
 	);
 
 	if (loading) return <LoadingIndicator />;

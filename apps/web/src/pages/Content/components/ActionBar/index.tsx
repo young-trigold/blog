@@ -4,14 +4,15 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { AppDispatch, AppState } from '@/app/store';
+import { setLoginModalVisible } from '@/app/store/modals';
 import { ContentPageContext } from '@/app/store/pages/contentPage';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';
+import Tooltip from '@/components/Tooltip';
 import CancelIcon from '@/static/icon/cancel.png';
 import PublishIcon from '@/static/icon/publish.png';
 import { useDispatch } from 'react-redux';
-import { setLoginModalVisible } from '@/app/store/modals';
 
 interface ActionBarProps {}
 
@@ -20,19 +21,19 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 	const { isChapter } = useContext(ContentPageContext);
 	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
 	const { hasLogin, info } = useSelector((state: AppState) => state.user);
-  const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const handlePublish = () => {
-		if (!hasLogin)  {
-      dispatch(setLoginModalVisible(true));
-      message.warn('请先登录!');
-      return;
-    }
+		if (!hasLogin) {
+			dispatch(setLoginModalVisible(true));
+			message.warn('请先登录!');
+			return;
+		}
 		if (info?.role !== 'admin') {
-      dispatch(setLoginModalVisible(true));
-      message.warn('权限不足, 请重新登录!');
-      return;
-    }
+			dispatch(setLoginModalVisible(true));
+			message.warn('权限不足, 请重新登录!');
+			return;
+		}
 		if (!editorState) return;
 		const user = watchedLocalStorage.getItem<{ token: string }>('user');
 		const updateItem = async () => {
@@ -74,12 +75,14 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 				icon={CancelIcon}
 				description="取消"
 			/>
-			<FloatingActionButton
-				onClick={handlePublish}
-				rect={{ right: 32, bottom: 170 }}
-				icon={PublishIcon}
-				description="发布"
-			/>
+			<Tooltip>
+				<FloatingActionButton
+					onClick={handlePublish}
+					rect={{ right: 32, bottom: 170 }}
+					icon={PublishIcon}
+					description="发布"
+				/>
+			</Tooltip>
 		</aside>
 	);
 };
