@@ -19,7 +19,6 @@ interface StyledCatalogProps {
 
 const StyledCatalog = styled.div<StyledCatalogProps>`
 	flex: 0 0 300px;
-	min-width: 300px;
 	max-height: 550px;
 	background-color: ${(props) => props.theme.foregroundColor};
 	border-radius: 6.4px;
@@ -40,7 +39,6 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
 		bottom: 160px;
 		right: 50%;
 		max-height: 450px;
-		max-width: 350px;
 		transform: translate(50%, 0) ${(props) => (props.catalogVisible ? '' : 'scaleY(0)')};
 		opacity: ${(props) => (props.catalogVisible ? 1 : 0)};
 		background-color: ${(props) => props.theme.foregroundColor};
@@ -48,7 +46,7 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
 	}
 `;
 
-export interface CatalogProps {}
+interface CatalogProps {}
 
 const Catalog: React.FC<CatalogProps> = (props) => {
 	const { visible: catalogVisible } = useSelector((state: AppState) => state.contentPage.catalog);

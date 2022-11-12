@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { memo, useContext } from 'react';
+import { memo, useContext, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ import { ContentPageContext } from '@/app/store/pages/contentPage';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';
-import Tooltip from '@/components/Tooltip';
+import Tooltip, { useTooltip } from '@/components/Tooltip';
 import CancelIcon from '@/static/icon/cancel.png';
 import PublishIcon from '@/static/icon/publish.png';
 import { useDispatch } from 'react-redux';
@@ -67,6 +67,14 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 		navigate(`/${isChapter ? 'chapters' : 'articles'}/${itemID}`);
 	};
 
+	const ref = useRef<HTMLButtonElement>(null);
+	const [tooltipVisible, setTooltipVisible] = useState(false);
+	
+	const tooltip = useMemo(() => <Tooltip visible={tooltipVisible}>
+		sbbakb
+	</Tooltip>, [tooltipVisible]);
+	useTooltip(ref, tooltip);
+
 	return (
 		<aside>
 			<FloatingActionButton
@@ -75,14 +83,15 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 				icon={CancelIcon}
 				description="取消"
 			/>
-			<Tooltip>
-				<FloatingActionButton
-					onClick={handlePublish}
-					rect={{ right: 32, bottom: 170 }}
-					icon={PublishIcon}
-					description="发布"
-				/>
-			</Tooltip>
+			<FloatingActionButton
+				ref={ref}
+				onClick={handlePublish}
+				rect={{ right: 32, bottom: 170 }}
+				icon={PublishIcon}
+				description="发布"
+				onMouseEnter={() => setTooltipVisible(true)}
+				onMouseLeave={() => setTooltipVisible(false)}
+			/>
 		</aside>
 	);
 };
