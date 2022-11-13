@@ -1,5 +1,4 @@
-import React, { PropsWithChildren, useEffect, useRef } from 'react';
-import { createRoot, Root } from 'react-dom/client';
+import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
 export type Direction = 'top' | 'bottom' | 'left' | 'right';
@@ -25,43 +24,27 @@ const StyledTooltipContainer = styled.div<StyledTooltipProps>`
 	visibility: ${(props) => (props.visible ? 'unset' : 'hidden')};
 	border-radius: 6.4px;
 	box-shadow: 0 0 4px ${(props) => props.theme.shadowColor};
-	background-color: ${(props) => props.theme.foregroundColor};
 	padding: 1em;
+	background-color: ${(props) => props.theme.surfaceColor};
+`;
+
+const StyledPositioner = styled.div`
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 0;
 `;
 
 const Tooltip: React.FC<PropsWithChildren<TooltipProps>> = (props) => {
 	const { visible, direction = 'top', children } = props;
 
 	return (
-		<StyledTooltipContainer visible={visible} direction={direction}>
-			{children}
-		</StyledTooltipContainer>
+		<StyledPositioner>
+			<StyledTooltipContainer visible={visible} direction={direction}>
+				{children}
+			</StyledTooltipContainer>
+		</StyledPositioner>
 	);
-};
-
-export const useTooltip = (ref: React.RefObject<HTMLElement>, tooltip: React.ReactNode) => {
-	const rootRef = useRef<Root | null>(null);
-
-	useEffect(() => {
-		if (!ref.current) return;
-		const positioner = document.createElement('div');
-		positioner.style.position = 'absolute';
-		positioner.style.width = '100%';
-		positioner.style.left = '0';
-		positioner.style.top = '0';
-
-		rootRef.current = createRoot(positioner);
-		rootRef.current.render(tooltip);
-		ref.current.appendChild(positioner);
-
-		return () => {
-			positioner.remove();
-		};
-	}, []);
-
-	useEffect(() => {
-		rootRef.current?.render(tooltip);
-	}, [tooltip]);
 };
 
 export default Tooltip;

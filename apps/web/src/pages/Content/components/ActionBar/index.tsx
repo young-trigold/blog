@@ -9,7 +9,6 @@ import { ContentPageContext } from '@/app/store/pages/contentPage';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';
-import Tooltip, { useTooltip } from '@/components/Tooltip';
 import CancelIcon from '@/static/icon/cancel.png';
 import PublishIcon from '@/static/icon/publish.png';
 import { useDispatch } from 'react-redux';
@@ -67,14 +66,6 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 		navigate(`/${isChapter ? 'chapters' : 'articles'}/${itemID}`);
 	};
 
-	const ref = useRef<HTMLButtonElement>(null);
-	const [tooltipVisible, setTooltipVisible] = useState(false);
-	
-	const tooltip = useMemo(() => <Tooltip visible={tooltipVisible}>
-		sbbakb
-	</Tooltip>, [tooltipVisible]);
-	useTooltip(ref, tooltip);
-
 	return (
 		<aside>
 			<FloatingActionButton
@@ -84,13 +75,10 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 				description="取消"
 			/>
 			<FloatingActionButton
-				ref={ref}
 				onClick={handlePublish}
 				rect={{ right: 32, bottom: 170 }}
 				icon={PublishIcon}
 				description="发布"
-				onMouseEnter={() => setTooltipVisible(true)}
-				onMouseLeave={() => setTooltipVisible(false)}
 			/>
 		</aside>
 	);
