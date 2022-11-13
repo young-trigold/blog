@@ -34,6 +34,7 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
 	@media (max-width: 1014px) {
 		z-index: 4;
 		position: fixed;
+		width: 300px;
 		margin: unset;
 		top: unset;
 		bottom: 160px;
