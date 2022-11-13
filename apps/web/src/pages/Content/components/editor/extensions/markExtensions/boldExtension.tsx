@@ -1,5 +1,5 @@
 import { MarkSpec } from 'prosemirror-model';
-import { MarkExtension } from '..';
+import { ExtensionTag, MarkExtension } from '..';
 import EditorStore from '../../store/EditorStore';
 
 class BoldExtension extends MarkExtension {
@@ -10,7 +10,7 @@ class BoldExtension extends MarkExtension {
 	}
 
 	createTags() {
-		return [];
+		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
 	}
 
 	createMarkSpec(): MarkSpec {
