@@ -12,9 +12,16 @@ interface EditorProps {
 
 const extensions = [new BoldExtension(), new ItalicExtension()];
 
-<Editor extensions={extensions} />
+const { editorStore, editorState, setEditorState } = useEditorStore({
+	extensions,
+	doc,
+});
+
+<Editor editorState={editorState} />
 ```
 
 ## 实现
 
+# 样式框架迁移至 scss
 
+# 渲染方式迁移至 Nextjs SSR
