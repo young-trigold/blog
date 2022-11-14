@@ -46,14 +46,14 @@ const unorderedListInputRule = wrappingInputRule(/^\s*([-+*])\s$/, schema.nodes.
 const orderedListInputRule = wrappingInputRule(
   /^(\d+)\.\s$/,
   schema.nodes.ordered_list,
-  (match) => ({ order: Number.parseInt(match[1], 10) }),
+  (match: RegExpMatchArray) => ({ order: Number.parseInt(match[1], 10) }),
   (match, node) => node.childCount + (node.attrs.order as number) === Number(match[1]),
 );
 
 const headingInputRule = textblockTypeInputRule(
   new RegExp(`^(#{1,${3}})\\s$`),
   schema.nodes.heading,
-  (match) => ({
+  (match: RegExpMatchArray) => ({
     level: match[1].length,
     headingID: getUniqueID(),
   }),
