@@ -1,5 +1,6 @@
 import { useAppSelector } from '@/app/store';
-import { memo, useEffect, useState } from 'react';
+import { ContentPageContext } from '@/app/store/pages/contentPage';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import InsertOptionContainer from './InsertOptionContainer';
@@ -47,16 +48,15 @@ const InsertTooltip = (props: InsertTooltipProps) => {
 		setInsertOptionContainerVisible(false);
 	}, [position]);
 
-	const handleInsertTooltipClicked: React.MouseEventHandler = (event) => {
+	const handleInsertTooltipClicked: React.MouseEventHandler = useCallback((event) => {
 		event.stopPropagation();
 		setInsertOptionContainerVisible(true);
-	};
-
-	const handleClick = () => {
-		setInsertOptionContainerVisible(false);
-	};
+	}, []);
 
 	useEffect(() => {
+		const handleClick = () => {
+			setInsertOptionContainerVisible(false);
+		};
 		window.addEventListener('click', handleClick);
 
 		return () => {

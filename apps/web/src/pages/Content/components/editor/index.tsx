@@ -1,13 +1,9 @@
 import { DirectEditorProps, EditorView } from 'prosemirror-view';
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react';
 import styled from 'styled-components';
 
-import { useAppDispatch, useAppSelector } from '@/app/store';
-import {
-	setCurrentHeadingID,
-	setInsertTooltip,
-	setSelectionTooltip,
-} from '@/app/store/pages/contentPage';
+import { useAppDispatch } from '@/app/store';
+import { setCurrentHeadingID } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
 import { EditorState, Transaction } from 'prosemirror-state';
 import BoldExtension from './extensions/markExtensions/boldExtension';
@@ -189,29 +185,12 @@ const Editor = forwardRef<{ view: EditorView | null }, EditorProps>((props, ref)
 		autoFocus && editorViewRef.current?.focus();
 	}, []);
 
-	const { plugin } = useAppSelector((state) => state.contentPage.editor);
-	const onEditorContainerBlur = useCallback(() => {
-		const { insertTooltip, selectionTooltip } = plugin;
-		dispatch(
-			setInsertTooltip({
-				...insertTooltip,
-				visible: false,
-			}),
-		);
-		dispatch(
-			setSelectionTooltip({
-				...selectionTooltip,
-				visible: false,
-			}),
-		);
-	}, [plugin]);
-
 	// const {} = useEditorStore({
 	// 	extensions,
 	// });
 
 	return (
-		<EditorContainer ref={editorContainerRef} onBlur={onEditorContainerBlur}>
+		<EditorContainer ref={editorContainerRef}>
 			{editable && (
 				<>
 					<InsertTooltip />

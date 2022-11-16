@@ -1,5 +1,5 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,7 +12,9 @@ import {
 	setCurrentHeadingID,
 	setEditorState,
 	setInsertTooltip,
+	setInsertTooltipVisible,
 	setSelectionTooltip,
+	setSelectionTooltipVisible,
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
@@ -94,12 +96,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	}, []);
 
 	const ref = useRef<{ view: EditorView | null }>({ view: null });
-	const [state, setState] = useState<EditorState | null>(null);
-
-	const { editorState } = editor;
-	useEffect(() => {
-		editorState && setState(editorState);
-	}, [editorState]);
 
 	const onChange = useCallback(
 		(tr: Transaction, state: EditorState) => {
@@ -134,7 +130,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 						},
 					}),
 				);
-				setState(newState);
 				dispatch(setEditorState(newState));
 			});
 		},
@@ -152,7 +147,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 			plugins,
 		});
 
-		setState(initialEditorState);
 		dispatch(setEditorState(initialEditorState));
 	}, [editor.editorContent]);
 
@@ -160,6 +154,18 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		() => ({ editable, isChapter, editorView: ref.current?.view }),
 		[editable, isChapter, ref.current?.view],
 	);
+
+	const handleDOMEvents = useMemo(
+		() => ({
+			blur() {
+				dispatch(setInsertTooltipVisible(false));
+				dispatch(setSelectionTooltipVisible(false));
+			},
+		}),
+		[],
+	);
+
+  const { editorState } = editor;
 
 	if (loading) return <LoadingIndicator />;
 	return (
@@ -169,13 +175,14 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						{state && (
+						{editorState && (
 							<Editor
 								ref={ref}
-								state={state}
+								state={editorState}
 								nodeViews={nodeViews}
 								editable={editable}
 								onChange={onChange}
+								handleDOMEvents={handleDOMEvents}
 								autoFocus
 							/>
 						)}

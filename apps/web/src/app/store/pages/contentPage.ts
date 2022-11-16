@@ -125,11 +125,26 @@ const ContentPageSlice = createSlice({
 		setCurrentHeadingID: (state, action: PayloadAction<string>) => {
 			state.catalog.currentHeadingID = action.payload;
 		},
-		setInsertTooltip: (state, action: PayloadAction<InsertTooltipState>) => {
+		setInsertTooltipVisible: (state, action: PayloadAction<InsertTooltipState['visible']>) => {
+			state.editor.plugin.insertTooltip.visible = action.payload;
+		},
+		setInsertTooltip: (
+			state,
+			action: PayloadAction<InsertTooltipState>,
+		) => {
 			state.editor.plugin.insertTooltip = action.payload;
 		},
-		setSelectionTooltip: (state, action: PayloadAction<SelectionTooltipState>) => {
+		setSelectionTooltip: (
+			state,
+			action: PayloadAction<SelectionTooltipState>,
+		) => {
 			state.editor.plugin.selectionTooltip = action.payload;
+		},
+		setSelectionTooltipVisible: (
+			state,
+			action: PayloadAction<SelectionTooltipState['visible']>,
+		) => {
+			state.editor.plugin.selectionTooltip.visible = action.payload;
 		},
 		setEditorContent: (state, action: PayloadAction<string>) => {
 			state.editor.editorContent = action.payload;
@@ -171,8 +186,10 @@ export const {
 	setComments,
 	setHeadings,
 	setCurrentHeadingID,
-	setInsertTooltip,
-	setSelectionTooltip,
+	setInsertTooltipVisible,
+  setInsertTooltip,
+  setSelectionTooltip,
+	setSelectionTooltipVisible,
 	setEditorContent,
 	setEditorState,
 	resetContentPage,
