@@ -1,11 +1,10 @@
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setLoginModalVisible } from '@/app/store/modals';
 import { memo, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { Button } from '../../../Button';
 
 const LoginButton: React.FC = () => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const onClick = useCallback(() => {
 		dispatch(setLoginModalVisible(true));
 	}, []);

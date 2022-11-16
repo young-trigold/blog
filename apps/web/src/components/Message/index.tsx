@@ -1,7 +1,6 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import appStore, { AppState } from '../../app/store';
+import appStore, { useAppSelector } from '../../app/store';
 import { addMessage, clearMessage } from '../../app/store/messages';
 
 import CancelIcon from '../../static/icon/cancel.png';
@@ -97,7 +96,7 @@ const Message: React.FC<MessageProps> = (props) => {
 };
 
 const MessageContainer = memo(() => {
-	const messages = useSelector((state: AppState) => state.messages.value);
+	const messages = useAppSelector((state) => state.messages.value);
 
 	return (
 		<StyledMessageContainer id="message-container">

@@ -1,12 +1,11 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setAddChapterModalVisible } from '@/app/store/modals';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
-import { useDispatch } from 'react-redux';
 import { NoteOption } from 'src/pages/admin/components/AdminPage';
 
 interface AddChapterFormProps {
@@ -15,7 +14,7 @@ interface AddChapterFormProps {
 
 const AddChapterForm: React.FC<AddChapterFormProps> = (props) => {
 	const { currentOption } = props;
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
 		dispatch(setAddChapterModalVisible(visible));
 	}, []);

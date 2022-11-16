@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 
-import { AppState } from '@/app/store';
+import { useAppSelector } from '@/app/store';
 import { message } from '@/components/Message';
-import { useSelector } from 'react-redux';
 import { NoteInfo } from 'src/pages/notes';
 import AdminBody from './AdminBody';
 import NavBar from './NavBar';
@@ -18,7 +17,7 @@ const StyledAdminPage = styled.div`
 export type NoteOption = Pick<NoteInfo, '_id' | 'title'>;
 
 const AdminPage = () => {
-	const { error } = useSelector((state: AppState) => state.homePage);
+	const { error } = useAppSelector((state) => state.homePage);
 
 	useEffect(() => {
 		if (error) message.error(error?.message ?? '请求错误!');

@@ -1,4 +1,4 @@
-import { AppState } from '@/app/store';
+import { AppState, useAppSelector } from '@/app/store';
 import CommentIcon from '@/static/icon/comment.png';
 import { TextSelection } from 'prosemirror-state';
 import { memo, useCallback } from 'react';
@@ -40,7 +40,7 @@ const SelectionCommentTooltip = () => {
 	const { position, visible } = useSelector(
 		(state: AppState) => state.contentPage.editor.plugin.selectionTooltip,
 	);
-	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
+	const { editorState } = useAppSelector((state) => state.contentPage.editor);
 
 	const onClick = useCallback(() => {
 		if (!editorState) return;

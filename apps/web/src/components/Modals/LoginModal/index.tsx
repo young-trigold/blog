@@ -1,20 +1,20 @@
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setLoginModalVisible } from '@/app/store/modals';
 import { memo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Modal from '../../Modal';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+
 interface LoginModalProps {}
 
 const LoginModal: React.FC<LoginModalProps> = (props) => {
-	const { visible } = useSelector((state: AppState) => state.modal.modals.loginModal);
+	const { visible } = useAppSelector((state) => state.modal.modals.loginModal);
 	const [logging, setLogging] = useState(true);
 
 	const modalTitle = logging ? '登录' : '注册';
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const setIsLoginModalVisible = (visible: boolean) => {
 		dispatch(setLoginModalVisible(visible));
 	};

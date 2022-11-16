@@ -1,13 +1,12 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppState } from '@/app/store';
+import { useAppSelector } from '@/app/store';
 import Footer from '@/components/Footer';
 import Header, { HeaderHeight } from '@/components/Header';
 import LoadingIndicator from '@/components/LodingIndicator';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { CommentInfo } from '../content/components/comment/CommentList';
 import Chapter from './components/Chapter';
 
@@ -47,7 +46,7 @@ export interface ChapterInfo {
 
 const ChapterListPage: React.FC = () => {
 	const { noteTitle } = useParams();
-	const { notes } = useSelector((state: AppState) => state.notePage);
+	const { notes } = useAppSelector((state) => state.notePage);
 	const chapters = useMemo(() => notes.find((note) => note.title === noteTitle)?.chapters, [notes]);
 
 	useDocumentTitle(`笔记 - ${noteTitle}`, [noteTitle]);

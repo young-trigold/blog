@@ -1,7 +1,6 @@
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setTagIndex } from '@/app/store/pages/homePage';
 import React, { memo, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 export interface TagContainerProps {
@@ -54,7 +53,7 @@ interface TagProps {
 
 const Tag: React.FC<TagProps> = memo((props) => {
 	const { tag, currentIndex } = props;
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const onClick = useCallback(() => {
 		dispatch(setTagIndex(currentIndex));
 	}, []);

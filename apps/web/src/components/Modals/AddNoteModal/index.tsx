@@ -1,14 +1,13 @@
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setAddNoteModalVisible } from '@/app/store/modals';
 import Modal from '@/components/Modal';
 import { memo, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import AddNoteForm from './AddNoteForm';
 
 const AddNoteModal = () => {
-	const { visible } = useSelector((state: AppState) => state.modal.modals.addNoteModal);
+	const { visible } = useAppSelector((state) => state.modal.modals.addNoteModal);
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
 		dispatch(setAddNoteModalVisible(visible));
 	}, []);

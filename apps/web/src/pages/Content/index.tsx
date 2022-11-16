@@ -1,10 +1,10 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppDispatch, AppState } from '@/app/store';
+import { AppState, useAppDispatch } from '@/app/store';
 import {
 	ContentPageContext,
 	fetchContentPageDataByID,
@@ -55,7 +55,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const { isChapter, editable } = props;
 
 	const { itemID } = useParams();
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	const { loading, editor, error, catalog, title } = useSelector(
 		(state: AppState) => state.contentPage,
@@ -142,13 +142,16 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	);
 
 	useEffect(() => {
-		if (!editor.editorContent) return;
-		const doc = ProseMirrorNode.fromJSON(schema, JSON.parse(editor.editorContent));
+		const doc = editor.editorContent
+			? ProseMirrorNode.fromJSON(schema, JSON.parse(editor.editorContent))
+			: undefined;
+
 		const initialEditorState = EditorState.create({
 			schema,
 			doc,
 			plugins,
 		});
+
 		setState(initialEditorState);
 		dispatch(setEditorState(initialEditorState));
 	}, [editor.editorContent]);

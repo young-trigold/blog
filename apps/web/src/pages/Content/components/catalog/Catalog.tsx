@@ -1,7 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import { AppState } from '@/app/store';
+import { useAppSelector } from '@/app/store';
 import { setCurrentHeadingID, setHeadings } from '@/app/store/pages/contentPage';
 import { useEffect } from 'react';
 import schema from '../editor/schema';
@@ -50,10 +50,10 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
 interface CatalogProps {}
 
 const Catalog: React.FC<CatalogProps> = (props) => {
-	const { visible: catalogVisible } = useSelector((state: AppState) => state.contentPage.catalog);
+	const { visible: catalogVisible } = useAppSelector((state) => state.contentPage.catalog);
 
 	// =============================== heading ===============================
-	const { catalog, editor } = useSelector((state: AppState) => state.contentPage);
+	const { catalog, editor } = useAppSelector((state) => state.contentPage);
 	const { headings } = catalog;
 	const { editorState } = editor;
 

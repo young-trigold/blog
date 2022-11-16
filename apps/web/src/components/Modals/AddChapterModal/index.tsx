@@ -1,9 +1,8 @@
 import React, { memo, useCallback } from 'react';
 
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setAddChapterModalVisible } from '@/app/store/modals';
 import Modal from '@/components/Modal';
-import { useDispatch, useSelector } from 'react-redux';
 import { NoteOption } from 'src/pages/admin/components/AdminPage';
 import AddChapterForm from './AddChapterForm';
 
@@ -13,8 +12,8 @@ export interface AddChapterModalProps {
 
 const AddChapterModal: React.FC<AddChapterModalProps> = (props) => {
 	const { currentOption } = props;
-	const { visible } = useSelector((state: AppState) => state.modal.modals.addChapterModal);
-	const dispatch = useDispatch<AppDispatch>();
+	const { visible } = useAppSelector((state) => state.modal.modals.addChapterModal);
+	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
 		dispatch(setAddChapterModalVisible(visible));
 	}, []);

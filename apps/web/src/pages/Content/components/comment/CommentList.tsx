@@ -1,7 +1,6 @@
-import { AppState } from '@/app/store';
+import { useAppSelector } from '@/app/store';
 import { UserInfo } from '@/app/store/user';
 import Divider from '@/components/Divider';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import CommentCard from './CommentCard';
 import CommentHeader from './CommentHeader';
@@ -32,7 +31,7 @@ const CommentListContainer = styled.div`
 `;
 
 const CommentList: React.FC = () => {
-	const { comments } = useSelector((state: AppState) => state.contentPage.comment);
+	const { comments } = useAppSelector((state) => state.contentPage.comment);
 
 	return (
 		<CommentListContainer>

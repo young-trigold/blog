@@ -1,10 +1,9 @@
 import { memo, useCallback } from 'react';
 import styled from 'styled-components';
 
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setAddArticleTagModalVisible } from '@/app/store/modals';
 import AddIcon from '@/static/icon/plus.png';
-import { useDispatch } from 'react-redux';
 
 const StyledAddArticleTagButton = styled.button`
 	display: flex;
@@ -27,7 +26,7 @@ const StyledAddArticleTagButton = styled.button`
 `;
 
 const AddArticleTagButton = () => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
 		dispatch(setAddArticleTagModalVisible(visible));
 	}, []);

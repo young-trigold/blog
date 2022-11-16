@@ -1,11 +1,10 @@
 import { memo, PropsWithChildren, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import { AppDispatch } from '@/app/store';
 import { setCurrentHeadingID } from '@/app/store/pages/contentPage';
 import { HeaderHeight } from '@/components/Header';
 import getCurrentHeadingID from '../editor/utils/getCurrentHeadingID';
+import { useAppDispatch } from '@/app/store';
 
 const StyledContentContainer = styled.div`
 	max-height: ${() => `calc(100vh - ${HeaderHeight}px)`};
@@ -16,7 +15,7 @@ const StyledContentContainer = styled.div`
 const ContentContainer: React.FC<PropsWithChildren> = (props) => {
 	const { children } = props;
 	const ref = useRef<HTMLDivElement>(null);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (!ref.current) return;

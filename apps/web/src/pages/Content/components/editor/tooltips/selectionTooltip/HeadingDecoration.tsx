@@ -1,9 +1,8 @@
-import store, { AppState } from '@/app/store';
+import store, { useAppSelector } from '@/app/store';
 import { setEditorState } from '@/app/store/pages/contentPage';
 import getUniqueID from '@/utils/getUniqueID';
 import { EditorState } from 'prosemirror-state';
 import { memo, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import schema from '../../schema';
 
@@ -82,7 +81,7 @@ const getSetFunctionByLevel = (level: number, editorState: EditorState | null) =
 };
 
 const HeadingDecoration = () => {
-	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
+	const { editorState } = useAppSelector((state) => state.contentPage.editor);
 	const [styledHeadingOptionContainerVisible, setStyledHeadingOptionContainerVisible] =
 		useState(false);
 

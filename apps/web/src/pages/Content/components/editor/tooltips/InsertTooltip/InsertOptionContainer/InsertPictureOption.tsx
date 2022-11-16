@@ -1,12 +1,10 @@
 import axios from 'axios';
 import { useRef } from 'react';
-import { useSelector } from 'react-redux';
 
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setEditorState } from '@/app/store/pages/contentPage';
 import { message } from '@/components/Message';
 import PictureIconSrc from '@/static/icon/picture.png';
-import { useDispatch } from 'react-redux';
 import { StyledOption } from '.';
 
 const InsertPictureOption = () => {
@@ -17,8 +15,8 @@ const InsertPictureOption = () => {
 		inputFileRef.current.click();
 	};
 
-	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
-	const dispatch = useDispatch<AppDispatch>();
+	const { editorState } = useAppSelector((state) => state.contentPage.editor);
+	const dispatch = useAppDispatch();
 	const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
 		const { files } = event.target;
 		if (!files || files.length === 0) return;

@@ -1,13 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import messagesReducer from './messages';
 import modalContainerReducer from './modals';
+import adminPageReducer from './pages/adminPage';
 import contentPageReducer from './pages/contentPage';
-import themeModeReducer from './themeMode';
-import userReducer from './user';
 import homePageReducer from './pages/homePage';
 import notePageReducer from './pages/notePage';
-import adminPageReducer from './pages/adminPage';
+import themeModeReducer from './themeMode';
+import userReducer from './user';
 
 const store = configureStore({
 	reducer: {
@@ -15,10 +16,10 @@ const store = configureStore({
 		messages: messagesReducer,
 		modal: modalContainerReducer,
 		user: userReducer,
-    contentPage: contentPageReducer,
-    homePage: homePageReducer,
-    notePage: notePageReducer,
-    adminPage: adminPageReducer,
+		contentPage: contentPageReducer,
+		homePage: homePageReducer,
+		notePage: notePageReducer,
+		adminPage: adminPageReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
@@ -28,4 +29,6 @@ const store = configureStore({
 
 export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
 export default store;

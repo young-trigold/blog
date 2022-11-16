@@ -1,13 +1,12 @@
 import { memo, useCallback } from 'react';
 
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setInsertLinkModalVisible } from '@/app/store/modals';
 import LinkIconSrc from '@/static/icon/link.png';
-import { useDispatch } from 'react-redux';
 import { StyledOption } from '.';
 
 const InsertLinkOption = () => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const handleOptionClick = useCallback(() => {
 		dispatch(setInsertLinkModalVisible(true));
 	}, []);

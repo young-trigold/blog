@@ -1,6 +1,5 @@
-import { AppState } from '@/app/store';
+import { useAppSelector } from '@/app/store';
 import { memo, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import InsertOptionContainer from './InsertOptionContainer';
@@ -40,7 +39,7 @@ const StyledInsertTooltip = styled.div<StyledInsertTooltipProps>`
 interface InsertTooltipProps {}
 
 const InsertTooltip = (props: InsertTooltipProps) => {
-	const { insertTooltip } = useSelector((state: AppState) => state.contentPage.editor.plugin);
+	const { insertTooltip } = useAppSelector((state) => state.contentPage.editor.plugin);
 	const { visible, position } = insertTooltip;
 	const [insertOptionContainerVisible, setInsertOptionContainerVisible] = useState(false);
 

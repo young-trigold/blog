@@ -1,9 +1,8 @@
-import { AppState } from '@/app/store';
 import { createContext, memo, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import LoginButton from './components/LoginButton';
 
+import { useAppSelector } from '@/app/store';
 import { throttle } from 'lodash';
 import Avatar from './components/Avatar';
 import Navigation from './components/Navigation';
@@ -34,7 +33,7 @@ export const HeaderContext = createContext({
 });
 
 const Header: React.FC = () => {
-	const user = useSelector((state: AppState) => state.user);
+	const user = useAppSelector((state) => state.user);
 	const getNotWide = () => window.matchMedia('(max-width: 666px)').matches;
 	const [notWide, setNotWide] = useState(getNotWide);
 

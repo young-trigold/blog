@@ -1,14 +1,13 @@
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setAddArticleTagModalVisible } from '@/app/store/modals';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
 import axios from 'axios';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 const AddArticleTagForm = () => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
 		dispatch(setAddArticleTagModalVisible(visible));
 	}, []);
@@ -65,7 +64,7 @@ const AddArticleTagForm = () => {
 		() => title.replace(/\s+/g, '') === '' || tag.replace(/\s+/g, '') === '',
 		[title, tag],
 	);
-	
+
 	const tagInputRef = useRef<HTMLInputElement>(null);
 	useEffect(() => {
 		tagInputRef.current?.focus();

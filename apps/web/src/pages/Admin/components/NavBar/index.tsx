@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setCurrentIndex } from '@/app/store/pages/adminPage';
 import AddArticleTagModal from '@/components/Modals/AddArticleTagModal';
 import AddNoteModal from '@/components/Modals/AddNoteModal';
 import { memo, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { ArticlesByTag } from 'src/pages/home';
 import { NoteInfo } from 'src/pages/notes';
 import AddArticleTagButton from '../buttons/AddArticleTagButton';
@@ -68,13 +67,13 @@ const Option = styled.li`
 `;
 
 const NavBar = () => {
-	const { articlesByTag } = useSelector((state: AppState) => state.homePage);
-	const { notes } = useSelector((state: AppState) => state.notePage);
+	const { articlesByTag } = useAppSelector((state) => state.homePage);
+	const { notes } = useAppSelector((state) => state.notePage);
 	const noteOptions = notes.map((note: NoteInfo) => ({ title: note.title, _id: note._id }));
 	const tagOptions = articlesByTag.map((tag: ArticlesByTag) => tag._id);
-	const { currentIndex } = useSelector((state: AppState) => state.adminPage);
+	const { currentIndex } = useAppSelector((state) => state.adminPage);
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const setIndex = useCallback((index: number) => {
 		dispatch(setCurrentIndex(index));
 	}, []);

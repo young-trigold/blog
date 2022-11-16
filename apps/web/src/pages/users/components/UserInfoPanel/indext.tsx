@@ -1,12 +1,11 @@
-import { AppState } from '@/app/store';
+import { useAppSelector } from '@/app/store';
 import { Button } from '@/components/Button';
 import Input from '@/components/Input';
 import TextArea from '@/components/Input/TextArea';
 import { message } from '@/components/Message';
 import DefaultAvatarSrc from '@/static/icon/default-avatar.png';
 import axios from 'axios';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { memo, useState } from 'react';
 import styled from 'styled-components';
 
 const StyledUserInfoPanel = styled.form`
@@ -28,7 +27,7 @@ const StyledAvatar = styled.figure`
 `;
 
 const UserInfoPanel = () => {
-	const { info } = useSelector((state: AppState) => state.user);
+	const { info } = useAppSelector((state) => state.user);
 
 	const [userInfoFormState, setUserInfoFormState] = useState({
 		avatar: null,
@@ -82,4 +81,4 @@ const UserInfoPanel = () => {
 	);
 };
 
-export default UserInfoPanel;
+export default memo(UserInfoPanel);

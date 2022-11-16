@@ -2,10 +2,9 @@ import React, { memo, useCallback } from 'react';
 
 import { FloatingActionButton } from '@/components/Button';
 
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setAddChapterModalVisible } from '@/app/store/modals';
 import AddIcon from '@/static/icon/plus.png';
-import { useDispatch } from 'react-redux';
 import { NoteOption } from '../AdminPage';
 
 interface AddButtonProps {
@@ -13,7 +12,7 @@ interface AddButtonProps {
 }
 
 const AddChapterButton: React.FC<AddButtonProps> = (props) => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const handleClick = useCallback(() => {
 		dispatch(setAddChapterModalVisible(true));
 	}, []);

@@ -1,8 +1,7 @@
-import { AppState } from '@/app/store';
+import { useAppSelector } from '@/app/store';
 import { IconButton } from '@/components/Button';
 import DefaultAvatarSrc from '@/static/icon/default-avatar.png';
 import { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import AvatarPanel from './AvatarPanel';
 
 const Avatar: React.FC = () => {
@@ -23,7 +22,7 @@ const Avatar: React.FC = () => {
 		event.stopPropagation();
 	};
 
-	const { info } = useSelector((state: AppState) => state.user);
+	const { info } = useAppSelector((state) => state.user);
 
 	return (
 		<div

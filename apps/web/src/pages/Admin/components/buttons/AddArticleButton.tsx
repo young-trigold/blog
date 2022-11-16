@@ -1,12 +1,11 @@
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setAddArticleModalVisible } from '@/app/store/modals';
 import { FloatingActionButton } from '@/components/Button';
 import AddIcon from '@/static/icon/plus.png';
 import { memo, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 
 const AddArticleButton = () => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	const onClick = useCallback(() => {
 		dispatch(setAddArticleModalVisible(true));

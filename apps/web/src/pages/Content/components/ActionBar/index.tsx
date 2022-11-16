@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { memo, useContext, useMemo, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { memo, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setLoginModalVisible } from '@/app/store/modals';
 import { ContentPageContext } from '@/app/store/pages/contentPage';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
@@ -11,16 +10,15 @@ import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';
 import CancelIcon from '@/static/icon/cancel.png';
 import PublishIcon from '@/static/icon/publish.png';
-import { useDispatch } from 'react-redux';
 
 interface ActionBarProps {}
 
 const ActionBar: React.FC<ActionBarProps> = (props) => {
 	const { itemID } = useParams();
 	const { isChapter } = useContext(ContentPageContext);
-	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
-	const { hasLogin, info } = useSelector((state: AppState) => state.user);
-	const dispatch = useDispatch<AppDispatch>();
+	const { editorState } = useAppSelector((state) => state.contentPage.editor);
+	const { hasLogin, info } = useAppSelector((state) => state.user);
+	const dispatch = useAppDispatch();
 
 	const handlePublish = () => {
 		if (!hasLogin) {

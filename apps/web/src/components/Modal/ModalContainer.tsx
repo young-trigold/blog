@@ -1,8 +1,7 @@
+import { useAppSelector } from '@/app/store';
 import getUniqueID from '@/utils/getUniqueID';
 import { memo } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { AppState } from '../../app/store';
 import InsertLinkModal from '../Modals/InsertLinkModal';
 import LoginModal from '../Modals/LoginModal';
 import LogoutModal from '../Modals/LogoutModal';
@@ -31,7 +30,7 @@ const StyledModalContainer = styled.div<StyledModalContainerProps>`
 export const modalContainerId = getUniqueID();
 
 const ModalContainer: React.FC = () => {
-	const { visible } = useSelector((state: AppState) => state.modal.modalContainer);
+	const { visible } = useAppSelector((state) => state.modal.modalContainer);
 
 	return (
 		<StyledModalContainer visible={visible} id="modal-container">

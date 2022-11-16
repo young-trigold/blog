@@ -1,9 +1,8 @@
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setLogoutModalVisible } from '@/app/store/modals';
 import Divider from '@/components/Divider';
 import DefaultAvatarSrc from '@/static/icon/default-avatar.png';
 import { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -53,7 +52,7 @@ const AvatarImgContainer = styled.figure`
 
 const AvatarPanel: React.FC<AvatarPanelProps> = (props) => {
 	const { visible, setVisible } = props;
-	const { info } = useSelector((state: AppState) => state.user);
+	const { info } = useAppSelector((state) => state.user);
 
 	const navigate = useNavigate();
 
@@ -61,7 +60,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = (props) => {
 		navigate('/admin');
 	};
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const logout = () => {
 		dispatch(setLogoutModalVisible(true));
 	};

@@ -1,18 +1,16 @@
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setLogoutModalVisible } from '@/app/store/modals';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { Button, ButtonBar } from '@/components/Button';
 import { message } from '@/components/Message';
 import Modal from '@/components/Modal';
 import { memo, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 interface ConfirmLogoutModalProps {}
 
 const ConfirmLogoutModal: React.FC<ConfirmLogoutModalProps> = (props) => {
-	const { visible } = useSelector((state: AppState) => state.modal.modals.logoutModal);
-
-	const dispatch = useDispatch<AppDispatch>();
+	const { visible } = useAppSelector((state) => state.modal.modals.logoutModal);
+	const dispatch = useAppDispatch();
 
 	const onConfirm = useCallback(() => {
 		watchedLocalStorage.removeItem('user');

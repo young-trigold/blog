@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 
-import { AppState } from '@/app/store';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import Note from './Note';
+import { useAppSelector } from '@/app/store';
 
 const StyledNoteShow = styled.section`
 	padding: 2em 1em;
@@ -22,7 +21,7 @@ const StyledNoteContainer = styled.div`
 `;
 
 const NoteShow = () => {
-	const { notes, loading, error } = useSelector((state: AppState) => state.notePage);
+	const { notes, loading, error } = useAppSelector((state) => state.notePage);
 
 	useEffect(() => {
 		if (error) message.error(error?.message ?? '请求错误!');

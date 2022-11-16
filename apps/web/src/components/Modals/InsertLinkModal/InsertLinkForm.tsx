@@ -1,14 +1,13 @@
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setInsertLinkModalVisible } from '@/app/store/modals';
 import { setEditorState } from '@/app/store/pages/contentPage';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 const InsertLinkForm = () => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	const [title, setTitle] = useState('');
 
@@ -30,7 +29,7 @@ const InsertLinkForm = () => {
 		dispatch(setInsertLinkModalVisible(false));
 	}, [setInsertLinkModalVisible]);
 
-	const { editorState } = useSelector((state: AppState) => state.contentPage.editor);
+	const { editorState } = useAppSelector((state) => state.contentPage.editor);
 
 	const handleOK = useCallback(() => {
 		if (!editorState) return;

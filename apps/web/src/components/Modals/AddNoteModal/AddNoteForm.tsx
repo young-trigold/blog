@@ -1,17 +1,16 @@
 import axios from 'axios';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { AppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import { setAddNoteModalVisible } from '@/app/store/modals';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
-import { useDispatch } from 'react-redux';
 
 const AddNoteForm = () => {
 	const [title, setTitle] = useState('');
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
 		dispatch(setAddNoteModalVisible(visible));
 	}, []);

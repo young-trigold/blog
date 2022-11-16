@@ -1,9 +1,8 @@
 import { DirectEditorProps, EditorView } from 'prosemirror-view';
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { AppDispatch, AppState } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import {
 	setCurrentHeadingID,
 	setInsertTooltip,
@@ -160,7 +159,7 @@ const Editor = forwardRef<{ view: EditorView | null }, EditorProps>((props, ref)
 	editorViewRef.current?.setProps(transformEditorProps(props));
 
 	const editorContainerRef = useRef<HTMLDivElement>(null);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		// ============================== 初始化 editorView ===============================
@@ -190,7 +189,7 @@ const Editor = forwardRef<{ view: EditorView | null }, EditorProps>((props, ref)
 		autoFocus && editorViewRef.current?.focus();
 	}, []);
 
-	const { plugin } = useSelector((state: AppState) => state.contentPage.editor);
+	const { plugin } = useAppSelector((state) => state.contentPage.editor);
 	const onEditorContainerBlur = useCallback(() => {
 		const { insertTooltip, selectionTooltip } = plugin;
 		dispatch(
