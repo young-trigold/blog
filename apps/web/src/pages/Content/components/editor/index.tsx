@@ -1,5 +1,5 @@
 import { DirectEditorProps, EditorView } from 'prosemirror-view';
-import { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from '@/app/store';
@@ -190,7 +190,7 @@ const Editor = forwardRef<{ view: EditorView | null }, EditorProps>((props, ref)
 	// });
 
 	return (
-		<EditorContainer ref={editorContainerRef}>
+		<EditorContainer ref={editorContainerRef} >
 			{editable && (
 				<>
 					<InsertTooltip />

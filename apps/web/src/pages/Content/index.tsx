@@ -53,6 +53,13 @@ interface ContentPageProps {
 	editable: boolean;
 }
 
+export type EditorDOMEventHandlers = {
+	[Event in keyof HTMLElementEventMap]?: (
+		view: EditorView,
+		event: HTMLElementEventMap[Event],
+	) => void | boolean;
+};
+
 const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const { isChapter, editable } = props;
 
@@ -155,7 +162,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		[editable, isChapter, ref.current?.view],
 	);
 
-	const handleDOMEvents = useMemo(
+	const editorDOMEventHandlers: EditorDOMEventHandlers = useMemo(
 		() => ({
 			blur() {
 				dispatch(setInsertTooltipVisible(false));
@@ -165,7 +172,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		[],
 	);
 
-  const { editorState } = editor;
+	const { editorState } = editor;
 
 	if (loading) return <LoadingIndicator />;
 	return (
@@ -177,13 +184,13 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 						<Catalog />
 						{editorState && (
 							<Editor
+								autoFocus
 								ref={ref}
 								state={editorState}
 								nodeViews={nodeViews}
 								editable={editable}
 								onChange={onChange}
-								handleDOMEvents={handleDOMEvents}
-								autoFocus
+								handleDOMEvents={editorDOMEventHandlers}
 							/>
 						)}
 						<CommentList />
