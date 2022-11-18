@@ -21,9 +21,9 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 const server = express();
 
 server.use(
-  cors({
-    origin: ['http://www.trigold.tech'],
-  }),
+	cors({
+		origin: ['http://www.trigold.tech'],
+	}),
 );
 
 server.use(morgan('dev'));
@@ -38,7 +38,7 @@ server.use('/api', userApi);
 server.use('/api', uploadAPI);
 
 server.get('/*', (_, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+	res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const port = process.env.PORT;

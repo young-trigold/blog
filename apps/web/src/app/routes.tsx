@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
-import NotFoundPage from '../pages/404';
 import LoadingPage from '../components/LodingIndicator';
+import NotFoundPage from '../pages/404';
 import HomePage from '../pages/home';
 
 const NotePage = React.lazy(() => import('../pages/notes'));
