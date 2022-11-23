@@ -50,17 +50,17 @@ const AddArticleForm: React.FC<AddArticleFormProps> = (props) => {
 			if (error instanceof Error) return message.error(error.message);
 			return message.error(JSON.stringify(error));
 		}
-	}, [currentOption]);
+	}, [currentOption, title]);
 
 	const handleSubmit = useCallback(() => {
 		postArticle();
 		setVisible(false);
-	}, [currentOption, setVisible]);
+	}, [postArticle]);
 
 	const handleCancel = useCallback(() => {
 		setTitle('');
 		setVisible(false);
-	}, [setVisible]);
+	}, []);
 
 	const disabled = useMemo(() => title.replace(/\s+/g, '') === '', [title]);
 
