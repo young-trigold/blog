@@ -58,7 +58,7 @@ const AddArticleTagForm = () => {
 
 		postChapter();
 		setVisible(false);
-	}, [tag, title, setVisible]);
+	}, [tag, title]);
 
 	const disabled = useMemo(
 		() => title.replace(/\s+/g, '') === '' || tag.replace(/\s+/g, '') === '',
