@@ -12,26 +12,19 @@ class SchemaExtension extends PlainExtension {
 
 	onEditorStoreCreate(): void {
 		if (!this.editorStore) return;
-		const marks: MarkSpec = {};
+		const marks: Record<string, MarkSpec> = {};
 		this.editorStore.markExtensions.forEach((markExtension) => {
 			marks[markExtension.name] = markExtension.createMarkSpec();
+			marks[markExtension.name].group = markExtension.tags.join(' ');
 		});
 
-		const nodes: NodeSpec = {};
+		const nodes: Record<string, NodeSpec> = {};
 		this.editorStore.nodeExtensions.forEach((nodeExtension) => {
 			nodes[nodeExtension.name] = nodeExtension.createNodeSpec();
+			nodes[nodeExtension.name].group = nodeExtension.tags.join(' ');
 		});
-		console.debug(marks, nodes);
-		// const mySchema = new Schema({
-			
-		// 	marks,
-		// 	nodes,
-		// 	topNode: 'doc',
-		// });
-		// console.debug('mySchema', mySchema);
-		// console.debug('schema', schema);
+
 		this.editorStore.schema = schema;
-		console.debug(this.editorStore);
 	}
 
 	onEditorViewCreate?(): void {}
