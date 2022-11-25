@@ -1,4 +1,4 @@
-import { Extension, MarkExtension, NodeExtension, PlainExtension } from '../..';
+import { MarkExtension, NodeExtension, PlainExtension } from '../..';
 
 class TagExtension extends PlainExtension {
 	get name() {
@@ -8,8 +8,8 @@ class TagExtension extends PlainExtension {
 	onEditorStoreCreate() {
 		if (!this.editorStore) return;
 
-		const addTagsToEachExtension = (extension: Extension) => {
-			extension.tags = extension.createTags?.() ?? [];
+		const addTagsToEachExtension = (extension: MarkExtension | NodeExtension) => {
+			if (extension.createTags) extension.tags = extension.createTags();
 		};
 
 		this.editorStore.markExtensions.forEach(addTagsToEachExtension);

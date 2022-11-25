@@ -1,5 +1,5 @@
 import { NodeSpec } from 'prosemirror-model';
-import { NodeExtension } from '../..';
+import { ExtensionTag, NodeExtension } from '../..';
 
 class DocExtension extends NodeExtension {
 	get name() {
@@ -7,7 +7,9 @@ class DocExtension extends NodeExtension {
 	}
 
 	createNodeSpec(): NodeSpec {
-		throw new Error('Method not implemented.');
+		return {
+			content: `${ExtensionTag.Block}+`,
+		};
 	}
 }
 
