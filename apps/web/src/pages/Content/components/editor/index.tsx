@@ -1,12 +1,16 @@
-import { DirectEditorProps } from 'prosemirror-view';
-import { memo, useContext, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import { ContentPageContext } from '@/app/store/pages/contentPage';
+import { useAppDispatch } from '@/app/store';
+import { setEditorStore } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
-import { EditorState, Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 import { Extension } from './extensions';
-import EditorStore from './store/EditorStore';
+import presetExtensions from './extensions/presetExtensions';
+import EditorStore, { HandleDOMEvents } from './store/EditorStore';
+import InsertTooltip from './tooltips/InsertTooltip';
+import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
+import SelectionTooltip from './tooltips/selectionTooltip';
 
 const EditorContainer = styled.article`
 	flex: 1 1 760px;
@@ -135,43 +139,56 @@ const EditorContainer = styled.article`
 	}
 `;
 
-export interface EditorProps extends Omit<DirectEditorProps, 'editable' | 'dispatchTransaction'> {
+export interface EditorProps {
 	editable: boolean;
 	autoFocus?: boolean;
-	onChange?: (tr: Transaction, state: EditorState) => void;
+	onChange?: (view: EditorView) => void;
+	extensions?: Extension[];
+	doc?: string;
+	handleDOMEvents?: HandleDOMEvents;
 }
 
-const Editor: React.FC<{ extensions: Extension[]; doc: string | undefined; editable: boolean, autofocus: boolean}> = (
-	props,
-) => {
-	const { extensions, editable, doc, autofocus } = props;
+const Editor: React.FC<EditorProps> = (props) => {
+	const {
+		extensions = [],
+		editable = false,
+		autoFocus = true,
+		onChange,
+		handleDOMEvents,
+		doc,
+	} = props;
+
 	const editorContainerRef = useRef<HTMLDivElement>(null);
-	const contentPageContext = useContext(ContentPageContext);
-
+	const dispatch = useAppDispatch();
 	useEffect(() => {
-		const editorStore = new EditorStore(extensions);
-		const editorState = editorStore.createEditorState();
+		const editorStore = new EditorStore(
+			extensions.length ? [...presetExtensions, ...extensions] : presetExtensions,
+		);
+		const state = editorStore.createEditorState(doc);
 		const editorView = editorStore.createEditorView(editorContainerRef.current!, {
+			state,
 			editable,
-			autofocus,
+			autoFocus,
+			onChange,
+			handleDOMEvents,
 		});
+		dispatch(setEditorStore(editorStore));
 
-		contentPageContext.editorStore = editorStore;
+		return () => {
+			editorView.destroy();
+			dispatch(setEditorStore(null));
+		};
 	}, []);
-
-  useEffect(() => {
-    console.debug(contentPageContext);
-  }, [contentPageContext])
 
 	return (
 		<EditorContainer ref={editorContainerRef}>
-			{/* {editable && (
+			{editable && (
 				<>
 					<InsertTooltip />
 					<SelectionTooltip />
 				</>
 			)}
-			{!editable && <SelectionCommentTooltip />} */}
+			{!editable && <SelectionCommentTooltip />}
 		</EditorContainer>
 	);
 };

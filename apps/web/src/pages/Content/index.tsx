@@ -1,4 +1,3 @@
-import { Node as ProseMirrorNode } from 'prosemirror-model';
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -10,7 +9,6 @@ import {
 	fetchContentPageDataByID,
 	resetContentPage,
 	setCurrentHeadingID,
-	setEditorState,
 	setInsertTooltip,
 	setInsertTooltipVisible,
 	setSelectionTooltip,
@@ -19,7 +17,6 @@ import {
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
-import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
@@ -29,9 +26,7 @@ import CommentList from './components/comment/CommentList';
 import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
 import BoldExtension from './components/editor/extensions/markExtensions/boldExtension';
-import presetExtensions from './components/editor/extensions/presetExtensions';
-import plugins from './components/editor/plugins';
-import schema from './components/editor/schema';
+import { HandleDOMEvents } from './components/editor/store/EditorStore';
 import addHeadingID from './components/editor/utils/addHeadingID';
 import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';
 
@@ -54,22 +49,20 @@ interface ContentPageProps {
 	editable: boolean;
 }
 
-export type EditorDOMEventHandlers = {
-	[Event in keyof HTMLElementEventMap]?: (
-		view: EditorView,
-		event: HTMLElementEventMap[Event],
-	) => void | boolean;
-};
-
 const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const { isChapter, editable } = props;
 
 	const { itemID } = useParams();
 	const dispatch = useAppDispatch();
 
+	const contentPageContext: ContentPageContext = useMemo(() => ({ isChapter }), []);
+
 	const { loading, editor, error, catalog, title } = useSelector(
 		(state: AppState) => state.contentPage,
 	);
+
+	const { editorContent } = editor;
+
 	if (error) message.error(error.message ?? '');
 	useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${title}`, [title]);
 
@@ -103,69 +96,41 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		};
 	}, []);
 
-	const ref = useRef<{ view: EditorView | null }>({ view: null });
+	const onChange = useCallback((view: EditorView) => {
+		const { state } = view;
+		const newState = addHeadingID(state);
+		// 更新 insert tooltip
+		const { selection } = newState;
+		const { $head, empty } = selection;
+		const { nodeAfter, nodeBefore } = $head;
+		const canInsertBlock = nodeAfter === null || nodeBefore === null;
+		const cursorPositionToViewPort = view.coordsAtPos($head.pos);
+		const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
+		dispatch(
+			setInsertTooltip({
+				visible: empty,
+				canInsertBlock,
+				position: {
+					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+					top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
+				},
+			}),
+		);
 
-	const onChange = useCallback(
-		(tr: Transaction, state: EditorState) => {
-			window.requestAnimationFrame(() => {
-				const { view } = ref.current;
-				if (!view || !state) return;
-				const newState = addHeadingID(state.apply(tr));
-				// 更新 insert tooltip
-				const { selection } = newState;
-				const { $head, empty } = selection;
-				const { nodeAfter, nodeBefore } = $head;
-				const canInsertBlock = nodeAfter === null || nodeBefore === null;
-				const cursorPositionToViewPort = view.coordsAtPos($head.pos);
-				const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
-				dispatch(
-					setInsertTooltip({
-						visible: empty,
-						canInsertBlock,
-						position: {
-							left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-							top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
-						},
-					}),
-				);
+		dispatch(
+			setSelectionTooltip({
+				visible: !empty,
+				position: {
+					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+					top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
+				},
+			}),
+		);
+	}, []);
 
-				dispatch(
-					setSelectionTooltip({
-						visible: !empty,
-						position: {
-							left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-							top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
-						},
-					}),
-				);
-				dispatch(setEditorState(newState));
-			});
-		},
-		[ref.current?.view, addHeadingID],
-	);
-
-	useEffect(() => {
-		const doc = editor.editorContent
-			? ProseMirrorNode.fromJSON(schema, JSON.parse(editor.editorContent))
-			: undefined;
-
-		const initialEditorState = EditorState.create({
-			schema,
-			doc,
-			plugins,
-		});
-
-		dispatch(setEditorState(initialEditorState));
-	}, [editor.editorContent]);
-
-	const contentPageContext: ContentPageContext = useMemo(
-		() => ({ isChapter, editorStore: null }),
-		[isChapter, ref.current?.view],
-	);
-
-	const editorDOMEventHandlers: EditorDOMEventHandlers = useMemo(
+	const handleDOMEvents: HandleDOMEvents = useMemo(
 		() => ({
-			blur() {
+			blur: () => {
 				dispatch(setInsertTooltipVisible(false));
 				dispatch(setSelectionTooltipVisible(false));
 			},
@@ -173,9 +138,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		[],
 	);
 
-	const extensions = useMemo(() => [...presetExtensions, new BoldExtension()], []);
-
-	const { editorState } = editor;
+	const extensions = useMemo(() => [new BoldExtension()], []);
 
 	if (loading) return <LoadingIndicator />;
 	return (
@@ -185,15 +148,16 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						{editor.editorContent && (
+						{editorContent && (
 							<Editor
 								extensions={extensions}
-								doc={editor.editorContent}
-                editable={true}
-                autofocus={true}
+								doc={editorContent}
+								editable={true}
+								autoFocus={true}
+								onChange={onChange}
+								handleDOMEvents={handleDOMEvents}
 							/>
 						)}
-
 						<CommentList />
 						{editable && <ActionBar />}
 						<CatalogButton />

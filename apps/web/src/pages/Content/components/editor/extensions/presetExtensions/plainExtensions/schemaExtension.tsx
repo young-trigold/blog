@@ -1,6 +1,6 @@
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
-import { schema } from 'prosemirror-schema-basic';
 import { PlainExtension } from '../..';
+import schema from '../../../schema';
 import EditorStore from '../../../store/EditorStore';
 
 class SchemaExtension extends PlainExtension {

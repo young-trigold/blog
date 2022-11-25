@@ -10,6 +10,13 @@ export enum EditorStoreStatus {
 	Destroyed,
 }
 
+export type HandleDOMEvents = {
+	[eventName in keyof HTMLElementEventMap]?: (
+		view: EditorView,
+		event: HTMLElementEventMap[eventName],
+	) => void | boolean;
+};
+
 class EditorStore {
 	status: EditorStoreStatus = EditorStoreStatus.Init;
 	view: EditorView | null = null;
@@ -36,7 +43,6 @@ class EditorStore {
 
 	createEditorState(doc?: string, selection?: Selection) {
 		if (!this.schema) throw new Error('editor store can not create editor status in this time');
-
 		const editorState = EditorState.create({
 			schema: this.schema,
 			plugins: this.plugins,
@@ -50,16 +56,25 @@ class EditorStore {
 	createEditorView(
 		editorDOMContainer: HTMLElement,
 		props: {
+			state: EditorState;
 			editable: boolean;
-			autofocus: boolean;
+			autoFocus: boolean;
+			onChange?: (view: EditorView) => void;
+			handleDOMEvents?: HandleDOMEvents;
 		},
 	) {
 		const editorView = new EditorView(editorDOMContainer, {
-			state: this.createEditorState(),
+			state: props.state,
 			editable: () => props.editable,
+			dispatchTransaction(tr) {
+				const newEditorState = editorView.state.apply(tr);
+				editorView.updateState(newEditorState);
+				props.onChange?.(editorView);
+			},
+			handleDOMEvents: props.handleDOMEvents,
 		});
 
-    if(props.autofocus) editorView.focus();
+		if (props.autoFocus) editorView.focus();
 
 		this.view = editorView;
 		if (this.status === EditorStoreStatus.EditorStateCreated)

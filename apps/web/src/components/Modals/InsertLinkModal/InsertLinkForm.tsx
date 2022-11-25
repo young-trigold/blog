@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setInsertLinkModalVisible } from '@/app/store/modals';
-import { setEditorState } from '@/app/store/pages/contentPage';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
@@ -29,17 +28,20 @@ const InsertLinkForm = () => {
 		dispatch(setInsertLinkModalVisible(false));
 	}, [setInsertLinkModalVisible]);
 
-	const { editorState } = useAppSelector((state) => state.contentPage.editor);
+	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 
 	const handleOK = useCallback(() => {
-		if (!editorState) return;
+		if (!editorStore) return;
+		const { view: editorView } = editorStore;
+    if (!editorView) return;
+    const {state: editorState} = editorView;
 		const attrs = { title, href: link };
 		const { schema } = editorState;
 		const node = schema.text(attrs.title, [schema.marks.link.create(attrs)]);
 		const newEditorState = editorState.apply(editorState.tr.replaceSelectionWith(node, false));
-		dispatch(setEditorState(newEditorState));
+    editorView.updateState(newEditorState);
 		dispatch(setInsertLinkModalVisible(false));
-	}, [editorState, setInsertLinkModalVisible, link, title]);
+	}, [editorStore, link, title]);
 
 	const disabled = useMemo(() => {
 		let pass = true;

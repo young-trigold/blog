@@ -10,12 +10,10 @@ import { CommentInfo } from '../../../pages/content/components/comment/CommentLi
 
 export interface ContentPageContext {
 	isChapter: boolean;
-	editorStore: EditorStore | null;
 }
 
 export const ContentPageContext = createContext<ContentPageContext>({
 	isChapter: false,
-	editorStore: null,
 });
 
 export type InsertTooltipState = {
@@ -42,7 +40,7 @@ interface ContentPageState {
 	};
 	editor: {
 		editorContent: string | undefined;
-		editorState: EditorState | null;
+		editorStore: EditorStore | null;
 		plugin: {
 			insertTooltip: InsertTooltipState;
 			selectionTooltip: SelectionTooltipState;
@@ -65,7 +63,7 @@ export const initialState: ContentPageState = {
 	},
 	editor: {
 		editorContent: undefined,
-		editorState: null,
+		editorStore: null,
 		plugin: {
 			insertTooltip: {
 				visible: false,
@@ -144,8 +142,8 @@ const ContentPageSlice = createSlice({
 		setEditorContent: (state, action: PayloadAction<string>) => {
 			state.editor.editorContent = action.payload;
 		},
-		setEditorState: (state, action: PayloadAction<EditorState>) => {
-			state.editor.editorState = action.payload as any;
+		setEditorStore: (state, action: PayloadAction<EditorStore | null>) => {
+			state.editor.editorStore = action.payload as any;
 		},
 		resetContentPage: (state) => {
 			const { catalog, comment, editor, title, error, loading } = initialState;
@@ -186,7 +184,7 @@ export const {
 	setSelectionTooltip,
 	setSelectionTooltipVisible,
 	setEditorContent,
-	setEditorState,
+	setEditorStore,
 	resetContentPage,
 } = ContentPageSlice.actions;
 
