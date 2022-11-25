@@ -3,18 +3,21 @@ import axios from 'axios';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { createContext } from 'react';
+import EditorStore from 'src/pages/content/components/editor/store/EditorStore';
 
 import { HeadingInfo } from '../../../pages/content/components/catalog/Catalog';
 import { CommentInfo } from '../../../pages/content/components/comment/CommentList';
 
-export const ContentPageContext = createContext<{
-	editable: boolean;
+export interface ContentPageContext {
 	isChapter: boolean;
 	editorView: EditorView | null;
-}>({
-	editable: false,
+	editorStore: EditorStore | null;
+}
+
+export const ContentPageContext = createContext<ContentPageContext>({
 	isChapter: false,
 	editorView: null,
+	editorStore: null,
 });
 
 export type InsertTooltipState = {
@@ -128,16 +131,10 @@ const ContentPageSlice = createSlice({
 		setInsertTooltipVisible: (state, action: PayloadAction<InsertTooltipState['visible']>) => {
 			state.editor.plugin.insertTooltip.visible = action.payload;
 		},
-		setInsertTooltip: (
-			state,
-			action: PayloadAction<InsertTooltipState>,
-		) => {
+		setInsertTooltip: (state, action: PayloadAction<InsertTooltipState>) => {
 			state.editor.plugin.insertTooltip = action.payload;
 		},
-		setSelectionTooltip: (
-			state,
-			action: PayloadAction<SelectionTooltipState>,
-		) => {
+		setSelectionTooltip: (state, action: PayloadAction<SelectionTooltipState>) => {
 			state.editor.plugin.selectionTooltip = action.payload;
 		},
 		setSelectionTooltipVisible: (
@@ -187,8 +184,8 @@ export const {
 	setHeadings,
 	setCurrentHeadingID,
 	setInsertTooltipVisible,
-  setInsertTooltip,
-  setSelectionTooltip,
+	setInsertTooltip,
+	setSelectionTooltip,
 	setSelectionTooltipVisible,
 	setEditorContent,
 	setEditorState,

@@ -31,6 +31,7 @@ import Editor from './components/editor';
 import nodeViews from './components/editor/nodeViews';
 import plugins from './components/editor/plugins';
 import schema from './components/editor/schema';
+import EditorStore from './components/editor/store/EditorStore';
 import addHeadingID from './components/editor/utils/addHeadingID';
 import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';
 
@@ -157,9 +158,9 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		dispatch(setEditorState(initialEditorState));
 	}, [editor.editorContent]);
 
-	const contentPageContext = useMemo(
-		() => ({ editable, isChapter, editorView: ref.current?.view }),
-		[editable, isChapter, ref.current?.view],
+	const contentPageContext: ContentPageContext = useMemo(
+		() => ({ isChapter, editorView: ref.current?.view, editorStore: new EditorStore([]) }),
+		[isChapter, ref.current?.view],
 	);
 
 	const editorDOMEventHandlers: EditorDOMEventHandlers = useMemo(
