@@ -78,6 +78,7 @@ const getSetFunctionByLevel = (level: number, editorStore: EditorStore | null) =
 		);
 
 		const newState = editorState.apply(transaction);
+    editorView.updateState(newState);
 	};
 };
 

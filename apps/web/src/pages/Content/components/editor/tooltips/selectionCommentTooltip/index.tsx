@@ -40,16 +40,19 @@ const SelectionCommentTooltip = () => {
 	const { position, visible } = useSelector(
 		(state: AppState) => state.contentPage.editor.plugin.selectionTooltip,
 	);
-	const { editorState } = useAppSelector((state) => state.contentPage.editor);
+	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 
 	const onClick = useCallback(() => {
-		if (!editorState) return;
+		if (!editorStore) return;
+		const { view: editorView } = editorStore;
+		if (!editorView) return;
+		const { state: editorState } = editorView;
 		const { selection, doc } = editorState;
 		if (selection instanceof TextSelection) {
 			const { from, to } = selection;
 			console.debug(doc.content.textBetween(from, to));
 		}
-	}, [editorState]);
+	}, [editorStore]);
 
 	return (
 		<StyledSelectionCommentTooltip visible={visible} position={position} onClick={onClick}>
