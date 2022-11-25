@@ -141,10 +141,10 @@ export interface EditorProps extends Omit<DirectEditorProps, 'editable' | 'dispa
 	onChange?: (tr: Transaction, state: EditorState) => void;
 }
 
-const Editor: React.FC<{ extensions: Extension[]; doc: string | undefined; editable: boolean }> = (
+const Editor: React.FC<{ extensions: Extension[]; doc: string | undefined; editable: boolean, autofocus: boolean}> = (
 	props,
 ) => {
-	const { extensions, editable } = props;
+	const { extensions, editable, doc, autofocus } = props;
 	const editorContainerRef = useRef<HTMLDivElement>(null);
 	const contentPageContext = useContext(ContentPageContext);
 
@@ -153,13 +153,15 @@ const Editor: React.FC<{ extensions: Extension[]; doc: string | undefined; edita
 		const editorState = editorStore.createEditorState();
 		const editorView = editorStore.createEditorView(editorContainerRef.current!, {
 			editable,
-			autofocus: false,
+			autofocus,
 		});
 
 		contentPageContext.editorStore = editorStore;
-
-		console.debug(editorStore);
 	}, []);
+
+  useEffect(() => {
+    console.debug(contentPageContext);
+  }, [contentPageContext])
 
 	return (
 		<EditorContainer ref={editorContainerRef}>

@@ -59,6 +59,8 @@ class EditorStore {
 			editable: () => props.editable,
 		});
 
+    if(props.autofocus) editorView.focus();
+
 		this.view = editorView;
 		if (this.status === EditorStoreStatus.EditorStateCreated)
 			this.status = EditorStoreStatus.EditorViewCreated;

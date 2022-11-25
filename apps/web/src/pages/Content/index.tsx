@@ -159,7 +159,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	}, [editor.editorContent]);
 
 	const contentPageContext: ContentPageContext = useMemo(
-		() => ({ isChapter, editorView: ref.current?.view, editorStore: null }),
+		() => ({ isChapter, editorStore: null }),
 		[isChapter, ref.current?.view],
 	);
 
@@ -190,13 +190,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 								extensions={extensions}
 								doc={editor.editorContent}
                 editable={true}
-								// autoFocus
-								// ref={ref}
-								// state={editorState}
-								// nodeViews={nodeViews}
-								// editable={editable}
-								// onChange={onChange}
-								// handleDOMEvents={editorDOMEventHandlers}
+                autofocus={true}
 							/>
 						)}
 

@@ -10,13 +10,11 @@ import { CommentInfo } from '../../../pages/content/components/comment/CommentLi
 
 export interface ContentPageContext {
 	isChapter: boolean;
-	editorView: EditorView | null;
 	editorStore: EditorStore | null;
 }
 
 export const ContentPageContext = createContext<ContentPageContext>({
 	isChapter: false,
-	editorView: null,
 	editorStore: null,
 });
 
