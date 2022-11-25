@@ -21,7 +21,7 @@ class SchemaExtension extends PlainExtension {
 		this.editorStore.nodeExtensions.forEach((nodeExtension) => {
 			nodes[nodeExtension.name] = nodeExtension.createNodeSpec();
 		});
-		console.debug(marks, nodes);
+		// console.debug(marks, nodes);
 		// const mySchema = new Schema({
 			
 		// 	marks,
@@ -31,7 +31,7 @@ class SchemaExtension extends PlainExtension {
 		// console.debug('mySchema', mySchema);
 		// console.debug('schema', schema);
 		this.editorStore.schema = schema;
-		console.debug(this.editorStore);
+		// console.debug(this.editorStore);
 	}
 
 	onEditorViewCreate?(): void {}

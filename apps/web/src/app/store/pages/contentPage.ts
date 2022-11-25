@@ -43,7 +43,7 @@ interface ContentPageState {
 		comments: CommentInfo[];
 	};
 	editor: {
-		editorContent: string;
+		editorContent: string | undefined;
 		editorState: EditorState | null;
 		plugin: {
 			insertTooltip: InsertTooltipState;
@@ -66,7 +66,7 @@ export const initialState: ContentPageState = {
 		comments: [],
 	},
 	editor: {
-		editorContent: '',
+		editorContent: undefined,
 		editorState: null,
 		plugin: {
 			insertTooltip: {

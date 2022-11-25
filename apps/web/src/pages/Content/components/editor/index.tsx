@@ -1,17 +1,12 @@
-import { DirectEditorProps, EditorView } from 'prosemirror-view';
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
+import { DirectEditorProps } from 'prosemirror-view';
+import { memo, useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import { useAppDispatch } from '@/app/store';
-import { setCurrentHeadingID } from '@/app/store/pages/contentPage';
+import { ContentPageContext } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
 import { EditorState, Transaction } from 'prosemirror-state';
-import BoldExtension from './extensions/markExtensions/boldExtension';
-import InsertTooltip from './tooltips/InsertTooltip';
-import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
-import SelectionTooltip from './tooltips/selectionTooltip';
-import getCurrentHeadingID from './utils/getCurrentHeadingID';
-import transformEditorProps from './utils/transformEditorProps';
+import { Extension } from './extensions';
+import EditorStore from './store/EditorStore';
 
 const EditorContainer = styled.article`
 	flex: 1 1 760px;
@@ -146,60 +141,37 @@ export interface EditorProps extends Omit<DirectEditorProps, 'editable' | 'dispa
 	onChange?: (tr: Transaction, state: EditorState) => void;
 }
 
-const extensions = [new BoldExtension()];
-
-const Editor = forwardRef<{ view: EditorView | null }, EditorProps>((props, ref) => {
-	const initialPropsRef = useRef<EditorProps | null>(props);
-	const editorViewRef = useRef<EditorView | null>(null);
-	// 更新 editor props
-	editorViewRef.current?.setProps(transformEditorProps(props));
-
+const Editor: React.FC<{ extensions: Extension[]; doc: string | undefined; editable: boolean }> = (
+	props,
+) => {
+	const { extensions, editable } = props;
 	const editorContainerRef = useRef<HTMLDivElement>(null);
-	const dispatch = useAppDispatch();
+	const contentPageContext = useContext(ContentPageContext);
 
 	useEffect(() => {
-		// ============================== 初始化 editorView ===============================
-		const initialEditorView = new EditorView(
-			editorContainerRef.current,
-			transformEditorProps(initialPropsRef.current!),
-		);
+		const editorStore = new EditorStore(extensions);
+		const editorState = editorStore.createEditorState();
+		const editorView = editorStore.createEditorView(editorContainerRef.current!, {
+			editable,
+			autofocus: false,
+		});
 
-		initialPropsRef.current = null;
-		editorViewRef.current = initialEditorView;
-		const currentHeadingId = getCurrentHeadingID(editorContainerRef.current!);
-		currentHeadingId && dispatch(setCurrentHeadingID(currentHeadingId));
+		contentPageContext.editorStore = editorStore;
 
-		return () => {
-			initialEditorView.destroy();
-		};
+		console.debug(editorStore);
 	}, []);
-
-	useImperativeHandle(ref, () => ({
-		get view() {
-			return editorViewRef.current;
-		},
-	}));
-
-	const { autoFocus, editable } = props;
-	useEffect(() => {
-		autoFocus && editorViewRef.current?.focus();
-	}, []);
-
-	// const {} = useEditorStore({
-	// 	extensions,
-	// });
 
 	return (
-		<EditorContainer ref={editorContainerRef} >
-			{editable && (
+		<EditorContainer ref={editorContainerRef}>
+			{/* {editable && (
 				<>
 					<InsertTooltip />
 					<SelectionTooltip />
 				</>
 			)}
-			{!editable && <SelectionCommentTooltip />}
+			{!editable && <SelectionCommentTooltip />} */}
 		</EditorContainer>
 	);
-});
+};
 
 export default memo(Editor);

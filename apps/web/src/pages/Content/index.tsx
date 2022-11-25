@@ -28,10 +28,10 @@ import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';
 import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
-import nodeViews from './components/editor/nodeViews';
+import BoldExtension from './components/editor/extensions/markExtensions/boldExtension';
+import presetExtensions from './components/editor/extensions/presetExtensions';
 import plugins from './components/editor/plugins';
 import schema from './components/editor/schema';
-import EditorStore from './components/editor/store/EditorStore';
 import addHeadingID from './components/editor/utils/addHeadingID';
 import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';
 
@@ -159,7 +159,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	}, [editor.editorContent]);
 
 	const contentPageContext: ContentPageContext = useMemo(
-		() => ({ isChapter, editorView: ref.current?.view, editorStore: new EditorStore([]) }),
+		() => ({ isChapter, editorView: ref.current?.view, editorStore: null }),
 		[isChapter, ref.current?.view],
 	);
 
@@ -173,6 +173,8 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		[],
 	);
 
+	const extensions = useMemo(() => [...presetExtensions, new BoldExtension()], []);
+
 	const { editorState } = editor;
 
 	if (loading) return <LoadingIndicator />;
@@ -183,17 +185,21 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						{editorState && (
+						{editor.editorContent && (
 							<Editor
-								autoFocus
-								ref={ref}
-								state={editorState}
-								nodeViews={nodeViews}
-								editable={editable}
-								onChange={onChange}
-								handleDOMEvents={editorDOMEventHandlers}
+								extensions={extensions}
+								doc={editor.editorContent}
+                editable={true}
+								// autoFocus
+								// ref={ref}
+								// state={editorState}
+								// nodeViews={nodeViews}
+								// editable={editable}
+								// onChange={onChange}
+								// handleDOMEvents={editorDOMEventHandlers}
 							/>
 						)}
+
 						<CommentList />
 						{editable && <ActionBar />}
 						<CatalogButton />
