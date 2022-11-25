@@ -1,6 +1,6 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
-import EditorStore from '../store/EditorStore';
+import EditorStore from '../store';
 
 export abstract class Extension {
 	abstract get name(): string;
@@ -13,7 +13,7 @@ export abstract class Extension {
 export abstract class MarkExtension extends Extension {
 	get type() {
 		return this.editorStore?.schema?.marks[this.name]!;
-	};
+	}
 
 	abstract createMarkSpec(): MarkSpec;
 	tags: ExtensionTag[] = [];
@@ -24,7 +24,7 @@ export abstract class MarkExtension extends Extension {
 export abstract class NodeExtension extends Extension {
 	get type() {
 		return this.editorStore?.schema?.nodes[this.name]!;
-	};
+	}
 	abstract createNodeSpec(): NodeSpec;
 
 	tags: ExtensionTag[] = [];

@@ -3,7 +3,7 @@ import getUniqueID from '@/utils/getUniqueID';
 import { memo, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import schema from '../../schema';
-import EditorStore from '../../store/EditorStore';
+import EditorStore from '../../store';
 
 const StyledHeadingDecoration = styled.div`
 	display: flex;

@@ -7,7 +7,7 @@ import px from '@/utils/realPixel';
 import { EditorView } from 'prosemirror-view';
 import { Extension } from './extensions';
 import presetExtensions from './extensions/presetExtensions';
-import EditorStore, { HandleDOMEvents } from './store/EditorStore';
+import EditorStore, { HandleDOMEvents } from './store';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
 import SelectionTooltip from './tooltips/selectionTooltip';

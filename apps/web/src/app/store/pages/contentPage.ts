@@ -1,9 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import { createContext } from 'react';
-import EditorStore from 'src/pages/content/components/editor/store/EditorStore';
+import EditorStore from 'src/pages/content/components/editor/store';
 
 import { HeadingInfo } from '../../../pages/content/components/catalog/Catalog';
 import { CommentInfo } from '../../../pages/content/components/comment/CommentList';

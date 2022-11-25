@@ -26,7 +26,7 @@ import CommentList from './components/comment/CommentList';
 import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
 import BoldExtension from './components/editor/extensions/markExtensions/boldExtension';
-import { HandleDOMEvents } from './components/editor/store/EditorStore';
+import { HandleDOMEvents } from './components/editor/store';
 import addHeadingID from './components/editor/utils/addHeadingID';
 import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';
 

@@ -1,7 +1,7 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
 import { ExtensionTag, MarkExtension } from '..';
-import EditorStore from '../../store/EditorStore';
+import EditorStore from '../../store';
 import markInputRule from '../../utils/markInputRule';
 
 class BoldExtension extends MarkExtension {
