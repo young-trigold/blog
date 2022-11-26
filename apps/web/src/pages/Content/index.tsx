@@ -68,7 +68,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 
 	useEffect(() => {
 		dispatch(fetchContentPageDataByID({ itemID, isChapter }));
-	}, [itemID, isChapter, fetchContentPageDataByID]);
+	}, [itemID, isChapter]);
 
 	const [currentHeadingIDSearchParam, setCurrentHeadingIDSearchParam] = useSearchParams();
 	const isFirstRef = useRef(true);
@@ -152,7 +152,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 							<Editor
 								extensions={extensions}
 								doc={editorContent}
-								editable={true}
+								editable={editable}
 								autoFocus={true}
 								onChange={onChange}
 								handleDOMEvents={handleDOMEvents}

@@ -5,11 +5,13 @@ import EditorStore from '../../store';
 import markInputRule from '../../utils/markInputRule';
 
 class BoldExtension extends MarkExtension {
-	editorStore: EditorStore | null = null;
+	static extensionName = 'bold';
 
-	get name() {
-		return 'bold' as const;
-	}
+  get name() {
+    return BoldExtension.extensionName;
+  }
+
+	editorStore: EditorStore | null = null;
 
 	createTags() {
 		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];

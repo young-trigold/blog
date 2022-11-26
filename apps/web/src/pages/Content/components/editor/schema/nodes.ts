@@ -6,7 +6,7 @@ import getUniqueID from '@/utils/getUniqueID';
 
 export const MaxHeadingLevel = 3;
 
-// 标题
+// 标题bb
 const heading: NodeSpec = {
 	content: 'text*',
 	marks: 'sup sub underline em link',

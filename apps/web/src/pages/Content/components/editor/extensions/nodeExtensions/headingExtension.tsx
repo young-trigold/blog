@@ -1,15 +1,18 @@
 import { NodeSpec } from 'prosemirror-model';
 import { ExtensionTag, NodeExtension } from '..';
+import BoldExtension from '../markExtensions/boldExtension';
 
 class HeadingExtension extends NodeExtension {
+	static extensionName = 'heading';
 	get name() {
-		return 'heading';
+		return HeadingExtension.extensionName;
 	}
-	createTags?(): ExtensionTag[] {
-		return [];
+	createTags(): ExtensionTag[] {
+		return [ExtensionTag.Block];
 	}
 	createNodeSpec(): NodeSpec {
 		return {
+			marks: [BoldExtension].map((extension) => extension.extensionName).join(' '),
 			attrs: {
 				level: {
 					default: 1,

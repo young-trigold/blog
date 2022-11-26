@@ -3,7 +3,10 @@ import { MarkSpec, NodeSpec } from 'prosemirror-model';
 import EditorStore from '../store';
 
 export abstract class Extension {
-	abstract get name(): string;
+	// abstract get name(): string;
+  static extensionName: string;
+  abstract get name() : string;
+
 	editorStore: EditorStore | null = null;
 
 	onEditorStoreCreate?(): void;
@@ -12,7 +15,7 @@ export abstract class Extension {
 
 export abstract class MarkExtension extends Extension {
 	get type() {
-		return this.editorStore?.schema?.marks[this.name]!;
+		return this.editorStore?.schema?.marks[MarkExtension.extensionName]!;
 	}
 
 	abstract createMarkSpec(): MarkSpec;
@@ -23,7 +26,7 @@ export abstract class MarkExtension extends Extension {
 
 export abstract class NodeExtension extends Extension {
 	get type() {
-		return this.editorStore?.schema?.nodes[this.name]!;
+		return this.editorStore?.schema?.nodes[NodeExtension.extensionName]!;
 	}
 	abstract createNodeSpec(): NodeSpec;
 

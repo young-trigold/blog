@@ -1,7 +1,6 @@
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import { useAppSelector } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setCurrentHeadingID, setHeadings } from '@/app/store/pages/contentPage';
 import { useEffect } from 'react';
 import schema from '../editor/schema';
@@ -55,12 +54,15 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 	// =============================== heading ===============================
 	const { catalog, editor } = useAppSelector((state) => state.contentPage);
 	const { headings } = catalog;
-	const { editorState } = editor;
+	const { editorStore } = editor;
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		if (!editorState) return;
+		if (!editorStore) return;
+		const { view: editorView } = editorStore;
+		if (!editorView) return;
+		const { state: editorState } = editorView;
 		const { doc } = editorState;
 		const currentHeadings: HeadingInfo[] = [];
 
@@ -74,7 +76,7 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 		if (!new window.URL(window.location.href).searchParams.get('currentHeadingID')) {
 			dispatch(setCurrentHeadingID(currentHeadings[0]?.headingID));
 		}
-	}, [editorState]);
+	}, [editorStore]);
 
 	return (
 		<StyledCatalog catalogVisible={catalogVisible}>
