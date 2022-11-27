@@ -2,8 +2,9 @@ import { NodeSpec } from 'prosemirror-model';
 import { ExtensionTag, NodeExtension } from '../..';
 
 class DocExtension extends NodeExtension {
+  static extensionName = 'doc';
 	get name() {
-		return 'doc' as const;
+		return DocExtension.extensionName;
 	}
 
 	createNodeSpec(): NodeSpec {

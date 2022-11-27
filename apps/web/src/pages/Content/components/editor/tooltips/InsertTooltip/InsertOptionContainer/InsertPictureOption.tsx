@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { message } from '@/components/Message';
@@ -32,8 +32,7 @@ const InsertPictureOption = () => {
 				const attrs = { src: fileURL };
 				const node = editorState.schema.nodes.image.create(attrs);
 				const transaction = editorState.tr.replaceSelectionWith(node, false);
-				const newState = editorState.apply(transaction);
-				editorView.updateState(newState);
+				editorView.dispatch(transaction);
 				message.success('图片插入成功!');
 			} catch (error) {
 				if (axios.isAxiosError(error))
@@ -61,4 +60,4 @@ const InsertPictureOption = () => {
 	);
 };
 
-export default InsertPictureOption;
+export default memo(InsertPictureOption);

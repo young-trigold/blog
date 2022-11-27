@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setCurrentHeadingID, setHeadings } from '@/app/store/pages/contentPage';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import schema from '../editor/schema';
 import CatalogItem from './CatalogItem';
 
@@ -76,7 +76,7 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 		if (!new window.URL(window.location.href).searchParams.get('currentHeadingID')) {
 			dispatch(setCurrentHeadingID(currentHeadings[0]?.headingID));
 		}
-	}, [editorStore]);
+	}, [editorStore?.view?.state.doc]);
 
 	return (
 		<StyledCatalog catalogVisible={catalogVisible}>
@@ -87,4 +87,4 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 	);
 };
 
-export default Catalog;
+export default memo(Catalog);

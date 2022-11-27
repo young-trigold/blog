@@ -2,8 +2,9 @@ import { NodeSpec } from 'prosemirror-model';
 import { ExtensionTag, NodeExtension } from '../..';
 
 class ParagraphExtension extends NodeExtension {
+	static extensionName = 'paragraph';
 	get name() {
-		return 'paragraph' as const;
+		return ParagraphExtension.extensionName;
 	}
 
 	createTags() {

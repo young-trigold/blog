@@ -3,7 +3,6 @@ import { MarkSpec, NodeSpec } from 'prosemirror-model';
 import EditorStore from '../store';
 
 export abstract class Extension {
-	// abstract get name(): string;
   static extensionName: string;
   abstract get name() : string;
 

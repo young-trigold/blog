@@ -38,8 +38,8 @@ const InsertLinkForm = () => {
 		const attrs = { title, href: link };
 		const { schema } = editorState;
 		const node = schema.text(attrs.title, [schema.marks.link.create(attrs)]);
-		const newEditorState = editorState.apply(editorState.tr.replaceSelectionWith(node, false));
-    editorView.updateState(newEditorState);
+		const transaction = (editorState.tr.replaceSelectionWith(node, false));
+    editorView.dispatch(transaction);
 		dispatch(setInsertLinkModalVisible(false));
 	}, [editorStore, link, title]);
 

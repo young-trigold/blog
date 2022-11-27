@@ -77,8 +77,7 @@ const getSetFunctionByLevel = (level: number, editorStore: EditorStore | null) =
 			{ level, headingID: getUniqueID() },
 		);
 
-		const newState = editorState.apply(transaction);
-    editorView.updateState(newState);
+    editorView.dispatch(transaction);
 	};
 };
 
