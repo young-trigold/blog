@@ -66,7 +66,7 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 		const { doc } = editorState;
 		const currentHeadings: HeadingInfo[] = [];
 
-		doc.descendants((node) => {
+		doc.content.forEach((node) => {
 			if (node.type !== schema.nodes.heading) return;
 			const { headingID, level } = node.attrs;
 			currentHeadings.push({ level, headingID, content: node.firstChild?.text ?? '' });
@@ -76,7 +76,7 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 		if (!new window.URL(window.location.href).searchParams.get('currentHeadingID')) {
 			dispatch(setCurrentHeadingID(currentHeadings[0]?.headingID));
 		}
-	}, [editorStore?.view?.state.doc]);
+	}, [editorStore?.view?.state.doc.content]);
 
 	return (
 		<StyledCatalog catalogVisible={catalogVisible}>
