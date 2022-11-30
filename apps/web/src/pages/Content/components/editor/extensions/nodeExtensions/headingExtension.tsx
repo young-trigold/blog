@@ -1,6 +1,13 @@
-import { NodeSpec } from 'prosemirror-model';
+import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { ExtensionTag, NodeExtension } from '..';
-import BoldExtension from '../markExtensions/boldExtension';
+import ItalicExtension from '../markExtensions/italicExtension';
+import LinkExtension from '../markExtensions/linkExtension';
+import SubExtension from '../markExtensions/subExtension';
+import SupExtension from '../markExtensions/supExtension';
+import UnderlineExtension from '../markExtensions/underlineExtension';
+import TextExtension from '../presetExtensions/nodeExtensions/textExtension';
+
+export const HeadingMaxLevel = 4;
 
 class HeadingExtension extends NodeExtension {
 	static extensionName = 'heading';
@@ -12,31 +19,35 @@ class HeadingExtension extends NodeExtension {
 	}
 	createNodeSpec(): NodeSpec {
 		return {
-			marks: [BoldExtension].map((extension) => extension.extensionName).join(' '),
+			marks: [ItalicExtension, UnderlineExtension, LinkExtension, SubExtension, SupExtension]
+				.map((extension) => extension.extensionName)
+				.join(' '),
 			attrs: {
 				level: {
 					default: 1,
 				},
-				: {
-					default: '2em',
+				headingId: {
+					default: '',
 				},
 			},
-			parseDOM: [
-				{
-					tag: 'h1',
-					getAttrs(node) {
-						return {
-							lineHeight: (node as HTMLElement).getAttribute('data-line-height'),
-						};
-					},
-				},
-			],
+			content: `${TextExtension.extensionName}*`,
+			defining: true,
+			parseDOM: Array.from({ length: HeadingMaxLevel }).map(
+				(_, i) =>
+					({
+						tag: `h${i + 1}`,
+						getAttrs(node) {
+							if (!(node instanceof HTMLHeadingElement)) return false;
+							const headingId = node.getAttribute('data-heading-id');
+							return { headingId, level: i + 1 };
+						},
+					} as ParseRule),
+			),
 			toDOM(node) {
 				return [
-					'h1',
+					`h${node.attrs.level}`,
 					{
-						style: { lineHeight: node.attrs.lineHeight },
-						'data-line-height': node.attrs.lineHeight,
+						'data-heading-id': node.attrs.headingId,
 					},
 					0,
 				];

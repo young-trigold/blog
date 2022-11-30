@@ -2,11 +2,11 @@ import { MarkSpec } from 'prosemirror-model';
 import { ExtensionTag, MarkExtension } from '..';
 import EditorStore from '../../store';
 
-class UnderlineExtension extends MarkExtension {
-	static extensionName = 'underline';
+class SubExtension extends MarkExtension {
+	static extensionName = 'sub';
 
 	get name() {
-		return UnderlineExtension.extensionName;
+		return SubExtension.extensionName;
 	}
 
 	editorStore: EditorStore | null = null;
@@ -16,19 +16,19 @@ class UnderlineExtension extends MarkExtension {
 	}
 
 	createMarkSpec(): MarkSpec {
-		const underlineMarkSpec: MarkSpec = {
+		const subMarkSpec: MarkSpec = {
 			parseDOM: [
 				{
-					tag: 'u',
+					tag: 'sub',
 				},
 			],
 			toDOM() {
-				return ['u', 0];
+				return ['sub', 0];
 			},
 		};
 
-		return underlineMarkSpec;
+		return subMarkSpec;
 	}
 }
 
-export default UnderlineExtension;
+export default SubExtension;

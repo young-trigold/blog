@@ -28,7 +28,7 @@ class SchemaExtension extends PlainExtension {
 			nodes,
       topNode: 'doc',
 		});
-    console.debug(schema.marks);
+    console.debug(schema.nodes);
 		this.editorStore.schema = schema;
 	}
 

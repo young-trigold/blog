@@ -1,5 +1,5 @@
 import { MarkSpec } from 'prosemirror-model';
-import { ExtensionTag, MarkExtension } from '..';
+import { MarkExtension } from '..';
 import EditorStore from '../../store';
 
 class LinkExtension extends MarkExtension {
@@ -16,18 +16,30 @@ class LinkExtension extends MarkExtension {
 	}
 
 	createMarkSpec(): MarkSpec {
-		const underlineMarkSpec: MarkSpec = {
+		const linkMarkSpec: MarkSpec = {
+			attrs: {
+				href: {
+					default: '',
+				},
+			},
 			parseDOM: [
 				{
 					tag: 'a',
+					getAttrs(node) {
+						if (!(node instanceof HTMLAnchorElement)) return false;
+						const href = node.getAttribute('href');
+						return {
+							href,
+						};
+					},
 				},
 			],
-			toDOM() {
-				return ['u', 0];
+			toDOM(mark) {
+				return ['a', { href: mark.attrs.href }, 0];
 			},
 		};
 
-		return underlineMarkSpec;
+		return linkMarkSpec;
 	}
 }
 

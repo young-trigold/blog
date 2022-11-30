@@ -26,6 +26,14 @@ import CommentList from './components/comment/CommentList';
 import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
 import BoldExtension from './components/editor/extensions/markExtensions/boldExtension';
+import CodeExtension from './components/editor/extensions/markExtensions/codeExtension';
+import ItalicExtension from './components/editor/extensions/markExtensions/italicExtension';
+import LinkExtension from './components/editor/extensions/markExtensions/linkExtension';
+import SubExtension from './components/editor/extensions/markExtensions/subExtension';
+import SupExtension from './components/editor/extensions/markExtensions/supExtension';
+import UnderlineExtension from './components/editor/extensions/markExtensions/underlineExtension';
+import CodeBlockExtension from './components/editor/extensions/nodeExtensions/codeBlockExtension';
+import HeadingExtension from './components/editor/extensions/nodeExtensions/headingExtension';
 import { HandleDOMEvents } from './components/editor/store';
 import addHeadingID from './components/editor/utils/addHeadingID';
 import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';
@@ -138,7 +146,20 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		[],
 	);
 
-	const extensions = useMemo(() => [new BoldExtension()], []);
+	const extensions = useMemo(
+		() => [
+			new BoldExtension(),
+			new ItalicExtension(),
+			new UnderlineExtension(),
+			new LinkExtension(),
+			new SubExtension(),
+			new SupExtension(),
+			new CodeExtension(),
+			new HeadingExtension(),
+			new CodeBlockExtension(),
+		],
+		[],
+	);
 
 	if (loading) return <LoadingIndicator />;
 	return (
@@ -148,16 +169,14 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						{editorContent && (
-							<Editor
-								extensions={extensions}
-								doc={editorContent}
-								editable={editable}
-								autoFocus={true}
-								onChange={onChange}
-								handleDOMEvents={handleDOMEvents}
-							/>
-						)}
+						<Editor
+							extensions={extensions}
+							doc={editorContent}
+							editable={editable}
+							autoFocus={true}
+							onChange={onChange}
+							handleDOMEvents={handleDOMEvents}
+						/>
 						<CommentList />
 						{editable && <ActionBar />}
 						<CatalogButton />
