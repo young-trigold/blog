@@ -31,13 +31,13 @@ class EditorStore {
 			if (extension instanceof MarkExtension) this.markExtensions.push(extension);
 			else if (extension instanceof NodeExtension) this.nodeExtensions.push(extension);
 			else this.plainExtensions.push(extension);
-
-			extension.editorStore = this;
-
-			extension.onEditorStoreCreate?.();
 		};
 
 		extensions.forEach(onCreate);
+		extensions.forEach((extension: Extension) => {
+			extension.editorStore = this;
+			extension.onEditorStoreCreate?.();
+		});
 		if (this.status === EditorStoreStatus.Init) this.status = EditorStoreStatus.EditorStateCreated;
 	}
 

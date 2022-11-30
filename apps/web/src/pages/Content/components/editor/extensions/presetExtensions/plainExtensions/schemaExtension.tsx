@@ -1,4 +1,4 @@
-import { MarkSpec, NodeSpec } from 'prosemirror-model';
+import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
 import { PlainExtension } from '../..';
 import schema from '../../../schema';
 import EditorStore from '../../../store';
@@ -23,17 +23,13 @@ class SchemaExtension extends PlainExtension {
 			nodes[nodeExtension.name] = nodeExtension.createNodeSpec();
 			nodes[nodeExtension.name].group = nodeExtension.tags.join(' ');
 		});
-		// console.debug(marks, nodes);
-		// const mySchema = new Schema({
-
-		// 	marks,
-		// 	nodes,
-		// 	topNode: 'doc',
-		// });
-		// console.debug('mySchema', mySchema);
-		// console.debug('schema', schema);
+		const mySchema = new Schema({
+			marks,
+			nodes,
+      topNode: 'doc',
+		});
+    console.debug(schema.marks);
 		this.editorStore.schema = schema;
-		// console.debug(this.editorStore);
 	}
 
 	onEditorViewCreate?(): void {}

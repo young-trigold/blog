@@ -17,7 +17,7 @@ class HeadingExtension extends NodeExtension {
 				level: {
 					default: 1,
 				},
-				lineHeight: {
+				: {
 					default: '2em',
 				},
 			},
