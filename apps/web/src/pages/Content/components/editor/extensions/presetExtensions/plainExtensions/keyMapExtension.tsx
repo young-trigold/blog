@@ -1,10 +1,7 @@
-import { PlainExtension } from '../..';
+import { extensionName, PlainExtension } from '../..';
 
+@extensionName('key_map')
 class KeyMapExtension extends PlainExtension {
-	get name() {
-		return 'keyMap' as const;
-	}
-
 	onEditorStoreCreate?(): void {}
 }
 

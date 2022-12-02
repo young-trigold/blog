@@ -1,9 +1,6 @@
-import { PlainExtension } from '../..';
+import { extensionName, PlainExtension } from '../..';
 
-class CommandExtension extends PlainExtension {
-	get name() {
-		return 'command' as const;
-	}
-}
+@extensionName('command')
+class CommandExtension extends PlainExtension {}
 
 export default CommandExtension;

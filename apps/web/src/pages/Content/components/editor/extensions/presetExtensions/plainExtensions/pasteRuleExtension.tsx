@@ -1,14 +1,8 @@
 import { PasteRule, pasteRules as createPasteRulesPlugin } from 'prosemirror-paste-rules';
-import { PlainExtension } from '../..';
-import EditorStore from '../../../store';
+import { extensionName, PlainExtension } from '../..';
 
+@extensionName('paste_rule')
 class PasteRuleExtension extends PlainExtension {
-	editorStore: EditorStore | null = null;
-	static extensionName = 'pasteRule';
-	get name() {
-		return PasteRuleExtension.extensionName;
-	}
-
 	createPlugin() {
 		if (!this.editorStore) return;
 		const markPasteRules = this.editorStore.markExtensions

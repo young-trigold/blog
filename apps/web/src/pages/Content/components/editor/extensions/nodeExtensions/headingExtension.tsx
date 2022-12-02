@@ -1,15 +1,12 @@
 import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { NodePasteRule, PasteRule } from 'prosemirror-paste-rules';
-import { ExtensionTag, NodeExtension } from '..';
+import { extensionName, ExtensionTag, NodeExtension } from '..';
 import TextExtension from '../presetExtensions/nodeExtensions/textExtension';
 
 export const HeadingMaxLevel = 4;
 
+@extensionName('heading')
 class HeadingExtension extends NodeExtension {
-	static extensionName = 'heading';
-	get name() {
-		return HeadingExtension.extensionName;
-	}
 	createTags(): ExtensionTag[] {
 		return [ExtensionTag.Block];
 	}

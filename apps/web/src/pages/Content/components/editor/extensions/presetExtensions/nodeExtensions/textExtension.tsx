@@ -1,12 +1,8 @@
 import { NodeSpec } from 'prosemirror-model';
-import { ExtensionTag, NodeExtension } from '../..';
+import { extensionName, ExtensionTag, NodeExtension } from '../..';
 
+@extensionName('text')
 class TextExtension extends NodeExtension {
-	static extensionName = 'text';
-	get name() {
-		return TextExtension.extensionName;
-	}
-
 	createTags() {
 		return [ExtensionTag.Inline];
 	}

@@ -2,12 +2,36 @@ import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
 import { PasteRule } from 'prosemirror-paste-rules';
 import { Plugin as ProseMirrorPlugin } from 'prosemirror-state';
+import { NodeViewConstructor } from 'prosemirror-view';
 import EditorStore from '../store';
+
+export const extensionName = (name: string) => {
+	const decorator = <
+		F extends {
+			new (...args: any[]): Extension;
+		},
+	>(
+		constructor: F,
+	) => {
+		const classWithName = class extends constructor {
+			static extensionName = name;
+			get name() {
+				return name;
+			}
+		};
+
+		return classWithName;
+	};
+
+	return decorator;
+};
 
 export abstract class Extension {
 	editorStore: EditorStore | null = null;
 	static extensionName: string;
-	abstract get name(): string;
+	get name() {
+		return Extension.extensionName;
+	}
 
 	onEditorStoreCreate?(): void;
 	onEditorViewCreate?(): void;
@@ -36,6 +60,7 @@ export abstract class NodeExtension extends Extension {
 	createTags?(): ExtensionTag[];
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
+	createNodeView?(): NodeViewConstructor;
 }
 
 export abstract class PlainExtension extends Extension {

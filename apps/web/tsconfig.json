@@ -16,6 +16,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+		"experimentalDecorators": true,
     "baseUrl": "./",
     "paths": {
       "@/components/*": ["./src/components/*"],

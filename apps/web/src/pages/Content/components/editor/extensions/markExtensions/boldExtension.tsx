@@ -1,18 +1,10 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
-import { ExtensionTag, MarkExtension } from '..';
-import EditorStore from '../../store';
+import { extensionName, ExtensionTag, MarkExtension } from '..';
 import markInputRule from '../../utils/markInputRule';
 
+@extensionName('bold')
 class BoldExtension extends MarkExtension {
-	static extensionName = 'bold';
-
-  get name() {
-    return BoldExtension.extensionName;
-  }
-
-	editorStore: EditorStore | null = null;
-
 	createTags() {
 		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
 	}

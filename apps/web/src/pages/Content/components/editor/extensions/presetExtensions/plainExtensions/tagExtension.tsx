@@ -1,10 +1,7 @@
-import { MarkExtension, NodeExtension, PlainExtension } from '../..';
+import { extensionName, MarkExtension, NodeExtension, PlainExtension } from '../..';
 
+@extensionName('tag')
 class TagExtension extends PlainExtension {
-	get name() {
-		return 'tag' as const;
-	}
-
 	onEditorStoreCreate() {
 		if (!this.editorStore) return;
 

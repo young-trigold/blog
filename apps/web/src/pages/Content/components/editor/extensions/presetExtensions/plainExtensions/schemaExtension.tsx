@@ -1,15 +1,8 @@
 import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
-import { PlainExtension } from '../..';
-import schema from '../../../schema';
-import EditorStore from '../../../store';
+import { extensionName, PlainExtension } from '../..';
 
+@extensionName('schema')
 class SchemaExtension extends PlainExtension {
-	get name() {
-		return 'schema' as const;
-	}
-
-	editorStore: EditorStore | null = null;
-
 	onEditorStoreCreate(): void {
 		if (!this.editorStore) return;
 		const marks: Record<string, MarkSpec> = {};
@@ -26,9 +19,10 @@ class SchemaExtension extends PlainExtension {
 		const mySchema = new Schema({
 			marks,
 			nodes,
-      topNode: 'doc',
+			topNode: 'doc',
 		});
-    console.debug(schema);
+		// console.debug(schema);
+		console.debug(mySchema);
 		this.editorStore.schema = mySchema;
 	}
 

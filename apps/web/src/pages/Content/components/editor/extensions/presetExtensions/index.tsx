@@ -8,6 +8,7 @@ import GapCursorExtension from './plainExtensions/gapCusorExtension';
 import HistoryExtension from './plainExtensions/historyExtension';
 import InputRuleExtension from './plainExtensions/inputRuleExtension';
 import KeyMapExtension from './plainExtensions/keyMapExtension';
+import NodeViewExtension from './plainExtensions/nodeViewExtension';
 import PasteRuleExtension from './plainExtensions/pasteRuleExtension';
 import PluginExtension from './plainExtensions/pluginExtension';
 import SchemaExtension from './plainExtensions/schemaExtension';
@@ -26,6 +27,7 @@ const presetExtensions = [
 	new PluginExtension(),
 	new InputRuleExtension(),
 	new PasteRuleExtension(),
+	new NodeViewExtension(),
 	new CommandExtension(),
 	new KeyMapExtension(),
 	new DecorationExtension(),

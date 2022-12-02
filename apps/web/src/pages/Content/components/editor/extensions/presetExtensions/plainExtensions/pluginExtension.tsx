@@ -1,14 +1,8 @@
 import { Plugin as ProseMirrorPlugin } from 'prosemirror-state';
-import { Extension, PlainExtension } from '../..';
-import EditorStore from '../../../store';
+import { Extension, extensionName, PlainExtension } from '../..';
 
+@extensionName('plugin')
 class PluginExtension extends PlainExtension {
-	editorStore: EditorStore | null = null;
-	static extensionName = 'plugin';
-	get name() {
-		return PluginExtension.extensionName;
-	}
-
 	onEditorStoreCreate(): void {
 		if (!this.editorStore) return;
 		const createPlugin = (extension: Extension) => extension.createPlugin?.();

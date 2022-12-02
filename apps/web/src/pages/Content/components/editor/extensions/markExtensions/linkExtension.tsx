@@ -1,16 +1,8 @@
 import { MarkSpec } from 'prosemirror-model';
-import { MarkExtension } from '..';
-import EditorStore from '../../store';
+import { extensionName, MarkExtension } from '..';
 
+@extensionName('link')
 class LinkExtension extends MarkExtension {
-	static extensionName = 'link';
-
-	get name() {
-		return LinkExtension.extensionName;
-	}
-
-	editorStore: EditorStore | null = null;
-
 	createTags() {
 		return [];
 	}

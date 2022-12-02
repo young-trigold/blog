@@ -1,12 +1,8 @@
 import { NodeSpec } from 'prosemirror-model';
-import { ExtensionTag, NodeExtension } from '../..';
+import { extensionName, ExtensionTag, NodeExtension } from '../..';
 
+@extensionName('paragraph')
 class ParagraphExtension extends NodeExtension {
-	static extensionName = 'paragraph';
-	get name() {
-		return ParagraphExtension.extensionName;
-	}
-
 	createTags() {
 		return [
 			ExtensionTag.LastNodeCompatible,

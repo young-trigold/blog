@@ -1,12 +1,8 @@
 import { NodeSpec } from 'prosemirror-model';
-import { ExtensionTag, NodeExtension } from '../..';
+import { extensionName, ExtensionTag, NodeExtension } from '../..';
 
+@extensionName('doc')
 class DocExtension extends NodeExtension {
-  static extensionName = 'doc';
-	get name() {
-		return DocExtension.extensionName;
-	}
-
 	createNodeSpec(): NodeSpec {
 		return {
 			content: `${ExtensionTag.Block}+`,

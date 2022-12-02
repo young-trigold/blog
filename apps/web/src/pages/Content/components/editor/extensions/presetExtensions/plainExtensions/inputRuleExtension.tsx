@@ -1,10 +1,7 @@
-import { PlainExtension } from '../..';
+import { extensionName, PlainExtension } from '../..';
 
+@extensionName('input_rule')
 class InputRuleExtension extends PlainExtension {
-	get name() {
-		return 'inputRule' as const;
-	}
-
 	onEditorStoreCreate?(): void {}
 }
 
