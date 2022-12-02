@@ -1,8 +1,9 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
 import { PasteRule } from 'prosemirror-paste-rules';
-import { Plugin as ProseMirrorPlugin } from 'prosemirror-state';
+import { Command, Plugin as ProseMirrorPlugin } from 'prosemirror-state';
 import { NodeViewConstructor } from 'prosemirror-view';
+import { Keymap } from '../plugins/keymapPlugin';
 import EditorStore from '../store';
 
 export const extensionName = (name: string) => {
@@ -38,6 +39,8 @@ export abstract class Extension {
 	createPlugin?(): ProseMirrorPlugin | void;
 }
 
+export type KeyMap = { [key: string]: Command };
+
 export abstract class MarkExtension extends Extension {
 	get type() {
 		return this.editorStore?.schema?.marks[MarkExtension.extensionName]!;
@@ -48,6 +51,7 @@ export abstract class MarkExtension extends Extension {
 	createTags?(): ExtensionTag[];
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
+	createKeyMap?(): KeyMap;
 }
 
 export abstract class NodeExtension extends Extension {
@@ -61,6 +65,7 @@ export abstract class NodeExtension extends Extension {
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
 	createNodeView?(): NodeViewConstructor;
+	createKeyMap?(): KeyMap;
 }
 
 export abstract class PlainExtension extends Extension {
