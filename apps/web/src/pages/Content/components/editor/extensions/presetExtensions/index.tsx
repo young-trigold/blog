@@ -4,6 +4,8 @@ import TextExtension from './nodeExtensions/textExtension';
 import AttributeExtension from './plainExtensions/attributeExtension';
 import CommandExtension from './plainExtensions/commandExtension';
 import DecorationExtension from './plainExtensions/decorationExtension';
+import GapCursorExtension from './plainExtensions/gapCusorExtension';
+import HistoryExtension from './plainExtensions/historyExtension';
 import InputRuleExtension from './plainExtensions/inputRuleExtension';
 import KeyMapExtension from './plainExtensions/keyMapExtension';
 import PasteRuleExtension from './plainExtensions/pasteRuleExtension';
@@ -13,6 +15,11 @@ import TagExtension from './plainExtensions/tagExtension';
 
 // 预置插件的顺序不可变动
 const presetExtensions = [
+	new HistoryExtension(),
+	new DocExtension(),
+	new TextExtension(),
+	new ParagraphExtension(),
+	new GapCursorExtension(),
 	new TagExtension(),
 	new SchemaExtension(),
 	new AttributeExtension(),
@@ -22,9 +29,6 @@ const presetExtensions = [
 	new CommandExtension(),
 	new KeyMapExtension(),
 	new DecorationExtension(),
-	new DocExtension(),
-	new TextExtension(),
-	new ParagraphExtension(),
 ];
 
 export default presetExtensions;
