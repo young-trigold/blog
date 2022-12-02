@@ -1,15 +1,17 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
+import { PasteRule } from 'prosemirror-paste-rules';
+import { Plugin as ProseMirrorPlugin } from 'prosemirror-state';
 import EditorStore from '../store';
 
 export abstract class Extension {
-  static extensionName: string;
-  abstract get name() : string;
-
 	editorStore: EditorStore | null = null;
+	static extensionName: string;
+	abstract get name(): string;
 
 	onEditorStoreCreate?(): void;
 	onEditorViewCreate?(): void;
+	createPlugin?(): ProseMirrorPlugin | void;
 }
 
 export abstract class MarkExtension extends Extension {
@@ -21,6 +23,7 @@ export abstract class MarkExtension extends Extension {
 	tags: ExtensionTag[] = [];
 	createTags?(): ExtensionTag[];
 	createInputRules?(): InputRule[];
+	createPasteRules?(): PasteRule[];
 }
 
 export abstract class NodeExtension extends Extension {
@@ -32,6 +35,7 @@ export abstract class NodeExtension extends Extension {
 	tags: ExtensionTag[] = [];
 	createTags?(): ExtensionTag[];
 	createInputRules?(): InputRule[];
+	createPasteRules?(): PasteRule[];
 }
 
 export abstract class PlainExtension extends Extension {

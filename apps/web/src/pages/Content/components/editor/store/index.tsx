@@ -1,5 +1,5 @@
 import { Node as ProseMirrorNode, Schema } from 'prosemirror-model';
-import { EditorState, Plugin, Selection } from 'prosemirror-state';
+import { EditorState, Plugin as ProseMirrorPlugin, Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Extension, MarkExtension, NodeExtension, PlainExtension } from '../extensions';
 
@@ -21,7 +21,7 @@ class EditorStore {
 	status: EditorStoreStatus = EditorStoreStatus.Init;
 	view: EditorView | null = null;
 	schema: Schema | null = null;
-	plugins: Plugin[] = [];
+	plugins: ProseMirrorPlugin[] = [];
 	markExtensions: MarkExtension[] = [];
 	nodeExtensions: NodeExtension[] = [];
 	plainExtensions: PlainExtension[] = [];

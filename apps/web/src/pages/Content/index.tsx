@@ -59,7 +59,6 @@ interface ContentPageProps {
 
 const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const { isChapter, editable } = props;
-
 	const { itemID } = useParams();
 	const dispatch = useAppDispatch();
 

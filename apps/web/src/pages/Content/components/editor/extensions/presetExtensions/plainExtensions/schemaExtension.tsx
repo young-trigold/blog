@@ -28,8 +28,8 @@ class SchemaExtension extends PlainExtension {
 			nodes,
       topNode: 'doc',
 		});
-    console.debug(schema.nodes);
-		this.editorStore.schema = schema;
+    console.debug(schema);
+		this.editorStore.schema = mySchema;
 	}
 
 	onEditorViewCreate?(): void {}

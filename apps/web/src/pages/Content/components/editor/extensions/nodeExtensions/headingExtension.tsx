@@ -1,10 +1,6 @@
 import { NodeSpec, ParseRule } from 'prosemirror-model';
+import { NodePasteRule, PasteRule } from 'prosemirror-paste-rules';
 import { ExtensionTag, NodeExtension } from '..';
-import ItalicExtension from '../markExtensions/italicExtension';
-import LinkExtension from '../markExtensions/linkExtension';
-import SubExtension from '../markExtensions/subExtension';
-import SupExtension from '../markExtensions/supExtension';
-import UnderlineExtension from '../markExtensions/underlineExtension';
 import TextExtension from '../presetExtensions/nodeExtensions/textExtension';
 
 export const HeadingMaxLevel = 4;
@@ -19,9 +15,6 @@ class HeadingExtension extends NodeExtension {
 	}
 	createNodeSpec(): NodeSpec {
 		return {
-			marks: [ItalicExtension, UnderlineExtension, LinkExtension, SubExtension, SupExtension]
-				.map((extension) => extension.extensionName)
-				.join(' '),
 			attrs: {
 				level: {
 					default: 1,
@@ -53,6 +46,20 @@ class HeadingExtension extends NodeExtension {
 				];
 			},
 		};
+	}
+	createPasteRules(): PasteRule[] {
+		return Array.from({ length: HeadingMaxLevel }).map(
+			(_, i) =>
+				({
+					type: 'node',
+					nodeType: this.type,
+					regexp: new RegExp(`^#{${i + 1}}\\s([\\s\\w]+)$`),
+					getAttributes() {
+						return { level: i + 1 };
+					},
+					startOfTextBlock: true,
+				} as NodePasteRule),
+		);
 	}
 }
 
