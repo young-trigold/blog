@@ -1,8 +1,8 @@
 import { MarkSpec } from 'prosemirror-model';
-import { extensionName, ExtensionTag, MarkExtension } from '..';
+import { extensionName, ExtensionTag, MarkExtension } from '../type';
 
 @extensionName('underline')
-class UnderlineExtension extends MarkExtension {
+export class UnderlineExtension extends MarkExtension {
 	createTags() {
 		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
 	}
@@ -22,5 +22,3 @@ class UnderlineExtension extends MarkExtension {
 		return underlineMarkSpec;
 	}
 }
-
-export default UnderlineExtension;

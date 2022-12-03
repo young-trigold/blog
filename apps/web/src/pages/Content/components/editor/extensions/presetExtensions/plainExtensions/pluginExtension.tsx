@@ -1,5 +1,5 @@
 import { Plugin as ProseMirrorPlugin } from 'prosemirror-state';
-import { Extension, extensionName, PlainExtension } from '../..';
+import { Extension, extensionName, PlainExtension } from '../../type';
 
 @extensionName('plugin')
 class PluginExtension extends PlainExtension {

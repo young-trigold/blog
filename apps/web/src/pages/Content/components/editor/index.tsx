@@ -5,8 +5,8 @@ import { useAppDispatch } from '@/app/store';
 import { setEditorStore } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
 import { EditorView } from 'prosemirror-view';
-import { Extension } from './extensions';
-import presetExtensions from './extensions/presetExtensions';
+import { presetExtensions } from './extensions';
+import { Extension } from './extensions/type';
 import EditorStore, { HandleDOMEvents } from './store';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
@@ -139,7 +139,7 @@ const EditorContainer = styled.article`
 	}
 `;
 
-export interface EditorProps {
+interface EditorProps {
 	editable: boolean;
 	autoFocus?: boolean;
 	onChange?: (view: EditorView) => void;

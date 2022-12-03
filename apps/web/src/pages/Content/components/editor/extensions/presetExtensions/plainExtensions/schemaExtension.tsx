@@ -1,5 +1,5 @@
 import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
-import { extensionName, PlainExtension } from '../..';
+import { extensionName, PlainExtension } from '../../type';
 
 @extensionName('schema')
 class SchemaExtension extends PlainExtension {

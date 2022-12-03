@@ -1,214 +1,44 @@
-import { InputRule } from 'prosemirror-inputrules';
-import { MarkSpec, NodeSpec } from 'prosemirror-model';
-import { PasteRule } from 'prosemirror-paste-rules';
-import { Command, Plugin as ProseMirrorPlugin } from 'prosemirror-state';
-import { NodeViewConstructor } from 'prosemirror-view';
-import EditorStore from '../store';
+import DocExtension from './presetExtensions/nodeExtensions/docExtension';
+import ParagraphExtension from './presetExtensions/nodeExtensions/paragraphExtension';
+import TextExtension from './presetExtensions/nodeExtensions/textExtension';
+import AttributeExtension from './presetExtensions/plainExtensions/attributeExtension';
+import CommandExtension from './presetExtensions/plainExtensions/commandExtension';
+import DecorationExtension from './presetExtensions/plainExtensions/decorationExtension';
+import GapCursorExtension from './presetExtensions/plainExtensions/gapCusorExtension';
+import HistoryExtension from './presetExtensions/plainExtensions/historyExtension';
+import InputRuleExtension from './presetExtensions/plainExtensions/inputRuleExtension';
+import KeyMapExtension from './presetExtensions/plainExtensions/keyMapExtension';
+import NodeViewExtension from './presetExtensions/plainExtensions/nodeViewExtension';
+import PasteRuleExtension from './presetExtensions/plainExtensions/pasteRuleExtension';
+import PluginExtension from './presetExtensions/plainExtensions/pluginExtension';
+import SchemaExtension from './presetExtensions/plainExtensions/schemaExtension';
+import TagExtension from './presetExtensions/plainExtensions/tagExtension';
 
-export const extensionName = (name: string) => {
-	const decorator = <
-		F extends {
-			new (...args: any[]): Extension;
-		},
-	>(
-		constructor: F,
-	) => {
-		const classWithName = class extends constructor {
-			static extensionName = name;
-			get name() {
-				return name;
-			}
-		};
+// 预置插件的顺序不可变动
+export const presetExtensions = [
+	new HistoryExtension(),
+	new DocExtension(),
+	new TextExtension(),
+	new ParagraphExtension(),
+	new GapCursorExtension(),
+	new TagExtension(),
+	new SchemaExtension(),
+	new AttributeExtension(),
+	new PluginExtension(),
+	new InputRuleExtension(),
+	new PasteRuleExtension(),
+	new NodeViewExtension(),
+	new CommandExtension(),
+	new KeyMapExtension(),
+	new DecorationExtension(),
+];
 
-		return classWithName;
-	};
-
-	return decorator;
-};
-
-export abstract class Extension {
-	editorStore: EditorStore | null = null;
-	static extensionName: string;
-	get name() {
-		return Extension.extensionName;
-	}
-
-	onEditorStoreCreate?(): void;
-	onEditorViewCreate?(): void;
-	createPlugin?(): ProseMirrorPlugin | void;
-	createKeyMap?(): KeyMap;
-}
-
-export enum FunctionKeys {
-	Mod = 'Mod',
-	Ctrl = 'Ctrl',
-	Shift = 'Shift',
-	Alt = 'Alt',
-	Backspace = 'Backspace',
-	Tab = 'Tab',
-}
-export enum LetterKeys {
-	z = 'z',
-	y = 'y',
-	b = 'b',
-	i = 'i',
-	u = 'u',
-	m = 'm',
-	// =========== 大写 ============
-	Z = 'Z',
-	Y = 'Y',
-	B = 'B',
-	I = 'I',
-	U = 'U',
-	M = 'M',
-}
-export enum SymbolKeys {
-	'`' = '`',
-}
-
-export type KeyMap = { [key: string]: Command };
-
-export abstract class MarkExtension extends Extension {
-	get type() {
-		return this.editorStore?.schema?.marks[MarkExtension.extensionName]!;
-	}
-
-	abstract createMarkSpec(): MarkSpec;
-	tags: ExtensionTag[] = [];
-	createTags?(): ExtensionTag[];
-	createInputRules?(): InputRule[];
-	createPasteRules?(): PasteRule[];
-}
-
-export abstract class NodeExtension extends Extension {
-	get type() {
-		return this.editorStore?.schema?.nodes[NodeExtension.extensionName]!;
-	}
-	abstract createNodeSpec(): NodeSpec;
-
-	tags: ExtensionTag[] = [];
-	createTags?(): ExtensionTag[];
-	createInputRules?(): InputRule[];
-	createPasteRules?(): PasteRule[];
-	createNodeView?(): NodeViewConstructor;
-}
-
-export abstract class PlainExtension extends Extension {
-	/**
-	 * 创建 MarkSpec 或 NodeSpec 中的一个属性相关的 attr，toDOM, parseDOM
-	 * 这些是在多个 Spec 之间公用的，因此单独需要一个方法提供这个机制
-	 * @example 缩进 行高 文字居中等
-	 */
-	createSpecCommonPart?(): Record<string, string>[];
-}
-
-export enum ExtensionTag {
-	LastNodeCompatible = 'lastNodeCompatible',
-	FormattingMark = 'formattingMark',
-	FormattingNode = 'formattingNode',
-	NodeCursor = 'nodeCursor',
-	FontStyle = 'fontStyle',
-	Link = 'link',
-	Color = 'color',
-	Alignment = 'alignment',
-	Indentation = 'indentation',
-	Behavior = 'behavior',
-	Code = 'code',
-	Inline = 'inline',
-	Block = 'block',
-	ListContainerNode = 'listContainer',
-	ListItemNode = 'listItemNode',
-	TextBlock = 'textBlock',
-	ExcludeInputRules = 'excludeFromInputRules',
-	PreventExits = 'preventsExits',
-	Media = 'media',
-}
-
-// export function markInputRule(props: MarkInputRuleProps): SkippableInputRule {
-//   const {
-//     regexp,
-//     type,
-//     getAttributes,
-//     ignoreWhitespace = false,
-//     beforeDispatch,
-//     updateCaptured,
-//     shouldSkip,
-//     invalidMarks,
-//   } = props;
-
-//   let markType: MarkType | undefined;
-
-//   const rule: SkippableInputRule = new InputRule(regexp, (state, match, start, end) => {
-//     const { tr, schema } = state;
-
-//     if (!markType) {
-//       markType = isString(type) ? schema.marks[type] : type;
-
-//       invariant(markType, {
-//         code: ErrorConstant.SCHEMA,
-//         message: `Mark type: ${type} does not exist on the current schema.`,
-//       });
-//     }
-
-//     let captureGroup: string | undefined = match[1];
-//     let fullMatch = match[0];
-
-//     // These are the attributes which are added to the mark and they can be
-//     // obtained from the match if a function is provided.
-//     const details = gatherDetails({
-//       captureGroup,
-//       fullMatch,
-//       end,
-//       start,
-//       rule,
-//       state,
-//       ignoreWhitespace,
-//       invalidMarks,
-//       shouldSkip,
-//       updateCaptured,
-//     });
-
-//     if (!details) {
-//       return null;
-//     }
-
-//     ({ start, end, captureGroup, fullMatch } = details);
-
-//     const attributes = isFunction(getAttributes) ? getAttributes(match) : getAttributes;
-//     let markEnd = end;
-//     let initialStoredMarks: readonly Mark[] = [];
-
-//     if (captureGroup) {
-//       const startSpaces = fullMatch.search(/\S/);
-//       const textStart = start + fullMatch.indexOf(captureGroup);
-//       const textEnd = textStart + captureGroup.length;
-
-//       initialStoredMarks = tr.storedMarks ?? [];
-
-//       if (textEnd < end) {
-//         tr.delete(textEnd, end);
-//       }
-
-//       if (textStart > start) {
-//         tr.delete(start + startSpaces, textStart);
-//       }
-
-//       markEnd = start + startSpaces + captureGroup.length;
-//     }
-
-//     tr.addMark(start, markEnd, markType.create(attributes));
-
-//     // Make sure not to reactivate any marks which had previously been
-//     // deactivated. By keeping track of the initial stored marks we are able to
-//     // discard any unintended consequences of deleting text and adding it again.
-//     tr.setStoredMarks(initialStoredMarks);
-
-//     // Allow the caller of this method to update the transaction before it is
-//     // returned and dispatched by ProseMirror.
-//     beforeDispatch?.({ tr, match, start, end });
-
-//     return tr;
-//   });
-
-//   return rule;
-// }
+export { BoldExtension } from './markExtensions/boldExtension';
+export { CodeExtension } from './markExtensions/codeExtension';
+export { ItalicExtension } from './markExtensions/italicExtension';
+export { LinkExtension } from './markExtensions/linkExtension';
+export { SubExtension } from './markExtensions/subExtension';
+export { SupExtension } from './markExtensions/supExtension';
+export { UnderlineExtension } from './markExtensions/underlineExtension';
+export { CodeBlockExtension } from './nodeExtensions/codeBlockExtension';
+export { HeadingExtension, HeadingMaxLevel } from './nodeExtensions/headingExtension';

@@ -1,6 +1,6 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { NodeViewConstructor } from 'prosemirror-view';
-import { extensionName, PlainExtension } from '../..';
+import { extensionName, PlainExtension } from '../../type';
 
 @extensionName('node_view')
 class NodeViewExtension extends PlainExtension {

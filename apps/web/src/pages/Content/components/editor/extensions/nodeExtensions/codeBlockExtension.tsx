@@ -6,8 +6,8 @@ import { exitCode } from 'prosemirror-commands';
 import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 import { Selection, TextSelection } from 'prosemirror-state';
 import { EditorView, NodeView, NodeViewConstructor } from 'prosemirror-view';
-import { extensionName, ExtensionTag, NodeExtension } from '..';
 import TextExtension from '../presetExtensions/nodeExtensions/textExtension';
+import { extensionName, ExtensionTag, NodeExtension } from '../type';
 
 interface ComputeChange {
 	from: number;
@@ -234,7 +234,7 @@ class CodeBlockView implements NodeView {
 }
 
 @extensionName('code_block')
-class CodeBlockExtension extends NodeExtension {
+export class CodeBlockExtension extends NodeExtension {
 	createTags(): ExtensionTag[] {
 		return [ExtensionTag.Block];
 	}
@@ -264,5 +264,3 @@ class CodeBlockExtension extends NodeExtension {
 		return nodeViewConstructor;
 	}
 }
-
-export default CodeBlockExtension;

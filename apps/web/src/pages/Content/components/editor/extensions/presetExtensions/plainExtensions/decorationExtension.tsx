@@ -1,4 +1,4 @@
-import { extensionName, PlainExtension } from '../..';
+import { extensionName, PlainExtension } from '../../type';
 
 @extensionName('decoration')
 class DecorationExtension extends PlainExtension {

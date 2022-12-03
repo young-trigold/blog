@@ -1,10 +1,10 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
-import { extensionName, ExtensionTag, MarkExtension } from '..';
 import markInputRule from '../../utils/markInputRule';
+import { extensionName, ExtensionTag, MarkExtension } from '../type';
 
 @extensionName('bold')
-class BoldExtension extends MarkExtension {
+export class BoldExtension extends MarkExtension {
 	createTags() {
 		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
 	}
@@ -31,5 +31,3 @@ class BoldExtension extends MarkExtension {
 		return [markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, this.type)];
 	}
 }
-
-export default BoldExtension;

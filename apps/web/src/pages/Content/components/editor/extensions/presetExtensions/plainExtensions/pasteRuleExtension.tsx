@@ -1,5 +1,5 @@
 import { PasteRule, pasteRules as createPasteRulesPlugin } from 'prosemirror-paste-rules';
-import { extensionName, PlainExtension } from '../..';
+import { extensionName, PlainExtension } from '../../type';
 
 @extensionName('paste_rule')
 class PasteRuleExtension extends PlainExtension {

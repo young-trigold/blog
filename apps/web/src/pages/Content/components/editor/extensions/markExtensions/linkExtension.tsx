@@ -1,8 +1,8 @@
 import { MarkSpec } from 'prosemirror-model';
-import { extensionName, MarkExtension } from '..';
+import { extensionName, MarkExtension } from '../type';
 
 @extensionName('link')
-class LinkExtension extends MarkExtension {
+export class LinkExtension extends MarkExtension {
 	createTags() {
 		return [];
 	}
@@ -34,5 +34,3 @@ class LinkExtension extends MarkExtension {
 		return linkMarkSpec;
 	}
 }
-
-export default LinkExtension;

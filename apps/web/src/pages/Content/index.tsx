@@ -25,15 +25,17 @@ import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';
 import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
-import BoldExtension from './components/editor/extensions/markExtensions/boldExtension';
-import CodeExtension from './components/editor/extensions/markExtensions/codeExtension';
-import ItalicExtension from './components/editor/extensions/markExtensions/italicExtension';
-import LinkExtension from './components/editor/extensions/markExtensions/linkExtension';
-import SubExtension from './components/editor/extensions/markExtensions/subExtension';
-import SupExtension from './components/editor/extensions/markExtensions/supExtension';
-import UnderlineExtension from './components/editor/extensions/markExtensions/underlineExtension';
-import CodeBlockExtension from './components/editor/extensions/nodeExtensions/codeBlockExtension';
-import HeadingExtension from './components/editor/extensions/nodeExtensions/headingExtension';
+import {
+	BoldExtension,
+	CodeBlockExtension,
+	CodeExtension,
+	HeadingExtension,
+	ItalicExtension,
+	LinkExtension,
+	SubExtension,
+	SupExtension,
+	UnderlineExtension,
+} from './components/editor/extensions';
 import { HandleDOMEvents } from './components/editor/store';
 import addHeadingID from './components/editor/utils/addHeadingID';
 import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';

@@ -1,6 +1,6 @@
 import { gapCursor } from 'prosemirror-gapcursor';
 import { Plugin } from 'prosemirror-state';
-import { extensionName, PlainExtension } from '../..';
+import { extensionName, PlainExtension } from '../../type';
 
 @extensionName('gap_cursor')
 class GapCursorExtension extends PlainExtension {
