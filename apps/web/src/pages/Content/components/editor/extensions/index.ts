@@ -3,7 +3,6 @@ import { MarkSpec, NodeSpec } from 'prosemirror-model';
 import { PasteRule } from 'prosemirror-paste-rules';
 import { Command, Plugin as ProseMirrorPlugin } from 'prosemirror-state';
 import { NodeViewConstructor } from 'prosemirror-view';
-import { Keymap } from '../plugins/keymapPlugin';
 import EditorStore from '../store';
 
 export const extensionName = (name: string) => {
@@ -37,6 +36,34 @@ export abstract class Extension {
 	onEditorStoreCreate?(): void;
 	onEditorViewCreate?(): void;
 	createPlugin?(): ProseMirrorPlugin | void;
+	createKeyMap?(): KeyMap;
+}
+
+export enum FunctionKeys {
+	Mod = 'Mod',
+	Ctrl = 'Ctrl',
+	Shift = 'Shift',
+	Alt = 'Alt',
+	Backspace = 'Backspace',
+	Tab = 'Tab',
+}
+export enum LetterKeys {
+	z = 'z',
+	y = 'y',
+	b = 'b',
+	i = 'i',
+	u = 'u',
+	m = 'm',
+	// =========== 大写 ============
+	Z = 'Z',
+	Y = 'Y',
+	B = 'B',
+	I = 'I',
+	U = 'U',
+	M = 'M',
+}
+export enum SymbolKeys {
+	'`' = '`',
 }
 
 export type KeyMap = { [key: string]: Command };
@@ -51,7 +78,6 @@ export abstract class MarkExtension extends Extension {
 	createTags?(): ExtensionTag[];
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
-	createKeyMap?(): KeyMap;
 }
 
 export abstract class NodeExtension extends Extension {
@@ -65,7 +91,6 @@ export abstract class NodeExtension extends Extension {
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
 	createNodeView?(): NodeViewConstructor;
-	createKeyMap?(): KeyMap;
 }
 
 export abstract class PlainExtension extends Extension {
