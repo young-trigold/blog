@@ -16,11 +16,11 @@ import TagExtension from './presetExtensions/plainExtensions/tagExtension';
 
 // 预置插件的顺序不可变动
 export const presetExtensions = [
-	new HistoryExtension(),
 	new DocExtension(),
 	new TextExtension(),
 	new ParagraphExtension(),
-	new GapCursorExtension(),
+	new HistoryExtension(),
+	// new GapCursorExtension(),
 	new TagExtension(),
 	new SchemaExtension(),
 	new AttributeExtension(),

@@ -1,3 +1,4 @@
+import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { NodePasteRule, PasteRule } from 'prosemirror-paste-rules';
 import TextExtension from '../presetExtensions/nodeExtensions/textExtension';
@@ -43,6 +44,17 @@ export class HeadingExtension extends NodeExtension {
 				];
 			},
 		};
+	}
+	createInputRules(): InputRule[] {
+		const inputRule = textblockTypeInputRule(
+			new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
+			this.type,
+			(match: RegExpMatchArray) => ({
+				level: match[1].length,
+			}),
+		);
+		console.debug(inputRule);
+		return [inputRule];
 	}
 	createPasteRules(): PasteRule[] {
 		return Array.from({ length: HeadingMaxLevel }).map(

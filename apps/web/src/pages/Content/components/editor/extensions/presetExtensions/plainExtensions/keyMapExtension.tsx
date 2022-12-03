@@ -1,36 +1,23 @@
 import { baseKeymap } from 'prosemirror-commands';
 import { keymap } from 'prosemirror-keymap';
 import { Plugin } from 'prosemirror-state';
-import { extensionName, KeyMap, PlainExtension } from '../../type';
+import { Extension, extensionName, KeyMap, PlainExtension } from '../../type';
 
 @extensionName('key_map')
 class KeyMapExtension extends PlainExtension {
 	createPlugin(): void | Plugin<any> {
 		if (!this.editorStore) return;
-		const markKeyMap = this.editorStore.markExtensions.reduce((result, extension) => {
+		const createKeyMap = (result: KeyMap, extension: Extension) => {
 			if (extension.createKeyMap)
 				result = {
 					...result,
 					...extension.createKeyMap(),
 				};
 			return result;
-		}, {} as KeyMap);
-		const nodeKeyMap = this.editorStore.nodeExtensions.reduce((result, extension) => {
-			if (extension.createKeyMap)
-				result = {
-					...result,
-					...extension.createKeyMap(),
-				};
-			return result;
-		}, {} as KeyMap);
-		const pluginKeyMap = this.editorStore.plainExtensions.reduce((result, extension) => {
-			if (extension.createKeyMap)
-				result = {
-					...result,
-					...extension.createKeyMap(),
-				};
-			return result;
-		}, {} as KeyMap);
+		};
+		const markKeyMap = this.editorStore.markExtensions.reduce(createKeyMap, {} as KeyMap);
+		const nodeKeyMap = this.editorStore.nodeExtensions.reduce(createKeyMap, {} as KeyMap);
+		const pluginKeyMap = this.editorStore.plainExtensions.reduce(createKeyMap, {} as KeyMap);
 		const keyMap = {
 			...baseKeymap,
 			...markKeyMap,

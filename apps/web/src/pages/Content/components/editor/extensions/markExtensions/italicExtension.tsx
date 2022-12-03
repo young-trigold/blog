@@ -1,4 +1,6 @@
+import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
+import markInputRule from '../../utils/markInputRule';
 import { extensionName, ExtensionTag, MarkExtension } from '../type';
 
 @extensionName('italic')
@@ -23,5 +25,9 @@ export class ItalicExtension extends MarkExtension {
 		};
 
 		return italicMarkSpec;
+	}
+
+	createInputRules(): InputRule[] {
+		return [markInputRule(/_(\S(?:|.*?\S))_$/, this.type)];
 	}
 }

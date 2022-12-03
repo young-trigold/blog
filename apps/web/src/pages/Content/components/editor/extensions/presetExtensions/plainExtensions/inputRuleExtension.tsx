@@ -1,8 +1,19 @@
-import { extensionName, PlainExtension } from '../../type';
+import { InputRule, inputRules as createInputRulePlugin } from 'prosemirror-inputrules';
+import { Plugin } from 'prosemirror-state';
+import { extensionName, MarkExtension, NodeExtension, PlainExtension } from '../../type';
 
 @extensionName('input_rule')
 class InputRuleExtension extends PlainExtension {
-	
+	createPlugin(): void | Plugin<any> {
+		if (!this.editorStore) return;
+		const createInputRule = (extension: MarkExtension | NodeExtension) =>
+			extension.createInputRules?.();
+		const nodeInputRules = this.editorStore.nodeExtensions.map(createInputRule);
+		const markInputRules = this.editorStore.markExtensions.map(createInputRule);
+		const inputRules = [...nodeInputRules, ...markInputRules].filter(Boolean).flat() as InputRule[];
+		const inputRulePlugin = createInputRulePlugin({ rules: inputRules });
+		return inputRulePlugin;
+	}
 }
 
 export default InputRuleExtension;

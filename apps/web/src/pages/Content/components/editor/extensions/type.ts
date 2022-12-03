@@ -41,7 +41,7 @@ export abstract class Extension {
 
 export abstract class MarkExtension extends Extension {
 	get type() {
-		return this.editorStore?.schema?.marks[MarkExtension.extensionName]!;
+		return this.editorStore?.schema?.marks[this.name]!;
 	}
 
 	abstract createMarkSpec(): MarkSpec;
@@ -53,7 +53,7 @@ export abstract class MarkExtension extends Extension {
 
 export abstract class NodeExtension extends Extension {
 	get type() {
-		return this.editorStore?.schema?.nodes[NodeExtension.extensionName]!;
+		return this.editorStore?.schema?.nodes[this.name]!;
 	}
 	abstract createNodeSpec(): NodeSpec;
 
