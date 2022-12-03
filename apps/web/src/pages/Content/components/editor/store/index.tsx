@@ -1,7 +1,7 @@
 import { Node as ProseMirrorNode, Schema } from 'prosemirror-model';
 import { EditorState, Plugin as ProseMirrorPlugin, Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { Extension, MarkExtension, NodeExtension, PlainExtension } from '../extensions';
+import { Extension, MarkExtension, NodeExtension, PlainExtension } from '../extensions/type';
 
 export enum EditorStoreStatus {
 	Init,

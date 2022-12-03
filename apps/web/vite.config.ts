@@ -8,7 +8,14 @@ export default defineConfig({
 		react({
 			babel: {
 				parserOpts: {
-					plugins: ['decorators'],
+					plugins: [
+						[
+							'decorators',
+							{
+								"decoratorsBeforeExport": true,
+							},
+						],
+					],
 				},
 			},
 		}),
