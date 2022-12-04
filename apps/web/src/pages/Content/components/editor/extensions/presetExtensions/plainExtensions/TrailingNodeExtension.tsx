@@ -1,7 +1,7 @@
 import { Plugin } from 'prosemirror-state';
 import { trailingNode } from 'prosemirror-trailing-node';
-import ParagraphExtension from '../presetExtensions/nodeExtensions/paragraphExtension';
-import { extensionName, PlainExtension } from '../type';
+import { extensionName, PlainExtension } from '../../type';
+import ParagraphExtension from '../nodeExtensions/paragraphExtension';
 
 @extensionName('trailing_node')
 export class TrailingNodeExtension extends PlainExtension {

@@ -1,11 +1,9 @@
-import { TrailingNodeExtension } from './plainExtensions/TrailingNodeExtension';
 import DocExtension from './presetExtensions/nodeExtensions/docExtension';
 import ParagraphExtension from './presetExtensions/nodeExtensions/paragraphExtension';
 import TextExtension from './presetExtensions/nodeExtensions/textExtension';
 import AttributeExtension from './presetExtensions/plainExtensions/attributeExtension';
 import CommandExtension from './presetExtensions/plainExtensions/commandExtension';
 import DecorationExtension from './presetExtensions/plainExtensions/decorationExtension';
-import GapCursorExtension from './presetExtensions/plainExtensions/gapCusorExtension';
 import HistoryExtension from './presetExtensions/plainExtensions/historyExtension';
 import InputRuleExtension from './presetExtensions/plainExtensions/inputRuleExtension';
 import KeyMapExtension from './presetExtensions/plainExtensions/keyMapExtension';
@@ -14,6 +12,7 @@ import PasteRuleExtension from './presetExtensions/plainExtensions/pasteRuleExte
 import PluginExtension from './presetExtensions/plainExtensions/pluginExtension';
 import SchemaExtension from './presetExtensions/plainExtensions/schemaExtension';
 import TagExtension from './presetExtensions/plainExtensions/tagExtension';
+import { TrailingNodeExtension } from './presetExtensions/plainExtensions/TrailingNodeExtension';
 
 // 预置插件的顺序不可变动
 export const presetExtensions = [
