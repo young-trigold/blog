@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setCurrentHeadingID, setHeadings } from '@/app/store/pages/contentPage';
+import { setCurrentHeadingId, setHeadings } from '@/app/store/pages/contentPage';
 import { memo, useEffect } from 'react';
-import schema from '../editor/schema';
+import { HeadingExtension } from '../editor/extensions';
 import CatalogItem from './CatalogItem';
 
 export interface HeadingInfo {
 	level: number;
 	content: string;
-	headingID: string;
+	headingId: string;
 }
 
 interface StyledCatalogProps {
@@ -67,21 +67,22 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 		const currentHeadings: HeadingInfo[] = [];
 
 		doc.content.forEach((node) => {
-			if (node.type !== schema.nodes.heading) return;
-			const { headingID, level } = node.attrs;
-			currentHeadings.push({ level, headingID, content: node.firstChild?.text ?? '' });
+			if (node.type.name === HeadingExtension.extensionName) {
+				const { headingId, level } = node.attrs;
+				currentHeadings.push({ level, headingId, content: node.textContent });
+			}
 		});
 
 		dispatch(setHeadings(currentHeadings));
-		if (!new window.URL(window.location.href).searchParams.get('currentHeadingID')) {
-			dispatch(setCurrentHeadingID(currentHeadings[0]?.headingID));
+		if (!new window.URL(window.location.href).searchParams.get('currentHeadingId')) {
+			dispatch(setCurrentHeadingId(currentHeadings[0]?.headingId));
 		}
 	}, [editorStore?.view?.state.doc.content]);
 
 	return (
 		<StyledCatalog catalogVisible={catalogVisible}>
 			{headings.map((heading) => (
-				<CatalogItem heading={heading} key={heading.headingID} />
+				<CatalogItem heading={heading} key={heading.headingId} />
 			))}
 		</StyledCatalog>
 	);

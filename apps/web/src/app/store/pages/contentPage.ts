@@ -30,7 +30,7 @@ interface ContentPageState {
 	catalog: {
 		visible: boolean;
 		headings: HeadingInfo[];
-		currentHeadingID: string;
+		currentHeadingId: string;
 	};
 	comment: {
 		visible: boolean;
@@ -53,7 +53,7 @@ export const initialState: ContentPageState = {
 	catalog: {
 		visible: false,
 		headings: [],
-		currentHeadingID: '',
+		currentHeadingId: '',
 	},
 	comment: {
 		visible: true,
@@ -90,11 +90,11 @@ interface ItemInfo {
 	comments: CommentInfo[];
 }
 
-export const fetchContentPageDataByID = createAsyncThunk(
-	'fetchContentPageDataByIDStatus',
-	async (fetchOption: { itemID: string | undefined; isChapter: boolean }, { rejectWithValue }) => {
+export const fetchContentPageDataById = createAsyncThunk(
+	'fetchContentPageDataByIdStatus',
+	async (fetchOption: { itemId: string | undefined; isChapter: boolean }, { rejectWithValue }) => {
 		try {
-			const url = `/api/${fetchOption.isChapter ? 'notes' : 'articles'}/${fetchOption.itemID}`;
+			const url = `/api/${fetchOption.isChapter ? 'notes' : 'articles'}/${fetchOption.itemId}`;
 			const res = await axios.get<ItemInfo>(url);
 			return res.data;
 		} catch (error) {
@@ -119,8 +119,8 @@ const ContentPageSlice = createSlice({
 		setHeadings: (state, action: PayloadAction<HeadingInfo[]>) => {
 			state.catalog.headings = action.payload;
 		},
-		setCurrentHeadingID: (state, action: PayloadAction<string>) => {
-			state.catalog.currentHeadingID = action.payload;
+		setCurrentHeadingId: (state, action: PayloadAction<string>) => {
+			state.catalog.currentHeadingId = action.payload;
 		},
 		setInsertTooltipVisible: (state, action: PayloadAction<InsertTooltipState['visible']>) => {
 			state.editor.plugin.insertTooltip.visible = action.payload;
@@ -155,16 +155,16 @@ const ContentPageSlice = createSlice({
 	},
 	extraReducers(builder) {
 		builder
-			.addCase(fetchContentPageDataByID.pending, (state) => {
+			.addCase(fetchContentPageDataById.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase(fetchContentPageDataByID.fulfilled, (state, action) => {
+			.addCase(fetchContentPageDataById.fulfilled, (state, action) => {
 				state.title = action.payload.title;
 				state.comment.comments = action.payload.comments;
 				state.editor.editorContent = action.payload.content;
 				state.loading = false;
 			})
-			.addCase(fetchContentPageDataByID.rejected, (state, action) => {
+			.addCase(fetchContentPageDataById.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error;
 			});
@@ -176,7 +176,7 @@ export const {
 	setCommentVisible,
 	setComments,
 	setHeadings,
-	setCurrentHeadingID,
+	setCurrentHeadingId,
 	setInsertTooltipVisible,
 	setInsertTooltip,
 	setSelectionTooltip,

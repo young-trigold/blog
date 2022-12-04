@@ -8,7 +8,7 @@ import {
 } from 'prosemirror-inputrules';
 import { MarkType } from 'prosemirror-model';
 
-import getUniqueID from '@/utils/getUniqueID';
+import getUniqueId from '@/utils/getUniqueId';
 import schema from '../schema';
 
 const markInputRule = (
@@ -55,7 +55,7 @@ const headingInputRule = textblockTypeInputRule(
   schema.nodes.heading,
   (match: RegExpMatchArray) => ({
     level: match[1].length,
-    headingID: getUniqueID(),
+    headingId: getUniqueId(),
   }),
 );
 

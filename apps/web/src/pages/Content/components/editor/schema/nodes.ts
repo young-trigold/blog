@@ -2,7 +2,7 @@
 import { Node as ProseMirrorNode, NodeSpec, ParseRule } from 'prosemirror-model';
 import { nodes } from 'prosemirror-schema-basic';
 
-import getUniqueID from '@/utils/getUniqueID';
+import getUniqueId from '@/utils/getUniqueId';
 
 export const MaxHeadingLevel = 3;
 
@@ -12,7 +12,7 @@ const heading: NodeSpec = {
 	marks: 'sup sub underline em link',
 	group: 'block',
 	defining: true,
-	attrs: { level: { default: 1 }, headingID: { default: '' } },
+	attrs: { level: { default: 1 }, headingId: { default: '' } },
 	// 粘贴
 	parseDOM: [
 		...new Array(MaxHeadingLevel).fill(0).map(
@@ -21,7 +21,7 @@ const heading: NodeSpec = {
 				getAttrs: () => {
 					return {
 						level: i + 1,
-						headingID: getUniqueID(),
+						headingId: getUniqueId(),
 					};
 				},
 			}),
@@ -30,7 +30,7 @@ const heading: NodeSpec = {
 	toDOM: (node) => [
 		`h${node.attrs.level}`,
 		{
-			'heading-id': node.attrs.headingID,
+			'heading-id': node.attrs.headingId,
 		},
 		0,
 	],

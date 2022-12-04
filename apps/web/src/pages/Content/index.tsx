@@ -6,9 +6,9 @@ import styled from 'styled-components';
 import { AppState, useAppDispatch } from '@/app/store';
 import {
 	ContentPageContext,
-	fetchContentPageDataByID,
+	fetchContentPageDataById,
 	resetContentPage,
-	setCurrentHeadingID,
+	setCurrentHeadingId,
 	setInsertTooltip,
 	setInsertTooltipVisible,
 	setSelectionTooltip,
@@ -37,8 +37,8 @@ import {
 	UnderlineExtension,
 } from './components/editor/extensions';
 import { HandleDOMEvents } from './components/editor/store';
-import addHeadingID from './components/editor/utils/addHeadingID';
-import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';
+import addHeadingId from './components/editor/utils/addHeadingId';
+import findHeadingElementById from './components/editor/utils/findHeadingElementById';
 
 const StyledContentPage = styled.div`
 	max-height: 100%;
@@ -61,7 +61,7 @@ interface ContentPageProps {
 
 const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const { isChapter, editable } = props;
-	const { itemID } = useParams();
+	const { itemId } = useParams();
 	const dispatch = useAppDispatch();
 
 	const contentPageContext: ContentPageContext = useMemo(() => ({ isChapter }), []);
@@ -76,27 +76,27 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${title}`, [title]);
 
 	useEffect(() => {
-		dispatch(fetchContentPageDataByID({ itemID, isChapter }));
-	}, [itemID, isChapter]);
+		dispatch(fetchContentPageDataById({ itemId, isChapter }));
+	}, [itemId, isChapter]);
 
-	const [currentHeadingIDSearchParam, setCurrentHeadingIDSearchParam] = useSearchParams();
+	const [currentHeadingIdSearchParam, setCurrentHeadingIdSearchParam] = useSearchParams();
 	const isFirstRef = useRef(true);
 	useEffect(() => {
 		if (!isFirstRef.current) return;
-		const initialHeadingIDFromURL = currentHeadingIDSearchParam.get('currentHeadingID');
-		const currentHeadingElement = findHeadingElementByID(initialHeadingIDFromURL ?? '');
+		const initialHeadingIdFromURL = currentHeadingIdSearchParam.get('currentHeadingId');
+		const currentHeadingElement = findHeadingElementById(initialHeadingIdFromURL ?? '');
 		if (currentHeadingElement) {
 			currentHeadingElement.scrollIntoView();
 			isFirstRef.current = false;
-			dispatch(setCurrentHeadingID(initialHeadingIDFromURL!));
+			dispatch(setCurrentHeadingId(initialHeadingIdFromURL!));
 		}
 	});
 
 	useEffect(() => {
-		const { currentHeadingID } = catalog;
-		if (!currentHeadingID) return;
-		setCurrentHeadingIDSearchParam({ currentHeadingID }, { replace: true });
-	}, [catalog.currentHeadingID]);
+		const { currentHeadingId } = catalog;
+		if (!currentHeadingId) return;
+		setCurrentHeadingIdSearchParam({ currentHeadingId }, { replace: true });
+	}, [catalog.currentHeadingId]);
 
 	// unmount
 	useEffect(() => {
@@ -107,7 +107,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 
 	const onChange = useCallback((view: EditorView) => {
 		const { state } = view;
-		const newState = addHeadingID(state);
+		const newState = addHeadingId(state);
 		// 更新 insert tooltip
 		const { selection } = newState;
 		const { $head, empty } = selection;

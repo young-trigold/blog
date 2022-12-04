@@ -8,8 +8,8 @@ const getHeadingsFromDocNode = (doc: ProseMirrorNode | undefined) => {
 
   doc.descendants((node) => {
     if (node.type !== schema.nodes.heading) return;
-    const { headingID, level } = node.attrs;
-    headings.push({ level, headingID, content: node.firstChild?.text ?? '' });
+    const { headingId, level } = node.attrs;
+    headings.push({ level, headingId, content: node.firstChild?.text ?? '' });
   });
 
   return headings;

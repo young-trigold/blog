@@ -1,8 +1,8 @@
 import { HeaderHeight } from '../../../../../components/Header';
-import { MaxHeadingLevel } from '../schema/nodes';
+import { HeadingMaxLevel } from '../extensions';
 
-const getCurrentHeadingID = (container: HTMLElement) => {
-	const allHeadingElements = Array.from<HTMLHeadingElement>({ length: MaxHeadingLevel }).reduce(
+const getCurrentHeadingId = (container: HTMLElement) => {
+	const allHeadingElements = Array.from<HTMLHeadingElement>({ length: HeadingMaxLevel }).reduce(
 		(result, _, i) => {
 			const headingElements = Array.from(
 				container.querySelectorAll<HTMLHeadingElement>(`h${i + 1}`),
@@ -24,9 +24,9 @@ const getCurrentHeadingID = (container: HTMLElement) => {
 	const currentHeadingElement = [...headingElementToTopMap].sort(
 		(a, b) => Math.abs(a[1] - HeaderHeight) - Math.abs(b[1] - HeaderHeight),
 	)[0][0];
-	const currentHeadingID = currentHeadingElement.getAttribute('heading-id')!;
+	const currentHeadingId = currentHeadingElement.getAttribute('data-heading-id')!;
 
-	return currentHeadingID;
+	return currentHeadingId;
 };
 
-export default getCurrentHeadingID;
+export default getCurrentHeadingId;

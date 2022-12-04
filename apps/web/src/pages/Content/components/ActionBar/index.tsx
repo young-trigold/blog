@@ -14,7 +14,7 @@ import PublishIcon from '@/static/icon/publish.png';
 interface ActionBarProps {}
 
 const ActionBar: React.FC<ActionBarProps> = (props) => {
-	const { itemID } = useParams();
+	const { itemId } = useParams();
 	const { isChapter } = useContext(ContentPageContext);
 	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 	const { hasLogin, info } = useAppSelector((state) => state.user);
@@ -39,7 +39,7 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 
 		try {
 			await axios.put(
-				`/api/${isChapter ? 'notes' : 'articles'}/${itemID}`,
+				`/api/${isChapter ? 'notes' : 'articles'}/${itemId}`,
 				{
 					content: JSON.stringify(editorState.doc.toJSON()),
 				},
@@ -57,12 +57,12 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 			if (error instanceof Error) return message.error(error.message);
 			return message.error(JSON.stringify(error));
 		}
-	}, [editorStore, hasLogin, info, isChapter, itemID]);
+	}, [editorStore, hasLogin, info, isChapter, itemId]);
 
 	const navigate = useNavigate();
 	const handleCancel = useCallback(() => {
-		navigate(`/${isChapter ? 'chapters' : 'articles'}/${itemID}`);
-	}, [isChapter, itemID]);
+		navigate(`/${isChapter ? 'chapters' : 'articles'}/${itemId}`);
+	}, [isChapter, itemId]);
 
 	return (
 		<aside>

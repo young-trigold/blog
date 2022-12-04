@@ -1,7 +1,8 @@
+import getUniqueId from '@/utils/getUniqueId';
 import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { NodePasteRule, PasteRule } from 'prosemirror-paste-rules';
-import TextExtension from '../presetExtensions/nodeExtensions/textExtension';
+import { Plugin, PluginKey } from 'prosemirror-state';
 import { extensionName, ExtensionTag, NodeExtension } from '../type';
 
 export const HeadingMaxLevel = 4;
@@ -21,7 +22,7 @@ export class HeadingExtension extends NodeExtension {
 					default: '',
 				},
 			},
-			content: `${TextExtension.extensionName}*`,
+			content: `${ExtensionTag.Inline}*`,
 			defining: true,
 			parseDOM: Array.from({ length: HeadingMaxLevel }).map(
 				(_, i) =>
@@ -69,5 +70,27 @@ export class HeadingExtension extends NodeExtension {
 					startOfTextBlock: true,
 				} as NodePasteRule),
 		);
+	}
+	createPlugin(): void | Plugin<any> {
+		const key = new PluginKey('addHeadingId');
+		const plugin = new Plugin({
+			key,
+			appendTransaction: (transactions, oldState, newState) => {
+				let tr = newState.tr;
+				newState.doc.descendants((node, position) => {
+					if (node.type.name === HeadingExtension.extensionName) {
+						if (!node.attrs.headingId) {
+							tr = tr.setNodeMarkup(position, node.type, {
+								...node.attrs,
+								headingId: getUniqueId(),
+							});
+						}
+					}
+				});
+
+				return tr;
+			},
+		});
+		return plugin;
 	}
 }

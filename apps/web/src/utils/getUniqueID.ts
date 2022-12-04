@@ -1,5 +1,5 @@
 let count = 0;
 
-const getUniqueID = () => (Math.random() + count++).toString(32);
+const getUniqueId = () => (Math.random() + count++).toString(32);
 
-export default getUniqueID;
+export default getUniqueId;

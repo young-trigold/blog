@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/app/store';
-import getUniqueID from '@/utils/getUniqueID';
+import getUniqueId from '@/utils/getUniqueId';
 import { memo, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import schema from '../../schema';
@@ -74,7 +74,7 @@ const getSetFunctionByLevel = (level: number, editorStore: EditorStore | null) =
 			selection.from,
 			selection.to,
 			schema.nodes.heading,
-			{ level, headingID: getUniqueID() },
+			{ level, headingId: getUniqueId() },
 		);
 
     editorView.dispatch(transaction);

@@ -1,10 +1,10 @@
 import { memo, PropsWithChildren, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import { setCurrentHeadingID } from '@/app/store/pages/contentPage';
-import { HeaderHeight } from '@/components/Header';
-import getCurrentHeadingID from '../editor/utils/getCurrentHeadingID';
 import { useAppDispatch } from '@/app/store';
+import { setCurrentHeadingId } from '@/app/store/pages/contentPage';
+import { HeaderHeight } from '@/components/Header';
+import getCurrentHeadingId from '../editor/utils/getCurrentHeadingId';
 
 const StyledContentContainer = styled.div`
 	max-height: ${() => `calc(100vh - ${HeaderHeight}px)`};
@@ -20,11 +20,11 @@ const ContentContainer: React.FC<PropsWithChildren> = (props) => {
 	useEffect(() => {
 		if (!ref.current) return;
 
-		const onScroll = () => window.requestAnimationFrame(() => {
+		const onScroll = () => {
 			if (!ref.current) return;
-			const currentHeadingID = getCurrentHeadingID(ref.current);
-			if (currentHeadingID) dispatch(setCurrentHeadingID(currentHeadingID));
-		});
+			const currentHeadingId = getCurrentHeadingId(ref.current);
+			if (currentHeadingId) dispatch(setCurrentHeadingId(currentHeadingId));
+		};
 
 		ref.current.addEventListener('scroll', onScroll);
 

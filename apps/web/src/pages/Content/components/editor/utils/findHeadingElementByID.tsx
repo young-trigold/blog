@@ -1,6 +1,6 @@
 import { MaxHeadingLevel } from '../schema/nodes';
 
-const findHeadingElementByID = (headingID: string) => {
+const findHeadingElementById = (headingId: string) => {
   const allHeadingElements = Array.from<HTMLHeadingElement>({ length: MaxHeadingLevel }).reduce(
     (result, _, i) => {
       const headingElements = Array.from(
@@ -12,10 +12,10 @@ const findHeadingElementByID = (headingID: string) => {
   );
 
   const currentHeadingElement = allHeadingElements.find(
-    (headingElement) => headingElement.getAttribute('heading-id') === headingID,
+    (headingElement) => headingElement.getAttribute('data-heading-id') === headingId,
   );
 
   return currentHeadingElement;
 };
 
-export default findHeadingElementByID;
+export default findHeadingElementById;
