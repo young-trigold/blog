@@ -5,27 +5,6 @@ import { Command, Plugin as ProseMirrorPlugin } from 'prosemirror-state';
 import { NodeViewConstructor } from 'prosemirror-view';
 import EditorStore from '../store';
 
-export const extensionName = (name: string) => {
-	const decorator = <
-		F extends {
-			new (...args: any[]): Extension;
-		},
-	>(
-		constructor: F,
-	) => {
-		const classWithName = class extends constructor {
-			static extensionName = name;
-			get name() {
-				return name;
-			}
-		};
-
-		return classWithName;
-	};
-
-	return decorator;
-};
-
 export abstract class Extension {
 	editorStore: EditorStore | null = null;
 	static extensionName: string;

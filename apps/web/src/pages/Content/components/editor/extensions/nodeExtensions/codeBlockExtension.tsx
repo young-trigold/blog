@@ -6,8 +6,41 @@ import { exitCode } from 'prosemirror-commands';
 import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 import { Selection, TextSelection } from 'prosemirror-state';
 import { EditorView, NodeView, NodeViewConstructor } from 'prosemirror-view';
+import { extensionName } from '../decorators/extensionName';
 import TextExtension from '../presetExtensions/nodeExtensions/textExtension';
-import { extensionName, ExtensionTag, NodeExtension } from '../type';
+import { ExtensionTag, NodeExtension } from '../type';
+
+@extensionName('code_block')
+export class CodeBlockExtension extends NodeExtension {
+	createTags(): ExtensionTag[] {
+		return [ExtensionTag.Block];
+	}
+	createNodeSpec(): NodeSpec {
+		return {
+			marks: '',
+			defining: true,
+			isolating: true,
+			draggable: false,
+			code: true,
+			content: `${TextExtension.extensionName}*`,
+			parseDOM: [
+				{
+					tag: 'pre',
+					preserveWhitespace: 'full',
+				},
+			],
+			toDOM() {
+				return ['pre', ['code', 0]];
+			},
+		};
+	}
+	createNodeView(): NodeViewConstructor {
+		const nodeViewConstructor: NodeViewConstructor = (node, view, getPos) =>
+			new CodeBlockView(node, view, getPos);
+
+		return nodeViewConstructor;
+	}
+}
 
 interface ComputeChange {
 	from: number;
@@ -230,37 +263,5 @@ class CodeBlockView implements NodeView {
 
 	destroy() {
 		this.cm.destroy();
-	}
-}
-
-@extensionName('code_block')
-export class CodeBlockExtension extends NodeExtension {
-	createTags(): ExtensionTag[] {
-		return [ExtensionTag.Block];
-	}
-	createNodeSpec(): NodeSpec {
-		return {
-			marks: '',
-			defining: true,
-			isolating: true,
-			draggable: false,
-			code: true,
-			content: `${TextExtension.extensionName}*`,
-			parseDOM: [
-				{
-					tag: 'pre',
-					preserveWhitespace: 'full',
-				},
-			],
-			toDOM() {
-				return ['pre', ['code', 0]];
-			},
-		};
-	}
-	createNodeView(): NodeViewConstructor {
-		const nodeViewConstructor: NodeViewConstructor = (node, view, getPos) =>
-			new CodeBlockView(node, view, getPos);
-
-		return nodeViewConstructor;
 	}
 }

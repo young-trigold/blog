@@ -1,7 +1,8 @@
 import { baseKeymap } from 'prosemirror-commands';
 import { keymap } from 'prosemirror-keymap';
 import { Plugin } from 'prosemirror-state';
-import { Extension, extensionName, KeyMap, PlainExtension } from '../../type';
+import { extensionName } from '../../decorators/extensionName';
+import { Extension, KeyMap, PlainExtension } from '../../type';
 
 @extensionName('key_map')
 class KeyMapExtension extends PlainExtension {

@@ -1,5 +1,6 @@
 import { MarkSpec } from 'prosemirror-model';
-import { extensionName, ExtensionTag, MarkExtension } from '../type';
+import { extensionName } from '../decorators/extensionName';
+import { ExtensionTag, MarkExtension } from '../type';
 
 @extensionName('sub')
 export class SubExtension extends MarkExtension {

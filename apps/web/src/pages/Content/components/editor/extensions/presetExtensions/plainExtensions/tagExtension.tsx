@@ -1,4 +1,5 @@
-import { extensionName, MarkExtension, NodeExtension, PlainExtension } from '../../type';
+import { extensionName } from '../../decorators/extensionName';
+import { MarkExtension, NodeExtension, PlainExtension } from '../../type';
 
 @extensionName('tag')
 class TagExtension extends PlainExtension {

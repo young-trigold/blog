@@ -1,5 +1,6 @@
 import { NodeSpec } from 'prosemirror-model';
-import { extensionName, NodeExtension } from '../../type';
+import { extensionName } from '../../decorators/extensionName';
+import { NodeExtension } from '../../type';
 import { ListItemExtension } from './listItemExtension';
 
 @extensionName('unordered_list')
@@ -8,7 +9,7 @@ export class UnorderedListExtension extends NodeExtension {
 		const unorderedListSpec: NodeSpec = {
 			defining: true,
 			draggable: false,
-			content: `${ListItemExtension.extensionName}*`,
+			content: `${ListItemExtension.extensionName}+`,
 			parseDOM: [{ tag: 'ul' }],
 			toDOM() {
 				return ['ul', 0];

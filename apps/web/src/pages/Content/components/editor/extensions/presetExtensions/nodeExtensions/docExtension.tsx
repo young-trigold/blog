@@ -1,5 +1,6 @@
 import { NodeSpec } from 'prosemirror-model';
-import { extensionName, ExtensionTag, NodeExtension } from '../../type';
+import { extensionName } from '../../decorators/extensionName';
+import { ExtensionTag, NodeExtension } from '../../type';
 
 @extensionName('doc')
 class DocExtension extends NodeExtension {

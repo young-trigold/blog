@@ -3,7 +3,8 @@ import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { NodePasteRule, PasteRule } from 'prosemirror-paste-rules';
 import { Plugin, PluginKey } from 'prosemirror-state';
-import { extensionName, ExtensionTag, NodeExtension } from '../type';
+import { extensionName } from '../decorators/extensionName';
+import { ExtensionTag, NodeExtension } from '../type';
 
 export const HeadingMaxLevel = 4;
 
