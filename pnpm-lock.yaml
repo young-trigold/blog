@@ -104,6 +104,7 @@ importers:
       prosemirror-schema-basic: ^1.2.0
       prosemirror-schema-list: ^1.2.2
       prosemirror-state: ^1.4.2
+      prosemirror-trailing-node: ^2.0.1
       prosemirror-transform: ^1.7.0
       prosemirror-view: ^1.29.1
       react: ^18.2.0
@@ -136,6 +137,7 @@ importers:
       prosemirror-schema-basic: registry.npmmirror.com/prosemirror-schema-basic/1.2.0
       prosemirror-schema-list: registry.npmmirror.com/prosemirror-schema-list/1.2.2
       prosemirror-state: registry.npmmirror.com/prosemirror-state/1.4.2
+      prosemirror-trailing-node: 2.0.1_pittxnjafysooc5fjh2fcbuwfq
       prosemirror-transform: registry.npmmirror.com/prosemirror-transform/1.7.0
       prosemirror-view: registry.npmmirror.com/prosemirror-view/1.29.1
       react: registry.npmmirror.com/react/18.2.0
@@ -1938,6 +1940,22 @@ packages:
       prosemirror-model: 1.18.2
       prosemirror-transform: 1.7.0
       prosemirror-view: 1.29.1
+    dev: false
+
+  /prosemirror-trailing-node/2.0.1_pittxnjafysooc5fjh2fcbuwfq:
+    resolution: {integrity: sha512-Lt0kgW2Y8rfEl2NdFJawzMFcIQpbvKOGaBKSEmOHNbNWxQuA5Uf87ISxHAPhEUGCpthR/n5T57GOIbfVWLs9HA==}
+    peerDependencies:
+      prosemirror-model: ^1
+      prosemirror-state: ^1
+      prosemirror-view: ^1
+    dependencies:
+      '@babel/runtime': 7.20.1
+      '@remirror/core-constants': 2.0.0
+      '@remirror/core-helpers': 2.0.0
+      escape-string-regexp: 4.0.0
+      prosemirror-model: registry.npmmirror.com/prosemirror-model/1.18.2
+      prosemirror-state: registry.npmmirror.com/prosemirror-state/1.4.2
+      prosemirror-view: registry.npmmirror.com/prosemirror-view/1.29.1
     dev: false
 
   /prosemirror-transform/1.7.0:

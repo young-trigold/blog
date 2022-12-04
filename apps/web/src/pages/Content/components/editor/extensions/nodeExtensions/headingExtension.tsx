@@ -24,6 +24,7 @@ export class HeadingExtension extends NodeExtension {
 			},
 			content: `${ExtensionTag.Inline}*`,
 			defining: true,
+			draggable: false,
 			parseDOM: Array.from({ length: HeadingMaxLevel }).map(
 				(_, i) =>
 					({
@@ -54,7 +55,6 @@ export class HeadingExtension extends NodeExtension {
 				level: match[1].length,
 			}),
 		);
-		console.debug(inputRule);
 		return [inputRule];
 	}
 	createPasteRules(): PasteRule[] {

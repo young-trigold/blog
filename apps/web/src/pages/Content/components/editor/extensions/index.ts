@@ -1,3 +1,4 @@
+import { TrailingNodeExtension } from './plainExtensions/TrailingNodeExtension';
 import DocExtension from './presetExtensions/nodeExtensions/docExtension';
 import ParagraphExtension from './presetExtensions/nodeExtensions/paragraphExtension';
 import TextExtension from './presetExtensions/nodeExtensions/textExtension';
@@ -31,6 +32,7 @@ export const presetExtensions = [
 	new CommandExtension(),
 	new KeyMapExtension(),
 	new DecorationExtension(),
+	new TrailingNodeExtension(),
 ];
 
 export { BoldExtension } from './markExtensions/boldExtension';
