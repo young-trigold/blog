@@ -44,11 +44,6 @@ export abstract class NodeExtension extends Extension {
 }
 
 export abstract class PlainExtension extends Extension {
-	/**
-	 * 创建 MarkSpec 或 NodeSpec 中的一个属性相关的 attr，toDOM, parseDOM
-	 * 这些是在多个 Spec 之间公用的，因此单独需要一个方法提供这个机制
-	 * @example 缩进 行高 文字居中等
-	 */
 	createSpecCommonPart?(): Record<string, string>[];
 }
 

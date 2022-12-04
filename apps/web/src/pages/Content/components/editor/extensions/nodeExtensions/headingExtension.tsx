@@ -1,7 +1,7 @@
 import getUniqueId from '@/utils/getUniqueId';
 import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
-import { NodePasteRule, PasteRule } from 'prosemirror-paste-rules';
+import { PasteRule } from 'prosemirror-paste-rules';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { extensionName } from '../decorators/extensionName';
 import { ExtensionTag, NodeExtension } from '../type';
@@ -20,7 +20,7 @@ export class HeadingExtension extends NodeExtension {
 					default: 1,
 				},
 				headingId: {
-					default: '',
+					default: null,
 				},
 			},
 			content: `${ExtensionTag.Inline}*`,
@@ -59,18 +59,16 @@ export class HeadingExtension extends NodeExtension {
 		return [inputRule];
 	}
 	createPasteRules(): PasteRule[] {
-		return Array.from({ length: HeadingMaxLevel }).map(
-			(_, i) =>
-				({
-					type: 'node',
-					nodeType: this.type,
-					regexp: new RegExp(`^#{${i + 1}}\\s([\\s\\w]+)$`),
-					getAttributes() {
-						return { level: i + 1 };
-					},
-					startOfTextBlock: true,
-				} as NodePasteRule),
-		);
+		const pasteRule: PasteRule = {
+			type: 'node',
+			nodeType: this.type,
+			regexp: new RegExp(`^#{1,${HeadingMaxLevel}}\\s([\\s\\w]+)$`),
+			getAttributes(match: RegExpMatchArray) {
+				return { level: match[1].length, headingId: getUniqueId() };
+			},
+			startOfTextBlock: true,
+		};
+		return [pasteRule];
 	}
 	createPlugin(): void | Plugin<any> {
 		const key = new PluginKey('addHeadingId');
@@ -78,14 +76,18 @@ export class HeadingExtension extends NodeExtension {
 			key,
 			appendTransaction: (transactions, oldState, newState) => {
 				let tr = newState.tr;
+				const headingIdCache = new Set();
 				newState.doc.descendants((node, position) => {
-					if (node.type.name === HeadingExtension.extensionName) {
-						if (!node.attrs.headingId) {
-							tr = tr.setNodeMarkup(position, node.type, {
-								...node.attrs,
-								headingId: getUniqueId(),
-							});
-						}
+					if (!(node.type.name === HeadingExtension.extensionName)) return;
+					const headingId = node.attrs.headingId;
+					if (!headingId || headingIdCache.has(headingId)) {
+						const newHeadingId = getUniqueId();
+						tr = tr.setNodeMarkup(position, node.type, {
+							...node.attrs,
+							headingId: newHeadingId,
+						});
+					} else {
+						headingIdCache.add(headingId);
 					}
 				});
 
