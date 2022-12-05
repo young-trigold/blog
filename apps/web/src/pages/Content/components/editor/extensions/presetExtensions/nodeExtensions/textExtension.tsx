@@ -1,13 +1,15 @@
 import { NodeSpec } from 'prosemirror-model';
-import { NodeExtension } from '../..';
+import { extensionName } from '../../decorators/extensionName';
+import { ExtensionTag, NodeExtension } from '../../type';
 
+@extensionName('text')
 class TextExtension extends NodeExtension {
-	get name() {
-		return 'text' as const;
+	createTags() {
+		return [ExtensionTag.Inline];
 	}
 
 	createNodeSpec(): NodeSpec {
-		throw new Error('Method not implemented.');
+		return {};
 	}
 }
 

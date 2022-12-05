@@ -1,21 +1,21 @@
-import { MaxHeadingLevel } from '../schema/nodes';
+import { HeadingMaxLevel } from '../extensions';
 
-const findHeadingElementByID = (headingID: string) => {
-  const allHeadingElements = Array.from<HTMLHeadingElement>({ length: MaxHeadingLevel }).reduce(
-    (result, _, i) => {
-      const headingElements = Array.from(
-        document.querySelectorAll<HTMLHeadingElement>(`h${i + 1}`),
-      );
-      return result.concat(headingElements);
-    },
-    [] as HTMLHeadingElement[],
-  );
+const findHeadingElementById = (headingId: string) => {
+	const allHeadingElements = Array.from<HTMLHeadingElement>({ length: HeadingMaxLevel }).reduce(
+		(result, _, i) => {
+			const headingElements = Array.from(
+				document.querySelectorAll<HTMLHeadingElement>(`h${i + 1}`),
+			);
+			return result.concat(headingElements);
+		},
+		[] as HTMLHeadingElement[],
+	);
 
-  const currentHeadingElement = allHeadingElements.find(
-    (headingElement) => headingElement.getAttribute('heading-id') === headingID,
-  );
+	const currentHeadingElement = allHeadingElements.find(
+		(headingElement) => headingElement.getAttribute('data-heading-id') === headingId,
+	);
 
-  return currentHeadingElement;
+	return currentHeadingElement;
 };
 
-export default findHeadingElementByID;
+export default findHeadingElementById;

@@ -21,6 +21,7 @@ const StyledInsertOptionContainer = styled.div<StyledInsertOptionContainerProps>
 		`translate(${props.position.left}px, ${props.position.top}px)`};
 	transition: ${(props) => props.theme.transition};
 	user-select: none;
+	z-index: 9;
 `;
 
 export const StyledOption = styled.div`

@@ -1,0 +1,25 @@
+import { MarkSpec } from 'prosemirror-model';
+import { extensionName } from '../decorators/extensionName';
+import { ExtensionTag, MarkExtension } from '../type';
+
+@extensionName('code')
+export class CodeExtension extends MarkExtension {
+	createTags() {
+		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
+	}
+
+	createMarkSpec(): MarkSpec {
+		const codeMarkSpec: MarkSpec = {
+			parseDOM: [
+				{
+					tag: 'code',
+				},
+			],
+			toDOM() {
+				return ['code', 0];
+			},
+		};
+
+		return codeMarkSpec;
+	}
+}

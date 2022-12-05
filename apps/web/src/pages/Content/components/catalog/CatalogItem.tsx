@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { AppState } from '@/app/store';
-import findHeadingElementByID from '../editor/utils/findHeadingElementByID';
+import findHeadingElementById from '../editor/utils/findHeadingElementById';
 import { HeadingInfo } from './Catalog';
 
 interface StyledCatalogItemProps {
@@ -53,19 +53,19 @@ const CatalogItem: React.FC<CatalogItemProps> = (props) => {
 	const { heading } = props;
 
 	const onClick: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
-		const currentHeadingElement = findHeadingElementByID(heading.headingID);
+		const currentHeadingElement = findHeadingElementById(heading.headingId);
 		currentHeadingElement?.scrollIntoView();
-	}, [heading.headingID]);
+	}, [heading.headingId]);
 
-	const currentHeadingID = useSelector(
-		(state: AppState) => state.contentPage.catalog.currentHeadingID,
+	const currentHeadingId = useSelector(
+		(state: AppState) => state.contentPage.catalog.currentHeadingId,
 	);
 
 	const [isCurrent, setIsCurrent] = useState(false);
 
 	useEffect(() => {
-		setIsCurrent(currentHeadingID === heading.headingID);
-	}, [currentHeadingID]);
+		setIsCurrent(currentHeadingId === heading.headingId);
+	}, [currentHeadingId]);
 
 	return (
 		<StyledCatalogItem isCurrent={isCurrent} level={heading.level} onClick={onClick}>
@@ -74,4 +74,4 @@ const CatalogItem: React.FC<CatalogItemProps> = (props) => {
 	);
 };
 
-export default memo(CatalogItem, (pre, next) => pre.heading.headingID === next.heading.headingID);
+export default memo(CatalogItem);

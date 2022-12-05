@@ -1,4 +1,3 @@
-import { Node as ProseMirrorNode } from 'prosemirror-model';
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -7,10 +6,9 @@ import styled from 'styled-components';
 import { AppState, useAppDispatch } from '@/app/store';
 import {
 	ContentPageContext,
-	fetchContentPageDataByID,
+	fetchContentPageDataById,
 	resetContentPage,
-	setCurrentHeadingID,
-	setEditorState,
+	setCurrentHeadingId,
 	setInsertTooltip,
 	setInsertTooltipVisible,
 	setSelectionTooltip,
@@ -19,7 +17,6 @@ import {
 import LoadingIndicator from '@/components/LodingIndicator';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
-import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
@@ -28,11 +25,22 @@ import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';
 import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
-import nodeViews from './components/editor/nodeViews';
-import plugins from './components/editor/plugins';
-import schema from './components/editor/schema';
-import addHeadingID from './components/editor/utils/addHeadingID';
-import findHeadingElementByID from './components/editor/utils/findHeadingElementByID';
+import {
+	BoldExtension,
+	CodeBlockExtension,
+	CodeExtension,
+	HeadingExtension,
+	ItalicExtension,
+	LinkExtension,
+	SubExtension,
+	SupExtension,
+	UnderlineExtension,
+} from './components/editor/extensions';
+import { ImageExtension } from './components/editor/extensions/nodeExtensions/imageExtension';
+import { ListExtensions } from './components/editor/extensions/nodeExtensions/listExtensions';
+import { TableExtensions } from './components/editor/extensions/nodeExtensions/tableExtensions';
+import { HandleDOMEvents } from './components/editor/store';
+import findHeadingElementById from './components/editor/utils/findHeadingElementById';
 
 const StyledContentPage = styled.div`
 	max-height: 100%;
@@ -53,47 +61,44 @@ interface ContentPageProps {
 	editable: boolean;
 }
 
-export type EditorDOMEventHandlers = {
-	[Event in keyof HTMLElementEventMap]?: (
-		view: EditorView,
-		event: HTMLElementEventMap[Event],
-	) => void | boolean;
-};
-
 const ContentPage: React.FC<ContentPageProps> = (props) => {
 	const { isChapter, editable } = props;
-
-	const { itemID } = useParams();
+	const { itemId } = useParams();
 	const dispatch = useAppDispatch();
+
+	const contentPageContext: ContentPageContext = useMemo(() => ({ isChapter }), []);
 
 	const { loading, editor, error, catalog, title } = useSelector(
 		(state: AppState) => state.contentPage,
 	);
+
+	const { editorContent } = editor;
+
 	if (error) message.error(error.message ?? '');
 	useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${title}`, [title]);
 
 	useEffect(() => {
-		dispatch(fetchContentPageDataByID({ itemID, isChapter }));
-	}, [itemID, isChapter, fetchContentPageDataByID]);
+		dispatch(fetchContentPageDataById({ itemId, isChapter }));
+	}, [itemId, isChapter]);
 
-	const [currentHeadingIDSearchParam, setCurrentHeadingIDSearchParam] = useSearchParams();
+	const [currentHeadingIdSearchParam, setCurrentHeadingIdSearchParam] = useSearchParams();
 	const isFirstRef = useRef(true);
 	useEffect(() => {
 		if (!isFirstRef.current) return;
-		const initialHeadingIDFromURL = currentHeadingIDSearchParam.get('currentHeadingID');
-		const currentHeadingElement = findHeadingElementByID(initialHeadingIDFromURL ?? '');
+		const initialHeadingIdFromURL = currentHeadingIdSearchParam.get('currentHeadingId');
+		const currentHeadingElement = findHeadingElementById(initialHeadingIdFromURL ?? '');
 		if (currentHeadingElement) {
 			currentHeadingElement.scrollIntoView();
 			isFirstRef.current = false;
-			dispatch(setCurrentHeadingID(initialHeadingIDFromURL!));
+			dispatch(setCurrentHeadingId(initialHeadingIdFromURL!));
 		}
 	});
 
 	useEffect(() => {
-		const { currentHeadingID } = catalog;
-		if (!currentHeadingID) return;
-		setCurrentHeadingIDSearchParam({ currentHeadingID }, { replace: true });
-	}, [catalog.currentHeadingID]);
+		const { currentHeadingId } = catalog;
+		if (!currentHeadingId) return;
+		setCurrentHeadingIdSearchParam({ currentHeadingId }, { replace: true });
+	}, [catalog.currentHeadingId]);
 
 	// unmount
 	useEffect(() => {
@@ -102,69 +107,40 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		};
 	}, []);
 
-	const ref = useRef<{ view: EditorView | null }>({ view: null });
+	const onChange = useCallback((view: EditorView) => {
+		const { state } = view;
+		// 更新 insert tooltip
+		const { selection } = state;
+		const { $head, empty } = selection;
+		const { nodeAfter, nodeBefore } = $head;
+		const canInsertBlock = nodeAfter === null || nodeBefore === null;
+		const cursorPositionToViewPort = view.coordsAtPos($head.pos);
+		const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
+		dispatch(
+			setInsertTooltip({
+				visible: empty,
+				canInsertBlock,
+				position: {
+					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+					top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
+				},
+			}),
+		);
 
-	const onChange = useCallback(
-		(tr: Transaction, state: EditorState) => {
-			window.requestAnimationFrame(() => {
-				const { view } = ref.current;
-				if (!view || !state) return;
-				const newState = addHeadingID(state.apply(tr));
-				// 更新 insert tooltip
-				const { selection } = newState;
-				const { $head, empty } = selection;
-				const { nodeAfter, nodeBefore } = $head;
-				const canInsertBlock = nodeAfter === null || nodeBefore === null;
-				const cursorPositionToViewPort = view.coordsAtPos($head.pos);
-				const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
-				dispatch(
-					setInsertTooltip({
-						visible: empty,
-						canInsertBlock,
-						position: {
-							left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-							top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
-						},
-					}),
-				);
+		dispatch(
+			setSelectionTooltip({
+				visible: !empty,
+				position: {
+					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+					top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
+				},
+			}),
+		);
+	}, []);
 
-				dispatch(
-					setSelectionTooltip({
-						visible: !empty,
-						position: {
-							left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-							top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
-						},
-					}),
-				);
-				dispatch(setEditorState(newState));
-			});
-		},
-		[ref.current?.view, addHeadingID],
-	);
-
-	useEffect(() => {
-		const doc = editor.editorContent
-			? ProseMirrorNode.fromJSON(schema, JSON.parse(editor.editorContent))
-			: undefined;
-
-		const initialEditorState = EditorState.create({
-			schema,
-			doc,
-			plugins,
-		});
-
-		dispatch(setEditorState(initialEditorState));
-	}, [editor.editorContent]);
-
-	const contentPageContext = useMemo(
-		() => ({ editable, isChapter, editorView: ref.current?.view }),
-		[editable, isChapter, ref.current?.view],
-	);
-
-	const editorDOMEventHandlers: EditorDOMEventHandlers = useMemo(
+	const handleDOMEvents: HandleDOMEvents = useMemo(
 		() => ({
-			blur() {
+			blur: () => {
 				dispatch(setInsertTooltipVisible(false));
 				dispatch(setSelectionTooltipVisible(false));
 			},
@@ -172,7 +148,23 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 		[],
 	);
 
-	const { editorState } = editor;
+	const extensions = useMemo(
+		() => [
+			new BoldExtension(),
+			new ItalicExtension(),
+			new UnderlineExtension(),
+			new LinkExtension(),
+			new SubExtension(),
+			new SupExtension(),
+			new CodeExtension(),
+			new HeadingExtension(),
+			new CodeBlockExtension(),
+			new ImageExtension(),
+			...ListExtensions.map((Extension) => new Extension()),
+			...TableExtensions.map((Extension) => new Extension()),
+		],
+		[],
+	);
 
 	if (loading) return <LoadingIndicator />;
 	return (
@@ -182,17 +174,14 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 				<ContentContainer>
 					<MainContainer>
 						<Catalog />
-						{editorState && (
-							<Editor
-								autoFocus
-								ref={ref}
-								state={editorState}
-								nodeViews={nodeViews}
-								editable={editable}
-								onChange={onChange}
-								handleDOMEvents={editorDOMEventHandlers}
-							/>
-						)}
+						<Editor
+							extensions={extensions}
+							doc={editorContent}
+							editable={editable}
+							autoFocus={true}
+							onChange={onChange}
+							handleDOMEvents={handleDOMEvents}
+						/>
 						<CommentList />
 						{editable && <ActionBar />}
 						<CatalogButton />

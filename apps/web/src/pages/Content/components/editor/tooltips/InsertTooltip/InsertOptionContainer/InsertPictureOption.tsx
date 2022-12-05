@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setEditorState } from '@/app/store/pages/contentPage';
 import { message } from '@/components/Message';
 import PictureIconSrc from '@/static/icon/picture.png';
 import { StyledOption } from '.';
@@ -15,13 +14,15 @@ const InsertPictureOption = () => {
 		inputFileRef.current.click();
 	};
 
-	const { editorState } = useAppSelector((state) => state.contentPage.editor);
+	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 	const dispatch = useAppDispatch();
 	const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
 		const { files } = event.target;
 		if (!files || files.length === 0) return;
-		if (!editorState) return;
-
+		if (!editorStore) return;
+		const { view: editorView } = editorStore;
+		if (!editorView) return;
+		const { state: editorState } = editorView;
 		const uploadImages = async () => {
 			try {
 				const formData = new FormData();
@@ -31,8 +32,7 @@ const InsertPictureOption = () => {
 				const attrs = { src: fileURL };
 				const node = editorState.schema.nodes.image.create(attrs);
 				const transaction = editorState.tr.replaceSelectionWith(node, false);
-				const newState = editorState.apply(transaction);
-				dispatch(setEditorState(newState));
+				editorView.dispatch(transaction);
 				message.success('图片插入成功!');
 			} catch (error) {
 				if (axios.isAxiosError(error))
@@ -60,4 +60,4 @@ const InsertPictureOption = () => {
 	);
 };
 
-export default InsertPictureOption;
+export default memo(InsertPictureOption);
