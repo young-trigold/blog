@@ -66,17 +66,17 @@ export class HeadingExtension extends NodeExtension {
 		};
 	}
 
-	createInputRules(): InputRule[] {
-		const inputRule = textblockTypeInputRule(
-			new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
-			this.editorStore?.schema?.nodes['heading']!,
-			(match: RegExpMatchArray) => ({
-				level: match[1].length,
-				headingId: getUniqueId(),
-			}),
-		);
-		return [inputRule];
-	}
+	// createInputRules(): InputRule[] {
+	// 	const inputRule = textblockTypeInputRule(
+	// 		new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
+	// 		this.editorStore?.schema?.nodes['heading']!,
+	// 		(match: RegExpMatchArray) => ({
+	// 			level: match[1].length,
+	// 			headingId: getUniqueId(),
+	// 		}),
+	// 	);
+	// 	return [inputRule];
+	// }
 
 	createPasteRules(): PasteRule[] {
 		const pasteRule: PasteRule = {
