@@ -1,7 +1,6 @@
 import DocExtension from './presetExtensions/nodeExtensions/docExtension';
 import ParagraphExtension from './presetExtensions/nodeExtensions/paragraphExtension';
 import TextExtension from './presetExtensions/nodeExtensions/textExtension';
-import AttributeExtension from './presetExtensions/plainExtensions/attributeExtension';
 import CommandExtension from './presetExtensions/plainExtensions/commandExtension';
 import DecorationExtension from './presetExtensions/plainExtensions/decorationExtension';
 import HistoryExtension from './presetExtensions/plainExtensions/historyExtension';
@@ -14,12 +13,14 @@ import SchemaExtension from './presetExtensions/plainExtensions/schemaExtension'
 import { TrailingNodeExtension } from './presetExtensions/plainExtensions/trailingNodeExtension';
 
 // 预置插件的顺序不可变动
-export const presetExtensions = [
+export const presetNodeExtensions = [
 	new DocExtension(),
 	new TextExtension(),
 	new ParagraphExtension(),
+];
+
+export const presetPlainExtensions = [
 	new SchemaExtension(),
-	new AttributeExtension(),
 	new PluginExtension(),
 	new InputRuleExtension(),
 	new PasteRuleExtension(),

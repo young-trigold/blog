@@ -5,7 +5,7 @@ import { useAppDispatch } from '@/app/store';
 import { setEditorStore } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
 import { EditorView } from 'prosemirror-view';
-import { presetExtensions } from './extensions';
+import { presetNodeExtensions, presetPlainExtensions } from './extensions';
 import { Extension } from './extensions/type';
 import EditorStore, { HandleDOMEvents } from './store';
 import InsertTooltip from './tooltips/InsertTooltip';
@@ -162,9 +162,9 @@ const Editor: React.FC<EditorProps> = (props) => {
 	const dispatch = useAppDispatch();
 	useEffect(() => {
 		const editorStore = new EditorStore([
-			...presetExtensions.slice(0, 3),
+			...presetNodeExtensions,
 			...extensions,
-			...presetExtensions.slice(3),
+			...presetPlainExtensions,
 		]);
 		const state = editorStore.createEditorState(doc);
 		const editorView = editorStore.createEditorView(editorContainerRef.current!, {
