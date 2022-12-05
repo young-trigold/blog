@@ -1,11 +1,8 @@
 import { toggleMark } from 'prosemirror-commands';
-import { memo, useCallback, useContext } from 'react';
-import { useSelector } from 'react-redux';
+import { memo, useCallback } from 'react';
 import styled from 'styled-components';
 
-import { AppState } from '@/app/store';
-import { ContentPageContext } from '@/app/store/pages/contentPage';
-import schema from '../../schema';
+import { useAppSelector } from '@/app/store';
 import HeadingDecoration from './HeadingDecoration';
 
 interface StyledSelectionTooltipProps {
@@ -26,7 +23,9 @@ const StyledSelectionTooltip = styled.div<StyledSelectionTooltipProps>`
 	top: 0;
 	left: 0;
 	transform: ${(props) =>
-		`translate(${props.position.left - SelectionTooltipWidth/2}px, ${props.position.top - SelectionTooltipHeight - 4}px)`};
+		`translate(${props.position.left - SelectionTooltipWidth / 2}px, ${
+			props.position.top - SelectionTooltipHeight - 4
+		}px)`};
 	visibility: ${(props) => (props.visible ? 'unset' : 'hidden')};
 	opacity: ${(props) => (props.visible ? 1 : 0)};
 	border-radius: 6.4px;
@@ -66,55 +65,69 @@ const StyledOption = styled.div`
 interface SelectionTooltipProps {}
 
 const SelectionTooltip = (props: SelectionTooltipProps) => {
-	const { position, visible } = useSelector(
-		(state: AppState) => state.contentPage.editor.plugin.selectionTooltip,
+	const { position, visible } = useAppSelector(
+		(state) => state.contentPage.editor.plugin.selectionTooltip,
 	);
 
-	const { editorView } = useContext(ContentPageContext);
+	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 
 	const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(
 		(event) => {
-			if (!editorView) return;
-			const command = toggleMark(schema.marks.strong);
+			if (!editorStore) return;
+			const { view: editorView, schema } = editorStore;
+			if (!editorView || !schema) return;
+			const command = toggleMark(schema.marks['bold']);
 			command(editorView.state, editorView.dispatch, editorView);
 			event.stopPropagation();
 		},
-		[editorView],
+		[editorStore],
 	);
 
 	const handleToggleEm: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
-		if (!editorView) return;
-		const command = toggleMark(schema.marks.em);
+		if (!editorStore) return;
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const command = toggleMark(schema.marks['italic']);
 		command(editorView.state, editorView.dispatch, editorView);
-	}, [editorView]);
+	}, [editorStore]);
 
 	const handleToggleUnderline: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
-		if (!editorView) return;
-		const command = toggleMark(schema.marks.underline);
+		if (!editorStore) return;
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const command = toggleMark(schema.marks['underline']);
 		command(editorView.state, editorView.dispatch, editorView);
-	}, [editorView]);
+	}, [editorStore]);
 
 	const handleToggleSup: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
-		if (!editorView) return;
-		const command = toggleMark(schema.marks.sup);
+		if (!editorStore) return;
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const command = toggleMark(schema.marks['sup']);
 		command(editorView.state, editorView.dispatch, editorView);
-	}, [editorView]);
+	}, [editorStore]);
 
 	const handleToggleSub: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
-		if (!editorView) return;
-		const command = toggleMark(schema.marks.sub);
+		if (!editorStore) return;
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const command = toggleMark(schema.marks['sub']);
 		command(editorView.state, editorView.dispatch, editorView);
-	}, [editorView]);
+	}, [editorStore]);
 
-	const handleToggleOrderedList: React.MouseEventHandler<HTMLDivElement> = () => {
+	const handleToggleOrderedList: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+		if (!editorStore) return;
+		const { view: editorView } = editorStore;
 		if (!editorView) return;
 		console.debug('ordered list option clicked');
-	};
+	}, [editorStore]);
 
-	const handleToggleUnorderedList: React.MouseEventHandler<HTMLDivElement> = () => {
+	const handleToggleUnorderedList: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+		if (!editorStore) return;
+		const { view: editorView } = editorStore;
 		if (!editorView) return;
 		console.debug('unordered list option clicked');
-	};
+	}, [editorStore]);
 
 	return (
 		<StyledSelectionTooltip

@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/app/store';
-import getUniqueID from '@/utils/getUniqueID';
+import getUniqueId from '@/utils/getUniqueId';
 import { memo } from 'react';
 import styled from 'styled-components';
 import InsertLinkModal from '../Modals/InsertLinkModal';
@@ -15,7 +15,7 @@ const StyledModalContainer = styled.div<StyledModalContainerProps>`
 	position: fixed;
 	left: 0;
 	top: 0;
-	width: 100vw;
+	wIdth: 100vw;
 	height: 100vh;
 	transition: ${(props) => props.theme.transition};
 	background-color: rgba(0, 0, 0, 0.5);
@@ -27,7 +27,7 @@ const StyledModalContainer = styled.div<StyledModalContainerProps>`
 	transform: ${(props) => (props.visible ? '' : 'scaleY(0)')};
 `;
 
-export const modalContainerId = getUniqueID();
+export const modalContainerId = getUniqueId();
 
 const ModalContainer: React.FC = () => {
 	const { visible } = useAppSelector((state) => state.modal.modalContainer);

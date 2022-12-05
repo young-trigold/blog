@@ -1,10 +1,8 @@
-import { PlainExtension } from '../..';
+import { extensionName } from '../../decorators/extensionName';
+import { PlainExtension } from '../../type';
 
+@extensionName('decoration')
 class DecorationExtension extends PlainExtension {
-	get name() {
-		return 'decoration' as const;
-	}
-
 	onEditorStoreCreate?(): void {}
 }
 

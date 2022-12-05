@@ -37,7 +37,7 @@ const RouterPart = () => {
 				/>
 
 				<Route
-					path="/articles/:itemID"
+					path="/articles/:itemId"
 					element={
 						<Suspense fallback={<LoadingPage />}>
 							<ContentPage isChapter={false} editable={false} />
@@ -45,7 +45,7 @@ const RouterPart = () => {
 					}
 				/>
 				<Route
-					path="/edit/articles/:itemID"
+					path="/edit/articles/:itemId"
 					element={
 						<Suspense fallback={<LoadingPage />}>
 							<ContentPage isChapter={false} editable />
@@ -54,7 +54,7 @@ const RouterPart = () => {
 				/>
 
 				<Route
-					path="/chapters/:itemID"
+					path="/chapters/:itemId"
 					element={
 						<Suspense fallback={<LoadingPage />}>
 							<ContentPage isChapter editable={false} />
@@ -63,7 +63,7 @@ const RouterPart = () => {
 				/>
 
 				<Route
-					path="/edit/chapters/:itemID"
+					path="/edit/chapters/:itemId"
 					element={
 						<Suspense fallback={<LoadingPage />}>
 							<ContentPage isChapter editable />

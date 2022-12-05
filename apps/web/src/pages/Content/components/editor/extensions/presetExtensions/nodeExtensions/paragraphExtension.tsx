@@ -1,13 +1,31 @@
 import { NodeSpec } from 'prosemirror-model';
-import { NodeExtension } from '../..';
+import { extensionName } from '../../decorators/extensionName';
+import { ExtensionTag, NodeExtension } from '../../type';
 
+@extensionName('paragraph')
 class ParagraphExtension extends NodeExtension {
-	get name() {
-		return 'paragraph' as const;
+	createTags() {
+		return [
+			ExtensionTag.LastNodeCompatible,
+			ExtensionTag.TextBlock,
+			ExtensionTag.Block,
+			ExtensionTag.FormattingNode,
+		];
 	}
 
 	createNodeSpec(): NodeSpec {
-		throw new Error('Method not implemented.');
+		return {
+			content: `${ExtensionTag.Inline}*`,
+			draggable: false,
+			parseDOM: [
+				{
+					tag: 'p',
+				},
+			],
+			toDOM() {
+				return ['p', 0];
+			},
+		};
 	}
 }
 

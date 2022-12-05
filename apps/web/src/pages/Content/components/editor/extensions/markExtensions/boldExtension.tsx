@@ -1,14 +1,11 @@
+import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
-import { ExtensionTag, MarkExtension } from '..';
-import EditorStore from '../../store/EditorStore';
+import markInputRule from '../../utils/markInputRule';
+import { extensionName } from '../decorators/extensionName';
+import { ExtensionTag, MarkExtension } from '../type';
 
-class BoldExtension extends MarkExtension {
-	editorStore: EditorStore | null = null;
-
-	get name() {
-		return 'bold' as const;
-	}
-
+@extensionName('bold')
+export class BoldExtension extends MarkExtension {
 	createTags() {
 		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
 	}
@@ -18,22 +15,12 @@ class BoldExtension extends MarkExtension {
 			parseDOM: [
 				{
 					tag: 'strong',
-					// getAttrs: extra.parse,
 				},
-				// {
-				//   tag: 'b',
-				//   getAttrs: (node) =>
-				//     isElementDomNode(node) && node.style.fontWeight !== 'normal'
-				//       ? extra.parse(node)
-				//       : false,
-				// },
-				// {
-				//   style: 'font-weight',
-				//   getAttrs: (node) =>
-				//     isString(node) && /^(bold(er)?|[5-9]\d{2,})$/.test(node) ? null : false,
-				// },
+				{
+					tag: 'b',
+				},
 			],
-			toDOM(mark, inline) {
+			toDOM() {
 				return ['strong', 0];
 			},
 		};
@@ -41,8 +28,7 @@ class BoldExtension extends MarkExtension {
 		return boldMarkSpec;
 	}
 
-	onEditorStoreCreate(): void {}
-	onEditorViewCreate(): void {}
+	createInputRules(): InputRule[] {
+		return [markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, this.type)];
+	}
 }
-
-export default BoldExtension;

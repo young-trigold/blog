@@ -1,9 +1,7 @@
-import { PlainExtension } from '../..';
+import { extensionName } from '../../decorators/extensionName';
+import { PlainExtension } from '../../type';
 
-class AttributeExtension extends PlainExtension {
-	get name() {
-		return 'attribute' as const;
-	}
-}
+@extensionName('attribute')
+class AttributeExtension extends PlainExtension {}
 
 export default AttributeExtension;

@@ -1,40 +1,31 @@
-import { MarkSpec, NodeSpec } from 'prosemirror-model';
-import { schema } from 'prosemirror-schema-basic';
-import { PlainExtension } from '../..';
-import EditorStore from '../../../store/EditorStore';
+import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
+import { extensionName } from '../../decorators/extensionName';
+import { PlainExtension } from '../../type';
 
+@extensionName('schema')
 class SchemaExtension extends PlainExtension {
-	get name() {
-		return 'schema' as const;
-	}
-
-	editorStore: EditorStore | null = null;
-
 	onEditorStoreCreate(): void {
 		if (!this.editorStore) return;
-		const marks: MarkSpec = {};
-		this.editorStore.markExtensions.forEach((markExtension) => {
-			marks[markExtension.name] = markExtension.createMarkSpec();
-		});
 
-		const nodes: NodeSpec = {};
-		this.editorStore.nodeExtensions.forEach((nodeExtension) => {
-			nodes[nodeExtension.name] = nodeExtension.createNodeSpec();
+		const marks = this.editorStore.markExtensions.reduce((result, extension) => {
+			result[extension.name] = extension.createMarkSpec();
+			if (extension.tags.length) result[extension.name].group = extension.tags.join(' ');
+			return result;
+		}, {} as Record<string, MarkSpec>);
+
+		const nodes = this.editorStore.nodeExtensions.reduce((result, extension) => {
+			result[extension.name] = extension.createNodeSpec();
+			if (extension.tags.length) result[extension.name].group = extension.tags.join(' ');
+			return result;
+		}, {} as Record<string, NodeSpec>);
+
+		const mySchema = new Schema({
+			marks,
+			nodes,
+			topNode: 'doc',
 		});
-		console.debug(marks, nodes);
-		// const mySchema = new Schema({
-			
-		// 	marks,
-		// 	nodes,
-		// 	topNode: 'doc',
-		// });
-		// console.debug('mySchema', mySchema);
-		// console.debug('schema', schema);
-		this.editorStore.schema = schema;
-		console.debug(this.editorStore);
+		this.editorStore.schema = mySchema;
 	}
-
-	onEditorViewCreate?(): void {}
 }
 
 export default SchemaExtension;

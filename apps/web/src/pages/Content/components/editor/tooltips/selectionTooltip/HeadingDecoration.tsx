@@ -1,10 +1,8 @@
-import store, { useAppSelector } from '@/app/store';
-import { setEditorState } from '@/app/store/pages/contentPage';
-import getUniqueID from '@/utils/getUniqueID';
-import { EditorState } from 'prosemirror-state';
+import { useAppSelector } from '@/app/store';
+import getUniqueId from '@/utils/getUniqueId';
 import { memo, useCallback, useState } from 'react';
 import styled from 'styled-components';
-import schema from '../../schema';
+import EditorStore from '../../store';
 
 const StyledHeadingDecoration = styled.div`
 	display: flex;
@@ -63,31 +61,33 @@ const StyledSpan = styled.span`
 	}
 `;
 
-const getSetFunctionByLevel = (level: number, editorState: EditorState | null) => {
+const getSetFunctionByLevel = (level: number, editorStore: EditorStore | null) => {
 	return () => {
-		if (!editorState) return;
+		if (!editorStore) return;
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const { state: editorState } = editorView;
 		const { selection } = editorState;
 
 		const transaction = editorState.tr.setBlockType(
 			selection.from,
 			selection.to,
 			schema.nodes.heading,
-			{ level, headingID: getUniqueID() },
+			{ level, headingId: getUniqueId() },
 		);
 
-		const newState = editorState.apply(transaction);
-		store.dispatch(setEditorState(newState));
+		editorView.dispatch(transaction);
 	};
 };
 
 const HeadingDecoration = () => {
-	const { editorState } = useAppSelector((state) => state.contentPage.editor);
+	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 	const [styledHeadingOptionContainerVisible, setStyledHeadingOptionContainerVisible] =
 		useState(false);
 
-	const toggleHeadingLevel1 = useCallback(getSetFunctionByLevel(1, editorState), [editorState]);
-	const toggleHeadingLevel2 = useCallback(getSetFunctionByLevel(2, editorState), [editorState]);
-	const toggleHeadingLevel3 = useCallback(getSetFunctionByLevel(3, editorState), [editorState]);
+	const toggleHeadingLevel1 = useCallback(getSetFunctionByLevel(1, editorStore), [editorStore]);
+	const toggleHeadingLevel2 = useCallback(getSetFunctionByLevel(2, editorStore), [editorStore]);
+	const toggleHeadingLevel3 = useCallback(getSetFunctionByLevel(3, editorStore), [editorStore]);
 
 	return (
 		<StyledHeadingDecoration

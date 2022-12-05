@@ -1,16 +1,15 @@
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import { useAppSelector } from '@/app/store';
-import { setCurrentHeadingID, setHeadings } from '@/app/store/pages/contentPage';
-import { useEffect } from 'react';
-import schema from '../editor/schema';
+import { useAppDispatch, useAppSelector } from '@/app/store';
+import { setHeadings } from '@/app/store/pages/contentPage';
+import { memo, useEffect } from 'react';
+import { HeadingExtension } from '../editor/extensions';
 import CatalogItem from './CatalogItem';
 
 export interface HeadingInfo {
 	level: number;
 	content: string;
-	headingID: string;
+	headingId: string;
 }
 
 interface StyledCatalogProps {
@@ -55,34 +54,36 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 	// =============================== heading ===============================
 	const { catalog, editor } = useAppSelector((state) => state.contentPage);
 	const { headings } = catalog;
-	const { editorState } = editor;
+	const { editorStore } = editor;
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		if (!editorState) return;
+		if (!editorStore) return;
+		const { view: editorView } = editorStore;
+		if (!editorView) return;
+		const { state: editorState } = editorView;
 		const { doc } = editorState;
 		const currentHeadings: HeadingInfo[] = [];
 
-		doc.descendants((node) => {
-			if (node.type !== schema.nodes.heading) return;
-			const { headingID, level } = node.attrs;
-			currentHeadings.push({ level, headingID, content: node.firstChild?.text ?? '' });
+		doc.content.forEach((node) => {
+			if (node.type.name === HeadingExtension.extensionName) {
+				const { headingId, level } = node.attrs;
+				currentHeadings.push({ level, headingId, content: node.textContent });
+			}
 		});
-
 		dispatch(setHeadings(currentHeadings));
-		if (!new window.URL(window.location.href).searchParams.get('currentHeadingID')) {
-			dispatch(setCurrentHeadingID(currentHeadings[0]?.headingID));
-		}
-	}, [editorState]);
+	}, [editorStore?.view?.state.doc.content]);
 
 	return (
 		<StyledCatalog catalogVisible={catalogVisible}>
-			{headings.map((heading) => (
-				<CatalogItem heading={heading} key={heading.headingID} />
-			))}
+			{headings
+				.filter((heading) => heading.content)
+				.map((heading) => (
+					<CatalogItem heading={heading} key={heading.headingId} />
+				))}
 		</StyledCatalog>
 	);
 };
 
-export default Catalog;
+export default memo(Catalog);

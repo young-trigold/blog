@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { memo, useContext } from 'react';
+import { memo, useCallback, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
@@ -14,13 +14,13 @@ import PublishIcon from '@/static/icon/publish.png';
 interface ActionBarProps {}
 
 const ActionBar: React.FC<ActionBarProps> = (props) => {
-	const { itemID } = useParams();
+	const { itemId } = useParams();
 	const { isChapter } = useContext(ContentPageContext);
-	const { editorState } = useAppSelector((state) => state.contentPage.editor);
+	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 	const { hasLogin, info } = useAppSelector((state) => state.user);
 	const dispatch = useAppDispatch();
 
-	const handlePublish = () => {
+	const handlePublish = useCallback(async () => {
 		if (!hasLogin) {
 			dispatch(setLoginModalVisible(true));
 			message.warn('请先登录!');
@@ -31,38 +31,38 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 			message.warn('权限不足, 请重新登录!');
 			return;
 		}
-		if (!editorState) return;
+		if (!editorStore) return;
+		const { view: editorView } = editorStore;
+		if (!editorView) return;
+		const { state: editorState } = editorView;
 		const user = watchedLocalStorage.getItem<{ token: string }>('user');
-		const updateItem = async () => {
-			try {
-				await axios.put(
-					`/api/${isChapter ? 'notes' : 'articles'}/${itemID}`,
-					{
-						content: JSON.stringify(editorState.doc.toJSON()),
-					},
-					{
-						headers: {
-							contentType: 'text/plain',
-							Authorization: `Bearer ${user?.token}`,
-						},
-					},
-				);
-				message.success('发布成功!');
-			} catch (error) {
-				if (axios.isAxiosError(error))
-					return message.error((error.response?.data as { message: string })?.message);
-				if (error instanceof Error) return message.error(error.message);
-				return message.error(JSON.stringify(error));
-			}
-		};
 
-		updateItem();
-	};
+		try {
+			await axios.put(
+				`/api/${isChapter ? 'notes' : 'articles'}/${itemId}`,
+				{
+					content: JSON.stringify(editorState.doc.toJSON()),
+				},
+				{
+					headers: {
+						contentType: 'text/plain',
+						Authorization: `Bearer ${user?.token}`,
+					},
+				},
+			);
+			message.success('发布成功!');
+		} catch (error) {
+			if (axios.isAxiosError(error))
+				return message.error((error.response?.data as { message: string })?.message);
+			if (error instanceof Error) return message.error(error.message);
+			return message.error(JSON.stringify(error));
+		}
+	}, [editorStore, hasLogin, info, isChapter, itemId]);
 
 	const navigate = useNavigate();
-	const handleCancel = () => {
-		navigate(`/${isChapter ? 'chapters' : 'articles'}/${itemID}`);
-	};
+	const handleCancel = useCallback(() => {
+		navigate(`/${isChapter ? 'chapters' : 'articles'}/${itemId}`);
+	}, [isChapter, itemId]);
 
 	return (
 		<aside>
