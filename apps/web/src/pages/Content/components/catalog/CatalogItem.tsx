@@ -74,4 +74,4 @@ const CatalogItem: React.FC<CatalogItemProps> = (props) => {
 	);
 };
 
-export default memo(CatalogItem, (pre, next) => pre.heading.headingId === next.heading.headingId);
+export default memo(CatalogItem);

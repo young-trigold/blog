@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setCurrentHeadingId, setHeadings } from '@/app/store/pages/contentPage';
+import { setHeadings } from '@/app/store/pages/contentPage';
 import { memo, useEffect } from 'react';
 import { HeadingExtension } from '../editor/extensions';
 import CatalogItem from './CatalogItem';
@@ -72,18 +72,16 @@ const Catalog: React.FC<CatalogProps> = (props) => {
 				currentHeadings.push({ level, headingId, content: node.textContent });
 			}
 		});
-
 		dispatch(setHeadings(currentHeadings));
-		if (!new window.URL(window.location.href).searchParams.get('currentHeadingId')) {
-			dispatch(setCurrentHeadingId(currentHeadings[0]?.headingId));
-		}
 	}, [editorStore?.view?.state.doc.content]);
 
 	return (
 		<StyledCatalog catalogVisible={catalogVisible}>
-			{headings.map((heading) => (
-				<CatalogItem heading={heading} key={heading.headingId} />
-			))}
+			{headings
+				.filter((heading) => heading.content)
+				.map((heading) => (
+					<CatalogItem heading={heading} key={heading.headingId} />
+				))}
 		</StyledCatalog>
 	);
 };

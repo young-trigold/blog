@@ -42,6 +42,7 @@ export class HeadingExtension extends NodeExtension {
 				.map((Extension) => Extension.extensionName)
 				.join(' '),
 			draggable: false,
+			defining: true,
 			parseDOM: Array.from({ length: HeadingMaxLevel }).map(
 				(_, i) =>
 					({
