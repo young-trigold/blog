@@ -2,7 +2,6 @@ import { useAppSelector } from '@/app/store';
 import getUniqueId from '@/utils/getUniqueId';
 import { memo, useCallback, useState } from 'react';
 import styled from 'styled-components';
-import schema from '../../schema';
 import EditorStore from '../../store';
 
 const StyledHeadingDecoration = styled.div`
@@ -65,8 +64,8 @@ const StyledSpan = styled.span`
 const getSetFunctionByLevel = (level: number, editorStore: EditorStore | null) => {
 	return () => {
 		if (!editorStore) return;
-		const { view: editorView } = editorStore;
-		if (!editorView) return;
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
 		const { state: editorState } = editorView;
 		const { selection } = editorState;
 
@@ -77,7 +76,7 @@ const getSetFunctionByLevel = (level: number, editorStore: EditorStore | null) =
 			{ level, headingId: getUniqueId() },
 		);
 
-    editorView.dispatch(transaction);
+		editorView.dispatch(transaction);
 	};
 };
 

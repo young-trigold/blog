@@ -3,7 +3,6 @@ import { memo, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector } from '@/app/store';
-import schema from '../../schema';
 import HeadingDecoration from './HeadingDecoration';
 
 interface StyledSelectionTooltipProps {
@@ -75,9 +74,9 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 	const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(
 		(event) => {
 			if (!editorStore) return;
-			const { view: editorView } = editorStore;
-			if (!editorView) return;
-			const command = toggleMark(schema.marks.strong);
+			const { view: editorView, schema } = editorStore;
+			if (!editorView || !schema) return;
+			const command = toggleMark(schema.marks['bold']);
 			command(editorView.state, editorView.dispatch, editorView);
 			event.stopPropagation();
 		},
@@ -86,33 +85,33 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 
 	const handleToggleEm: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView } = editorStore;
-		if (!editorView) return;
-		const command = toggleMark(schema.marks.em);
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const command = toggleMark(schema.marks['italic']);
 		command(editorView.state, editorView.dispatch, editorView);
 	}, [editorStore]);
 
 	const handleToggleUnderline: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView } = editorStore;
-		if (!editorView) return;
-		const command = toggleMark(schema.marks.underline);
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const command = toggleMark(schema.marks['underline']);
 		command(editorView.state, editorView.dispatch, editorView);
 	}, [editorStore]);
 
 	const handleToggleSup: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView } = editorStore;
-		if (!editorView) return;
-		const command = toggleMark(schema.marks.sup);
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const command = toggleMark(schema.marks['sup']);
 		command(editorView.state, editorView.dispatch, editorView);
 	}, [editorStore]);
 
 	const handleToggleSub: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView } = editorStore;
-		if (!editorView) return;
-		const command = toggleMark(schema.marks.sub);
+		const { view: editorView, schema } = editorStore;
+		if (!editorView || !schema) return;
+		const command = toggleMark(schema.marks['sub']);
 		command(editorView.state, editorView.dispatch, editorView);
 	}, [editorStore]);
 

@@ -165,7 +165,6 @@ const Editor: React.FC<EditorProps> = (props) => {
 			extensions.length ? [...extensions, ...presetExtensions] : presetExtensions,
 		);
 		const state = editorStore.createEditorState(doc);
-		console.debug(state);
 		const editorView = editorStore.createEditorView(editorContainerRef.current!, {
 			state,
 			editable,
