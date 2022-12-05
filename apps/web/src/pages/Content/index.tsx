@@ -37,6 +37,7 @@ import {
 	UnderlineExtension,
 } from './components/editor/extensions';
 import { ListExtensions } from './components/editor/extensions/nodeExtensions/listExtensions';
+import { TableExtensions } from './components/editor/extensions/nodeExtensions/tableExtensions';
 import { HandleDOMEvents } from './components/editor/store';
 import addHeadingId from './components/editor/utils/addHeadingId';
 import findHeadingElementById from './components/editor/utils/findHeadingElementById';
@@ -160,6 +161,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 			new HeadingExtension(),
 			new CodeBlockExtension(),
 			...ListExtensions.map((Extension) => new Extension()),
+			...TableExtensions.map((Extension) => new Extension()),
 		],
 		[],
 	);
