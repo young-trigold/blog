@@ -161,11 +161,13 @@ const Editor: React.FC<EditorProps> = (props) => {
 	const editorContainerRef = useRef<HTMLDivElement>(null);
 	const dispatch = useAppDispatch();
 	useEffect(() => {
-		const editorStore = new EditorStore([
+		const finalExtensions = [
 			...presetNodeExtensions,
 			...extensions,
-			...presetPlainExtensions,
-		]);
+			...(editable ? presetPlainExtensions : [presetPlainExtensions[0]]),
+		];
+
+		const editorStore = new EditorStore(finalExtensions);
 		const state = editorStore.createEditorState(doc);
 		const editorView = editorStore.createEditorView(editorContainerRef.current!, {
 			state,

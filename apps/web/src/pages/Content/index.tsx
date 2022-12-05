@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -193,4 +193,4 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 	);
 };
 
-export default memo(ContentPage);
+export default ContentPage;

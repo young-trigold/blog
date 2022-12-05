@@ -30,7 +30,6 @@ export const presetPlainExtensions = [
 	new DecorationExtension(),
 	new HistoryExtension(),
 	new TrailingNodeExtension(),
-	// new GapCursorExtension(),
 ];
 
 export { BoldExtension } from './markExtensions/boldExtension';
