@@ -36,10 +36,10 @@ import {
 	SupExtension,
 	UnderlineExtension,
 } from './components/editor/extensions';
+import { ImageExtension } from './components/editor/extensions/nodeExtensions/imageExtension';
 import { ListExtensions } from './components/editor/extensions/nodeExtensions/listExtensions';
 import { TableExtensions } from './components/editor/extensions/nodeExtensions/tableExtensions';
 import { HandleDOMEvents } from './components/editor/store';
-import addHeadingId from './components/editor/utils/addHeadingId';
 import findHeadingElementById from './components/editor/utils/findHeadingElementById';
 
 const StyledContentPage = styled.div`
@@ -109,9 +109,8 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 
 	const onChange = useCallback((view: EditorView) => {
 		const { state } = view;
-		const newState = addHeadingId(state);
 		// 更新 insert tooltip
-		const { selection } = newState;
+		const { selection } = state;
 		const { $head, empty } = selection;
 		const { nodeAfter, nodeBefore } = $head;
 		const canInsertBlock = nodeAfter === null || nodeBefore === null;
@@ -160,6 +159,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 			new CodeExtension(),
 			new HeadingExtension(),
 			new CodeBlockExtension(),
+			new ImageExtension(),
 			...ListExtensions.map((Extension) => new Extension()),
 			...TableExtensions.map((Extension) => new Extension()),
 		],
