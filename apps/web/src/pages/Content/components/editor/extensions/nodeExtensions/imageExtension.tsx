@@ -4,14 +4,12 @@ import { ExtensionTag, NodeExtension } from '../type';
 
 @extensionName('image')
 export class ImageExtension extends NodeExtension {
-	createTags() {
-		return [ExtensionTag.Inline, ExtensionTag.Media];
-	}
 	createNodeSpec(): NodeSpec {
 		const imageSpec: NodeSpec = {
 			inline: true,
 			draggable: true,
 			selectable: false,
+			group: [ExtensionTag.Inline, ExtensionTag.Media].join(' '),
 			attrs: {
 				src: {
 					default: null,

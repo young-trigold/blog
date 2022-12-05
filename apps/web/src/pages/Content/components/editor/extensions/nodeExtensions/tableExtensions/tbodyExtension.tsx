@@ -1,16 +1,16 @@
 import { NodeSpec } from 'prosemirror-model';
 import { extensionName } from '../../decorators/extensionName';
-import { NodeExtension } from '../../type';
+import { ExtensionTag, NodeExtension } from '../../type';
 import { TrExtension } from './trExtension';
 
 @extensionName('tbody')
 export class TBodyExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
 		const tbodySpec: NodeSpec = {
-			content: `${TrExtension.extensionName}*`,
-			tableRole: 'table_body',
 			isolating: true,
-			group: 'block',
+			tableRole: 'table_body',
+			group: [ExtensionTag.Block].join(' '),
+			content: `${TrExtension.extensionName}*`,
 			// allowGapCursor: true,
 			parseDOM: [
 				{

@@ -1,7 +1,6 @@
 import getUniqueId from '@/utils/getUniqueId';
 import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
-import { PasteRule } from 'prosemirror-paste-rules';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { extensionName } from '../decorators/extensionName';
 import { CodeExtension } from '../markExtensions/codeExtension';
@@ -16,10 +15,6 @@ export const HeadingMaxLevel = 4;
 
 @extensionName('heading')
 export class HeadingExtension extends NodeExtension {
-	createTags() {
-		return [ExtensionTag.Block, ExtensionTag.TextBlock, ExtensionTag.FormattingNode];
-	}
-
 	createNodeSpec(): NodeSpec {
 		return {
 			attrs: {
@@ -41,6 +36,7 @@ export class HeadingExtension extends NodeExtension {
 			]
 				.map((Extension) => Extension.extensionName)
 				.join(' '),
+			group: [ExtensionTag.Block, ExtensionTag.TextBlock, ExtensionTag.FormattingNode].join(' '),
 			draggable: false,
 			defining: true,
 			parseDOM: Array.from({ length: HeadingMaxLevel }).map(

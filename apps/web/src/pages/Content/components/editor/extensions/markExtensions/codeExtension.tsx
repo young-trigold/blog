@@ -4,12 +4,9 @@ import { ExtensionTag, MarkExtension } from '../type';
 
 @extensionName('code')
 export class CodeExtension extends MarkExtension {
-	createTags() {
-		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
-	}
-
 	createMarkSpec(): MarkSpec {
 		const codeMarkSpec: MarkSpec = {
+			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			parseDOM: [
 				{
 					tag: 'code',

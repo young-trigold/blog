@@ -6,12 +6,9 @@ import { ExtensionTag, MarkExtension } from '../type';
 
 @extensionName('bold')
 export class BoldExtension extends MarkExtension {
-	createTags() {
-		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
-	}
-
 	createMarkSpec(): MarkSpec {
 		const boldMarkSpec: MarkSpec = {
+			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			parseDOM: [
 				{
 					tag: 'strong',

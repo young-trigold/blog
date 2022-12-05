@@ -4,10 +4,6 @@ import { MarkExtension } from '../type';
 
 @extensionName('link')
 export class LinkExtension extends MarkExtension {
-	createTags() {
-		return [];
-	}
-
 	createMarkSpec(): MarkSpec {
 		const linkMarkSpec: MarkSpec = {
 			attrs: {

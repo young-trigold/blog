@@ -11,15 +11,13 @@ import NodeViewExtension from './presetExtensions/plainExtensions/nodeViewExtens
 import PasteRuleExtension from './presetExtensions/plainExtensions/pasteRuleExtension';
 import PluginExtension from './presetExtensions/plainExtensions/pluginExtension';
 import SchemaExtension from './presetExtensions/plainExtensions/schemaExtension';
-import TagExtension from './presetExtensions/plainExtensions/tagExtension';
-import { TrailingNodeExtension } from './presetExtensions/plainExtensions/TrailingNodeExtension';
+import { TrailingNodeExtension } from './presetExtensions/plainExtensions/trailingNodeExtension';
 
 // 预置插件的顺序不可变动
 export const presetExtensions = [
 	new DocExtension(),
 	new TextExtension(),
 	new ParagraphExtension(),
-	new TagExtension(),
 	new SchemaExtension(),
 	new AttributeExtension(),
 	new PluginExtension(),

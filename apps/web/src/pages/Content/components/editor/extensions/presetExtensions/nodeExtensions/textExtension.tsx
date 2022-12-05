@@ -4,12 +4,10 @@ import { ExtensionTag, NodeExtension } from '../../type';
 
 @extensionName('text')
 class TextExtension extends NodeExtension {
-	createTags() {
-		return [ExtensionTag.Inline];
-	}
-
 	createNodeSpec(): NodeSpec {
-		return {};
+		return {
+			group: [ExtensionTag.Inline].join(' '),
+		};
 	}
 }
 

@@ -4,12 +4,9 @@ import { ExtensionTag, MarkExtension } from '../type';
 
 @extensionName('sub')
 export class SubExtension extends MarkExtension {
-	createTags() {
-		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
-	}
-
 	createMarkSpec(): MarkSpec {
 		const subMarkSpec: MarkSpec = {
+			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			parseDOM: [
 				{
 					tag: 'sub',

@@ -24,8 +24,6 @@ export abstract class MarkExtension extends Extension {
 	}
 
 	abstract createMarkSpec(): MarkSpec;
-	tags: ExtensionTag[] = [];
-	createTags?(): ExtensionTag[];
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
 }
@@ -35,9 +33,6 @@ export abstract class NodeExtension extends Extension {
 		return this.editorStore?.schema?.nodes[this.name]!;
 	}
 	abstract createNodeSpec(): NodeSpec;
-
-	tags: ExtensionTag[] = [];
-	createTags?(): ExtensionTag[];
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
 	createNodeView?(): NodeViewConstructor;

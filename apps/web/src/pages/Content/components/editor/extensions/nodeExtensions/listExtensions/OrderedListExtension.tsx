@@ -5,13 +5,11 @@ import { ListItemExtension } from './listItemExtension';
 
 @extensionName('ordered_list')
 export class OrderedListExtension extends NodeExtension {
-	createTags(): ExtensionTag[] {
-		return [ExtensionTag.Block];
-	}
 	createNodeSpec(): NodeSpec {
 		const orderedListSpec: NodeSpec = {
 			defining: true,
 			draggable: false,
+			group: [ExtensionTag.Block].join(' '),
 			content: `${ListItemExtension.extensionName}+`,
 			parseDOM: [{ tag: 'ol' }],
 			toDOM() {

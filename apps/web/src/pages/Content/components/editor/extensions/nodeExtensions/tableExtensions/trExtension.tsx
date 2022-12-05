@@ -8,8 +8,8 @@ import { ThExtension } from './thExtension';
 export class TrExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
 		const trSpec: NodeSpec = {
-			content: `(${TdExtension.extensionName}|${ThExtension.extensionName})*`,
 			tableRole: 'row',
+			content: `(${TdExtension.extensionName}|${ThExtension.extensionName})*`,
 			parseDOM: [
 				{
 					tag: 'tr',

@@ -9,13 +9,11 @@ class SchemaExtension extends PlainExtension {
 
 		const marks = this.editorStore.markExtensions.reduce((result, extension) => {
 			result[extension.name] = extension.createMarkSpec();
-			if (extension.tags.length) result[extension.name].group = extension.tags.join(' ');
 			return result;
 		}, {} as Record<string, MarkSpec>);
 
 		const nodes = this.editorStore.nodeExtensions.reduce((result, extension) => {
 			result[extension.name] = extension.createNodeSpec();
-			if (extension.tags.length) result[extension.name].group = extension.tags.join(' ');
 			return result;
 		}, {} as Record<string, NodeSpec>);
 

@@ -8,10 +8,10 @@ import { cellAttrs, getCellAttrs, setCellAttrs } from './uitls';
 export class TdExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
 		const tdSpec: NodeSpec = {
-			content: `${TextExtension.extensionName}*`,
 			attrs: cellAttrs,
 			tableRole: 'cell',
 			isolating: true,
+			content: `${TextExtension.extensionName}*`,
 			parseDOM: [
 				{
 					tag: 'td',

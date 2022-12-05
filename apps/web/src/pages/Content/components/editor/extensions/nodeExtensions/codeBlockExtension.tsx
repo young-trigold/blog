@@ -12,16 +12,14 @@ import { ExtensionTag, NodeExtension } from '../type';
 
 @extensionName('code_block')
 export class CodeBlockExtension extends NodeExtension {
-	createTags(): ExtensionTag[] {
-		return [ExtensionTag.Block];
-	}
 	createNodeSpec(): NodeSpec {
 		return {
-			marks: '',
 			defining: true,
 			isolating: true,
 			draggable: false,
 			code: true,
+			marks: '',
+			group: [ExtensionTag.Block].join(' '),
 			content: `${TextExtension.extensionName}*`,
 			parseDOM: [
 				{

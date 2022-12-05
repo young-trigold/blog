@@ -4,12 +4,9 @@ import { ExtensionTag, MarkExtension } from '../type';
 
 @extensionName('underline')
 export class UnderlineExtension extends MarkExtension {
-	createTags() {
-		return [ExtensionTag.FormattingMark, ExtensionTag.FontStyle];
-	}
-
 	createMarkSpec(): MarkSpec {
 		const underlineMarkSpec: MarkSpec = {
+			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			parseDOM: [
 				{
 					tag: 'u',

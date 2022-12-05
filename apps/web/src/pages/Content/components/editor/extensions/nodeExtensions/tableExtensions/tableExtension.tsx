@@ -1,6 +1,6 @@
 import { NodeSpec } from 'prosemirror-model';
 import { extensionName } from '../../decorators/extensionName';
-import { NodeExtension } from '../../type';
+import { ExtensionTag, NodeExtension } from '../../type';
 import { TBodyExtension } from './tbodyExtension';
 import { THeadExtension } from './theadExtension';
 
@@ -8,10 +8,10 @@ import { THeadExtension } from './theadExtension';
 export class TableExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
 		const tableSpec: NodeSpec = {
-			content: `${THeadExtension.extensionName}? ${TBodyExtension.extensionName}?`,
-			tableRole: 'table',
 			isolating: true,
-			group: 'block',
+			tableRole: 'table',
+			group: [ExtensionTag.Block].join(' '),
+			content: `${THeadExtension.extensionName}? ${TBodyExtension.extensionName}?`,
 			// allowGapCursor: true,
 			parseDOM: [
 				{

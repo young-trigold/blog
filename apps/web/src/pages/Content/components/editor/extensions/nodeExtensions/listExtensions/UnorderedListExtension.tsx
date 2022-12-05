@@ -6,13 +6,11 @@ import { ListItemExtension } from './listItemExtension';
 
 @extensionName('unordered_list')
 export class UnorderedListExtension extends NodeExtension {
-	createTags(): ExtensionTag[] {
-		return [ExtensionTag.Block];
-	}
 	createNodeSpec(): NodeSpec {
 		const unorderedListSpec: NodeSpec = {
 			defining: true,
 			draggable: false,
+			group: [ExtensionTag.Block].join(' '),
 			content: `${ListItemExtension.extensionName}+`,
 			parseDOM: [{ tag: 'ul' }],
 			toDOM() {
