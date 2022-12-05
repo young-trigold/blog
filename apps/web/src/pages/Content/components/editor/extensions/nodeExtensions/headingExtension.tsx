@@ -66,30 +66,30 @@ export class HeadingExtension extends NodeExtension {
 		};
 	}
 
-	// createInputRules(): InputRule[] {
-	// 	const inputRule = textblockTypeInputRule(
-	// 		new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
-	// 		this.editorStore?.schema?.nodes['heading']!,
-	// 		(match: RegExpMatchArray) => ({
-	// 			level: match[1].length,
-	// 			headingId: getUniqueId(),
-	// 		}),
-	// 	);
-	// 	return [inputRule];
-	// }
-
-	createPasteRules(): PasteRule[] {
-		const pasteRule: PasteRule = {
-			type: 'node',
-			nodeType: this.type,
-			regexp: new RegExp(`^#{1,${HeadingMaxLevel}}\\s([\\s\\w]+)$`),
-			getAttributes(match: RegExpMatchArray) {
-				return { level: match[1].length, headingId: getUniqueId() };
-			},
-			startOfTextBlock: true,
-		};
-		return [pasteRule];
+	createInputRules(): InputRule[] {
+		const inputRule = textblockTypeInputRule(
+			new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
+			this.editorStore?.schema?.nodes['heading']!,
+			(match: RegExpMatchArray) => ({
+				level: match[1].length,
+				headingId: getUniqueId(),
+			}),
+		);
+		return [inputRule];
 	}
+
+	// createPasteRules(): PasteRule[] {
+	// 	const pasteRule: PasteRule = {
+	// 		type: 'node',
+	// 		nodeType: this.type,
+	// 		regexp: new RegExp(`^#{1,${HeadingMaxLevel}}\\s([\\s\\w]+)$`),
+	// 		getAttributes(match: RegExpMatchArray) {
+	// 			return { level: match[1].length, headingId: getUniqueId() };
+	// 		},
+	// 		startOfTextBlock: true,
+	// 	};
+	// 	return [pasteRule];
+	// }
 
 	createPlugin(): void | Plugin<any> {
 		const key = new PluginKey('addHeadingId');
