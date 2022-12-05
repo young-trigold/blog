@@ -29,7 +29,7 @@ export class ImageExtension extends NodeExtension {
 			],
 			toDOM(node) {
 				const { src } = node.attrs;
-				return ['image', { src }];
+				return ['img', { src }];
 			},
 		};
 
