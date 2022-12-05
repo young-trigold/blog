@@ -13,7 +13,7 @@ interface DeleteChapterButtonProps {
 const DeleteChapterButton: React.FC<DeleteChapterButtonProps> = (props) => {
 	const { chapterId, noteId } = props;
 
-	const onClick = useCallback(() => {
+	const onClick = () => {
 		const deleteItem = (chapterId: string) => {
 			const userToken = getUserToken();
 
@@ -41,7 +41,7 @@ const DeleteChapterButton: React.FC<DeleteChapterButtonProps> = (props) => {
 		};
 
 		deleteItem(chapterId);
-	}, []);
+	};
 
 	const size = useMemo(
 		() => (window.matchMedia('(max-width: 400px)').matches ? 'small' : 'middle'),
