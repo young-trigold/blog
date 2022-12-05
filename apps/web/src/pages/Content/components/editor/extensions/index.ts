@@ -12,16 +12,13 @@ import PasteRuleExtension from './presetExtensions/plainExtensions/pasteRuleExte
 import PluginExtension from './presetExtensions/plainExtensions/pluginExtension';
 import SchemaExtension from './presetExtensions/plainExtensions/schemaExtension';
 import TagExtension from './presetExtensions/plainExtensions/tagExtension';
-import { TrailingNodeExtension } from './presetExtensions/plainExtensions/trailingNodeExtension';
+import { TrailingNodeExtension } from './presetExtensions/plainExtensions/TrailingNodeExtension';
 
 // 预置插件的顺序不可变动
 export const presetExtensions = [
 	new DocExtension(),
 	new TextExtension(),
 	new ParagraphExtension(),
-	// new GapCursorExtension(),
-	new HistoryExtension(),
-	new TrailingNodeExtension(),
 	new TagExtension(),
 	new SchemaExtension(),
 	new AttributeExtension(),
@@ -32,6 +29,9 @@ export const presetExtensions = [
 	new CommandExtension(),
 	new KeyMapExtension(),
 	new DecorationExtension(),
+	new HistoryExtension(),
+	new TrailingNodeExtension(),
+	// new GapCursorExtension(),
 ];
 
 export { BoldExtension } from './markExtensions/boldExtension';
