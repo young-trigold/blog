@@ -9,9 +9,9 @@ class InputRuleExtension extends PlainExtension {
 		if (!this.editorStore) return;
 		const createInputRule = (extension: MarkExtension | NodeExtension) =>
 			extension.createInputRules?.();
-		const nodeInputRules = this.editorStore.nodeExtensions.map(createInputRule);
 		const markInputRules = this.editorStore.markExtensions.map(createInputRule);
-		const inputRules = [...nodeInputRules, ...markInputRules].flat().filter(Boolean) as InputRule[];
+		const nodeInputRules = this.editorStore.nodeExtensions.map(createInputRule);
+		const inputRules = [...markInputRules, ...nodeInputRules].flat().filter(Boolean) as InputRule[];
 		const inputRulePlugin = createInputRulePlugin({ rules: inputRules });
 		return inputRulePlugin;
 	}

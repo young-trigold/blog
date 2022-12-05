@@ -4,15 +4,22 @@ import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { PasteRule } from 'prosemirror-paste-rules';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { extensionName } from '../decorators/extensionName';
+import { CodeExtension } from '../markExtensions/codeExtension';
+import { ItalicExtension } from '../markExtensions/italicExtension';
+import { LinkExtension } from '../markExtensions/linkExtension';
+import { SubExtension } from '../markExtensions/subExtension';
+import { SupExtension } from '../markExtensions/supExtension';
+import { UnderlineExtension } from '../markExtensions/underlineExtension';
 import { ExtensionTag, NodeExtension } from '../type';
 
 export const HeadingMaxLevel = 4;
 
 @extensionName('heading')
 export class HeadingExtension extends NodeExtension {
-	createTags(): ExtensionTag[] {
-		return [ExtensionTag.Block];
+	createTags() {
+		return [ExtensionTag.Block, ExtensionTag.TextBlock, ExtensionTag.FormattingNode];
 	}
+
 	createNodeSpec(): NodeSpec {
 		return {
 			attrs: {
@@ -24,7 +31,16 @@ export class HeadingExtension extends NodeExtension {
 				},
 			},
 			content: `${ExtensionTag.Inline}*`,
-			defining: true,
+			marks: [
+				ItalicExtension,
+				CodeExtension,
+				LinkExtension,
+				SubExtension,
+				SupExtension,
+				UnderlineExtension,
+			]
+				.map((Extension) => Extension.extensionName)
+				.join(' '),
 			draggable: false,
 			parseDOM: Array.from({ length: HeadingMaxLevel }).map(
 				(_, i) =>
@@ -48,16 +64,19 @@ export class HeadingExtension extends NodeExtension {
 			},
 		};
 	}
+
 	createInputRules(): InputRule[] {
 		const inputRule = textblockTypeInputRule(
 			new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
-			this.type,
+			this.editorStore?.schema?.nodes['heading']!,
 			(match: RegExpMatchArray) => ({
 				level: match[1].length,
+				headingId: getUniqueId(),
 			}),
 		);
 		return [inputRule];
 	}
+
 	createPasteRules(): PasteRule[] {
 		const pasteRule: PasteRule = {
 			type: 'node',
@@ -70,6 +89,7 @@ export class HeadingExtension extends NodeExtension {
 		};
 		return [pasteRule];
 	}
+
 	createPlugin(): void | Plugin<any> {
 		const key = new PluginKey('addHeadingId');
 		const plugin = new Plugin({

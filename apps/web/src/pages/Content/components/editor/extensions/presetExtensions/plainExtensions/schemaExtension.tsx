@@ -1,5 +1,4 @@
 import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
-import schema from '../../../schema';
 import { extensionName } from '../../decorators/extensionName';
 import { PlainExtension } from '../../type';
 
@@ -25,13 +24,8 @@ class SchemaExtension extends PlainExtension {
 			nodes,
 			topNode: 'doc',
 		});
-
-		console.debug(mySchema);
-		// console.debug(mySchema);
 		this.editorStore.schema = mySchema;
 	}
-
-	onEditorViewCreate?(): void {}
 }
 
 export default SchemaExtension;

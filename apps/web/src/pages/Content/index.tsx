@@ -36,7 +36,7 @@ import {
 	SupExtension,
 	UnderlineExtension,
 } from './components/editor/extensions';
-import { ListExtensions } from './components/editor/extensions/nodeExtensions/list';
+import { ListExtensions } from './components/editor/extensions/nodeExtensions/listExtensions';
 import { HandleDOMEvents } from './components/editor/store';
 import addHeadingId from './components/editor/utils/addHeadingId';
 import findHeadingElementById from './components/editor/utils/findHeadingElementById';

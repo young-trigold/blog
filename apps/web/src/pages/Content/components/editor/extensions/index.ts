@@ -19,8 +19,9 @@ export const presetExtensions = [
 	new DocExtension(),
 	new TextExtension(),
 	new ParagraphExtension(),
-	new HistoryExtension(),
 	// new GapCursorExtension(),
+	new HistoryExtension(),
+	new TrailingNodeExtension(),
 	new TagExtension(),
 	new SchemaExtension(),
 	new AttributeExtension(),
@@ -31,7 +32,6 @@ export const presetExtensions = [
 	new CommandExtension(),
 	new KeyMapExtension(),
 	new DecorationExtension(),
-	new TrailingNodeExtension(),
 ];
 
 export { BoldExtension } from './markExtensions/boldExtension';
