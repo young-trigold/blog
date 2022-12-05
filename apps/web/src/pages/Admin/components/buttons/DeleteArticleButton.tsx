@@ -5,12 +5,12 @@ import axios from 'axios';
 import { memo, useCallback, useMemo } from 'react';
 
 interface DeleteArticleButtonProps {
-	articleId: string
+	articleId: string;
 }
 
 const DeleteArticleButton: React.FC<DeleteArticleButtonProps> = (props) => {
-	const {articleId} = props;
-	const onClick = useCallback(() => {
+	const { articleId } = props;
+	const onClick = () => {
 		const userToken = getUserToken();
 
 		if (!userToken) return message.warn('请先登录!');
@@ -33,16 +33,15 @@ const DeleteArticleButton: React.FC<DeleteArticleButtonProps> = (props) => {
 		};
 
 		deleteArticle();
-	}, [articleId]);
+	};
 
-	const size = useMemo(() => (window.matchMedia('(max-width: 400px)').matches ? 'small' : 'middle'), []);
+	const size = useMemo(
+		() => (window.matchMedia('(max-width: 400px)').matches ? 'small' : 'middle'),
+		[],
+	);
 
 	return (
-		<Button
-			onClick={onClick}
-			state="dange"
-			size={size}
-		>
+		<Button onClick={onClick} state="dange" size={size}>
 			删除
 		</Button>
 	);
