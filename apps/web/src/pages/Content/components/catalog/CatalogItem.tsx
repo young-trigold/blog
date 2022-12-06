@@ -13,7 +13,7 @@ interface StyledCatalogItemProps {
 
 const StyledCatalogItem = styled.div<StyledCatalogItemProps>`
 	position: relative;
-	margin: 3px ${(props) => `${props.level * 1.5}em`};
+	margin: 3px ${(props) => `${(props.level - 1) * 1.5}em`};
 	padding-left: 1em;
 	margin-right: 0;
 	color: ${(props) => (props.isCurrent ? props.theme.primaryColor : 'inherit')};
