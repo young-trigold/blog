@@ -13,23 +13,19 @@ import SchemaExtension from './presetExtensions/plainExtensions/schemaExtension'
 import { TrailingNodeExtension } from './presetExtensions/plainExtensions/trailingNodeExtension';
 
 // 预置插件的顺序不可变动
-export const presetNodeExtensions = [
-	new DocExtension(),
-	new TextExtension(),
-	new ParagraphExtension(),
-];
+export const presetNodeExtensions = [DocExtension, TextExtension, ParagraphExtension];
 
 export const presetPlainExtensions = [
-	new SchemaExtension(),
-	new PluginExtension(),
-	new InputRuleExtension(),
-	new PasteRuleExtension(),
-	new NodeViewExtension(),
-	new CommandExtension(),
-	new KeyMapExtension(),
-	new DecorationExtension(),
-	new HistoryExtension(),
-	new TrailingNodeExtension(),
+	SchemaExtension,
+	PluginExtension,
+	InputRuleExtension,
+	PasteRuleExtension,
+	NodeViewExtension,
+	CommandExtension,
+	KeyMapExtension,
+	DecorationExtension,
+	HistoryExtension,
+	TrailingNodeExtension,
 ];
 
 export { BoldExtension } from './markExtensions/boldExtension';
