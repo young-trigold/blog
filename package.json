@@ -1,0 +1,35 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "trigold 的个人博客",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build"
+  },
+  "keywords": [
+    "博客",
+    "前端"
+  ],
+  "author": "trigold",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^18.11.12",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.31.11",
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4"
+  }
+}
