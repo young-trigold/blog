@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setLogoutModalVisible } from '@/app/store/modals';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { Button, ButtonBar } from '@/components/Button';
 import { message } from '@/components/Message';
@@ -9,21 +9,26 @@ import { memo, useCallback } from 'react';
 interface ConfirmLogoutModalProps {}
 
 const ConfirmLogoutModal: React.FC<ConfirmLogoutModalProps> = (props) => {
-	const { visible } = useAppSelector((state) => state.modal.modals.logoutModal);
+	const { currentModal } = useAppSelector((state) => state.modal);
+	const visible = currentModal === CurrentModal.Logout;
 	const dispatch = useAppDispatch();
 
 	const onConfirm = useCallback(() => {
 		watchedLocalStorage.removeItem('user');
 		message.success('您已退出登录');
-		dispatch(setLogoutModalVisible(false));
+		dispatch(closeModal());
 	}, []);
 
 	const onCancel = useCallback(() => {
-		dispatch(setLogoutModalVisible(false));
+		dispatch(closeModal());
 	}, []);
 
 	const setVisible = useCallback((visible: boolean) => {
-		dispatch(setLogoutModalVisible(visible));
+		if (visible) {
+			dispatch(openModal(CurrentModal.Logout));
+		} else {
+			dispatch(closeModal());
+		}
 	}, []);
 
 	return (

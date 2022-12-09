@@ -1,16 +1,21 @@
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setAddNoteModalVisible } from '@/app/store/modals';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import Modal from '@/components/Modal';
 import { memo, useCallback } from 'react';
 import AddNoteForm from './AddNoteForm';
 
 const AddNoteModal = () => {
-	const { visible } = useAppSelector((state) => state.modal.modals.addNoteModal);
-
 	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
-		dispatch(setAddNoteModalVisible(visible));
+		if (visible) {
+			dispatch(openModal(CurrentModal.AddNote));
+		} else {
+			dispatch(closeModal());
+		}
 	}, []);
+
+	const { currentModal } = useAppSelector((state) => state.modal);
+	const visible = currentModal === CurrentModal.AddNote;
 
 	return (
 		<Modal visible={visible} setVisible={setVisible} title="新增笔记">

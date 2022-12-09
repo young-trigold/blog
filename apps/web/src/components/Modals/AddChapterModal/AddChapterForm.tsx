@@ -2,11 +2,11 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAppDispatch } from '@/app/store';
-import { setAddChapterModalVisible } from '@/app/store/modals';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
 import { NoteOption } from 'src/pages/admin/components/AdminPage';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 
 interface AddChapterFormProps {
 	currentOption: NoteOption;
@@ -16,8 +16,13 @@ const AddChapterForm: React.FC<AddChapterFormProps> = (props) => {
 	const { currentOption } = props;
 	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
-		dispatch(setAddChapterModalVisible(visible));
+		if (visible) {
+			dispatch(openModal(CurrentModal.AddChapter));
+		} else {
+			dispatch(closeModal());
+		}
 	}, []);
+
 	const [title, setTitle] = useState('');
 
 	const handleTitleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {

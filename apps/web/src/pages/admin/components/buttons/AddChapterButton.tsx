@@ -3,7 +3,7 @@ import React, { memo, useCallback } from 'react';
 import { FloatingActionButton } from '@/components/Button';
 
 import { useAppDispatch } from '@/app/store';
-import { setAddChapterModalVisible } from '@/app/store/modals';
+import { CurrentModal, openModal } from '@/app/store/modals';
 import AddIcon from '@/static/icon/plus.png';
 import { NoteOption } from '../AdminPage';
 
@@ -14,7 +14,7 @@ interface AddButtonProps {
 const AddChapterButton: React.FC<AddButtonProps> = (props) => {
 	const dispatch = useAppDispatch();
 	const handleClick = useCallback(() => {
-		dispatch(setAddChapterModalVisible(true));
+		dispatch(openModal(CurrentModal.AddChapter));
 	}, []);
 
 	return (

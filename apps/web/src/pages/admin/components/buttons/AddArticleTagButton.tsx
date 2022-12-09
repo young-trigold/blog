@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from '@/app/store';
-import { setAddArticleTagModalVisible } from '@/app/store/modals';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import AddIcon from '@/static/icon/plus.png';
 
 const StyledAddArticleTagButton = styled.button`
@@ -28,7 +28,11 @@ const StyledAddArticleTagButton = styled.button`
 const AddArticleTagButton = () => {
 	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
-		dispatch(setAddArticleTagModalVisible(visible));
+		if (visible) {
+			dispatch(openModal(CurrentModal.AddArticleTag));
+		} else {
+			closeModal();
+		}
 	}, []);
 
 	const onClick = useCallback(() => {

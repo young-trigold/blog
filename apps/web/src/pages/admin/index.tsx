@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setLoginModalVisible } from '@/app/store/modals';
+import { CurrentModal, openModal } from '@/app/store/modals';
 import { message } from '@/components/Message';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { useEffect } from 'react';
@@ -15,11 +15,11 @@ const ProtectPage: React.FC = () => {
 	useEffect(() => {
 		if (hasLogin) {
 			if (info?.role !== 'admin') {
-				dispatch(setLoginModalVisible(true));
+				dispatch(openModal(CurrentModal.Login));
 				message.warn('权限不足，请重新登录!');
 			}
 		} else {
-			dispatch(setLoginModalVisible(true));
+			dispatch(openModal(CurrentModal.Login));
 			message.warn('请先登录');
 		}
 	}, []);

@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAppDispatch } from '@/app/store';
-import { setAddNoteModalVisible } from '@/app/store/modals';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
@@ -12,7 +12,11 @@ const AddNoteForm = () => {
 
 	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
-		dispatch(setAddNoteModalVisible(visible));
+		if (visible) {
+			dispatch(openModal(CurrentModal.AddNote));
+		} else {
+			dispatch(closeModal());
+		}
 	}, []);
 
 	const handleCancel = useCallback(() => {

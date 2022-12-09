@@ -1,6 +1,6 @@
 import { Button } from '@/components/Button';
 import axios from 'axios';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
 import { message } from '@/components/Message';
 import getUserToken from '@/utils/getUserToken';

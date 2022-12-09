@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setInsertLinkModalVisible } from '@/app/store/modals';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
@@ -25,8 +25,8 @@ const InsertLinkForm = () => {
 	const handleCancel = useCallback(() => {
 		setTitle('');
 		setLink('');
-		dispatch(setInsertLinkModalVisible(false));
-	}, [setInsertLinkModalVisible]);
+		dispatch(openModal(CurrentModal.InsertLink));
+	}, []);
 
 	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 
@@ -40,7 +40,7 @@ const InsertLinkForm = () => {
 		const node = schema.text(attrs.title, [schema.marks.link.create(attrs)]);
 		const transaction = (editorState.tr.replaceSelectionWith(node, false));
     editorView.dispatch(transaction);
-		dispatch(setInsertLinkModalVisible(false));
+		dispatch(closeModal());
 	}, [editorStore, link, title]);
 
 	const disabled = useMemo(() => {

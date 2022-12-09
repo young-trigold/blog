@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/app/store';
-import { setAddArticleModalVisible } from '@/app/store/modals';
+import { CurrentModal, openModal } from '@/app/store/modals';
 import { FloatingActionButton } from '@/components/Button';
 import AddIcon from '@/static/icon/plus.png';
 import { memo, useCallback } from 'react';
@@ -8,8 +8,8 @@ const AddArticleButton = () => {
 	const dispatch = useAppDispatch();
 
 	const onClick = useCallback(() => {
-		dispatch(setAddArticleModalVisible(true));
-	}, [setAddArticleModalVisible]);
+		dispatch(openModal(CurrentModal.AddArticle));
+	}, []);
 
 	return (
 		<>

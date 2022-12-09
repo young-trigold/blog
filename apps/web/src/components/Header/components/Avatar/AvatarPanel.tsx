@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setLogoutModalVisible } from '@/app/store/modals';
+import { CurrentModal, openModal } from '@/app/store/modals';
 import Divider from '@/components/Divider';
 import DefaultAvatarSrc from '@/static/icon/default-avatar.png';
 import { useEffect, useRef } from 'react';
@@ -62,7 +62,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = (props) => {
 
 	const dispatch = useAppDispatch();
 	const logout = () => {
-		dispatch(setLogoutModalVisible(true));
+		dispatch(openModal(CurrentModal.Logout));
 	};
 
 	const toUserPage = () => {

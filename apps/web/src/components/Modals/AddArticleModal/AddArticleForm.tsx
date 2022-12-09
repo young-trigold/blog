@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/app/store';
-import { setAddArticleModalVisible } from '@/app/store/modals';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
@@ -13,12 +13,13 @@ interface AddArticleFormProps {
 const AddArticleForm: React.FC<AddArticleFormProps> = (props) => {
 	const { currentOption } = props;
 	const dispatch = useAppDispatch();
-	const setVisible = useCallback(
-		(visible: boolean) => {
-			dispatch(setAddArticleModalVisible(visible));
-		},
-		[setAddArticleModalVisible],
-	);
+	const setVisible = useCallback((visible: boolean) => {
+		if (visible) {
+			dispatch(openModal(CurrentModal.AddArticle));
+		} else {
+			dispatch(closeModal());
+		}
+	}, []);
 
 	const [title, setTitle] = useState('');
 

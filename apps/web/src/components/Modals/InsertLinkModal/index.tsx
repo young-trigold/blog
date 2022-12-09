@@ -1,15 +1,19 @@
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setInsertLinkModalVisible } from '@/app/store/modals';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import Modal from '@/components/Modal';
 import { memo, useCallback } from 'react';
 import InsertLinkForm from './InsertLinkForm';
 
 const InsertLinkModal = () => {
-	const { visible } = useAppSelector((state) => state.modal.modals.insertLinkModal);
-
+	const { currentModal } = useAppSelector((state) => state.modal);
+	const visible = currentModal === CurrentModal.InsertLink;
 	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
-		dispatch(setInsertLinkModalVisible(visible));
+		if (visible) {
+			dispatch(openModal(CurrentModal.InsertLink));
+		} else {
+			dispatch(closeModal());
+		}
 	}, []);
 
 	return (

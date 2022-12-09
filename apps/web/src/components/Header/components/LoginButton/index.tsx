@@ -1,12 +1,12 @@
 import { useAppDispatch } from '@/app/store';
-import { setLoginModalVisible } from '@/app/store/modals';
+import { CurrentModal, openModal } from '@/app/store/modals';
 import { memo, useCallback } from 'react';
 import { Button } from '../../../Button';
 
 const LoginButton: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const onClick = useCallback(() => {
-		dispatch(setLoginModalVisible(true));
+		dispatch(openModal(CurrentModal.Login));
 	}, []);
 
 	return (

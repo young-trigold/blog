@@ -3,7 +3,7 @@ import { memo, useCallback, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setLoginModalVisible } from '@/app/store/modals';
+import { CurrentModal, openModal } from '@/app/store/modals';
 import { ContentPageContext } from '@/app/store/pages/contentPage';
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { FloatingActionButton } from '@/components/Button';
@@ -22,12 +22,12 @@ const ActionBar: React.FC<ActionBarProps> = (props) => {
 
 	const handlePublish = useCallback(async () => {
 		if (!hasLogin) {
-			dispatch(setLoginModalVisible(true));
+			dispatch(openModal(CurrentModal.Login));
 			message.warn('请先登录!');
 			return;
 		}
 		if (info?.role !== 'admin') {
-			dispatch(setLoginModalVisible(true));
+			dispatch(openModal(CurrentModal.Login));
 			message.warn('权限不足, 请重新登录!');
 			return;
 		}

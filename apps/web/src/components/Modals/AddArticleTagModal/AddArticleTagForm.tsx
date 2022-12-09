@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/app/store';
-import { setAddArticleTagModalVisible } from '@/app/store/modals';
+import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
@@ -9,7 +9,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 const AddArticleTagForm = () => {
 	const dispatch = useAppDispatch();
 	const setVisible = useCallback((visible: boolean) => {
-		dispatch(setAddArticleTagModalVisible(visible));
+		if (visible) {
+			dispatch(openModal(CurrentModal.AddArticleTag));
+		} else {
+			dispatch(closeModal());
+		}
 	}, []);
 
 	const [title, setTitle] = useState('');

@@ -2,7 +2,7 @@ import { Button } from '@/components/Button';
 import { message } from '@/components/Message';
 import getUserToken from '@/utils/getUserToken';
 import axios from 'axios';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
 interface DeleteArticleButtonProps {
 	articleId: string;

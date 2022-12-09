@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from '@/app/store';
-import { setAddNoteModalVisible } from '@/app/store/modals';
+import { CurrentModal, openModal } from '@/app/store/modals';
 import AddIcon from '@/static/icon/plus.png';
 
 const StyledAddNoteButton = styled.button`
@@ -28,8 +28,8 @@ const StyledAddNoteButton = styled.button`
 const AddNoteButton = () => {
 	const dispatch = useAppDispatch();
 	const onClick = useCallback(() => {
-		dispatch(setAddNoteModalVisible(true));
-	}, [setAddNoteModalVisible]);
+		dispatch(openModal(CurrentModal.AddNote));
+	}, []);
 
 	return (
 		<StyledAddNoteButton type="button" onClick={onClick}>
