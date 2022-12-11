@@ -34,7 +34,7 @@ const EditorContainer = styled.article`
 
 	@media (max-width: 530px) {
 		border-radius: 0;
-		margin: 0;
+    padding: 1.5em 1em 0.5em 1em;
 	}
 
 	u {
