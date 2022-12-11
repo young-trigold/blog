@@ -1,15 +1,15 @@
 import { memo, useCallback } from 'react';
 
 import { useAppDispatch } from '@/app/store';
-import { setInsertLinkModalVisible } from '@/app/store/modals';
+import { CurrentModal, openModal } from '@/app/store/modals';
 import LinkIconSrc from '@/static/icon/link.png';
 import { StyledOption } from '.';
 
 const InsertLinkOption = () => {
 	const dispatch = useAppDispatch();
-	const handleOptionClick = useCallback(() => {
-		dispatch(setInsertLinkModalVisible(true));
-	}, []);
+	const handleOptionClick = () => {
+		dispatch(openModal(CurrentModal.InsertLink));
+	};
 
 	return (
 		<StyledOption onClick={handleOptionClick}>
