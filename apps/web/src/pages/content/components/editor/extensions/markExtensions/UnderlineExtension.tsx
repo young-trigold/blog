@@ -1,6 +1,9 @@
+import { toggleMark } from 'prosemirror-commands';
+import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
+import { environment } from '../../utils/enviroment';
 import { extensionName } from '../decorators/extensionName';
-import { ExtensionTag, MarkExtension } from '../type';
+import { ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
 
 @extensionName('underline')
 export class UnderlineExtension extends MarkExtension {
@@ -18,5 +21,17 @@ export class UnderlineExtension extends MarkExtension {
 		};
 
 		return underlineMarkSpec;
+	}
+
+	createKeyMap(): KeyMap {
+		const keyMapForWin: KeyMap = {
+			[`${FunctionKeys.Ctrl}-${LetterKeys.u}`]: toggleMark(this.type),
+		};
+
+		const keyMapForMac: KeyMap = {
+			[`${FunctionKeys.Mod}-${LetterKeys.u}`]: toggleMark(this.type),
+		};
+
+		return environment.isMac ? keyMapForMac : keyMapForWin;
 	}
 }

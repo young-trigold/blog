@@ -28,7 +28,7 @@ const EditorContainer = styled.article`
 	background-size: 1.2em 1.2em;
 	background-position-x: 0.6em;
 	border-radius: 6.4px;
-	padding: 1em;
+	padding: 1.5em 2em 0.5em 2em;
 	overflow-wrap: break-word;
 	caret-color: ${(props) => props.theme.warnColor};
 
@@ -46,6 +46,14 @@ const EditorContainer = styled.article`
 	p {
 		text-indent: 2em;
 	}
+
+  ol, ul {
+    padding-left: 0;
+
+    & > li {
+      margin-left: 1.5em;
+    }
+  }
 
 	li > p {
 		text-indent: 0 !important;
