@@ -162,7 +162,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 			new ImageExtension(),
 			...ListExtensions.map((Extension) => new Extension()),
 			...TableExtensions.map((Extension) => new Extension()),
-      new BeforeNodeTooltipExtension(),
 		],
 		[],
 	);
