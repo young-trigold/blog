@@ -1,4 +1,3 @@
-import { toggleMark } from 'prosemirror-commands';
 import { memo, useCallback } from 'react';
 import styled from 'styled-components';
 
@@ -71,48 +70,40 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 
 	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 
-	const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(
-		(event) => {
-			if (!editorStore) return;
-			const { view: editorView, schema, commands } = editorStore;
-			if (!editorView || !schema) return;
-			const { bold } = commands;
-			bold.toggle();
-			event.stopPropagation();
-		},
-		[editorStore],
-	);
+	const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+		if (!editorStore) return;
+		const { view: editorView, schema, commands } = editorStore;
+		if (!editorView || !schema) return;
+		const { bold } = commands;
+		bold.toggle();
+	}, [editorStore]);
 
 	const handleToggleEm: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView, schema } = editorStore;
+		const { view: editorView, schema, commands } = editorStore;
 		if (!editorView || !schema) return;
-		const command = toggleMark(schema.marks['italic']);
-		command(editorView.state, editorView.dispatch, editorView);
+		commands.italic.toggle();
 	}, [editorStore]);
 
 	const handleToggleUnderline: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView, schema } = editorStore;
+		const { view: editorView, schema, commands } = editorStore;
 		if (!editorView || !schema) return;
-		const command = toggleMark(schema.marks['underline']);
-		command(editorView.state, editorView.dispatch, editorView);
+		commands.underline.toggle();
 	}, [editorStore]);
 
 	const handleToggleSup: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView, schema } = editorStore;
+		const { view: editorView, schema, commands } = editorStore;
 		if (!editorView || !schema) return;
-		const command = toggleMark(schema.marks['sup']);
-		command(editorView.state, editorView.dispatch, editorView);
+		commands.sup.toggle();
 	}, [editorStore]);
 
 	const handleToggleSub: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView, schema } = editorStore;
+		const { view: editorView, schema, commands } = editorStore;
 		if (!editorView || !schema) return;
-		const command = toggleMark(schema.marks['sub']);
-		command(editorView.state, editorView.dispatch, editorView);
+		commands.sub.toggle();
 	}, [editorStore]);
 
 	const handleToggleOrderedList: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
@@ -129,6 +120,8 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 		console.debug('unordered list option clicked');
 	}, [editorStore]);
 
+	const preventDefault: React.MouseEventHandler<HTMLElement> = (event) => event.preventDefault();
+
 	return (
 		<StyledSelectionTooltip
 			onMouseDown={(event) => event.stopPropagation()}
@@ -136,29 +129,26 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 			position={position}
 		>
 			<HeadingDecoration />
-			<StyledOption onClick={handleToggleBold} onMouseDown={(event) => event.preventDefault()}>
+			<StyledOption onClick={handleToggleBold} onMouseDown={preventDefault}>
 				<span style={{ fontWeight: 'bold' }}>B</span>
 			</StyledOption>
-			<StyledOption onClick={handleToggleEm} onMouseDown={(event) => event.preventDefault()}>
+			<StyledOption onClick={handleToggleEm} onMouseDown={preventDefault}>
 				<span style={{ fontStyle: 'italic' }}>I</span>
 			</StyledOption>
-			<StyledOption onClick={handleToggleUnderline} onMouseDown={(event) => event.preventDefault()}>
+			<StyledOption onClick={handleToggleUnderline} onMouseDown={preventDefault}>
 				<span style={{ textDecoration: 'underline' }}>U</span>
 			</StyledOption>
-			<StyledOption onClick={handleToggleSup} onMouseDown={(event) => event.preventDefault()}>
+			<StyledOption onClick={handleToggleSup} onMouseDown={preventDefault}>
 				<span>
 					X<sup>2</sup>
 				</span>
 			</StyledOption>
-			<StyledOption onClick={handleToggleSub} onMouseDown={(event) => event.preventDefault()}>
+			<StyledOption onClick={handleToggleSub} onMouseDown={preventDefault}>
 				<span>
 					X<sub>2</sub>
 				</span>
 			</StyledOption>
-			<StyledOption
-				onMouseDown={(event) => event.preventDefault()}
-				onClick={handleToggleOrderedList}
-			>
+			<StyledOption onMouseDown={preventDefault} onClick={handleToggleOrderedList}>
 				<span style={{ display: 'inline-flex', alignItems: 'center' }}>
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
 						<path
@@ -169,10 +159,7 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 					</svg>
 				</span>
 			</StyledOption>
-			<StyledOption
-				onMouseDown={(event) => event.preventDefault()}
-				onClick={handleToggleUnorderedList}
-			>
+			<StyledOption onMouseDown={preventDefault} onClick={handleToggleUnorderedList}>
 				<span style={{ display: 'inline-flex', alignItems: 'center' }}>
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
 						<path

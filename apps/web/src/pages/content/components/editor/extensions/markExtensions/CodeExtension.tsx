@@ -1,6 +1,7 @@
 import { toggleMark } from 'prosemirror-commands';
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
+import { Command } from 'prosemirror-state';
 import { environment } from '../../utils/enviroment';
 import markInputRule from '../../utils/markInputRule';
 import { extensionName } from '../decorators/extensionName';
@@ -29,13 +30,23 @@ export class CodeExtension extends MarkExtension {
 		return [markInputRule(/`([^`\n\r]+)`$/, this.type)];
 	}
 
+	toggleCode() {
+		return toggleMark(this.type);
+	}
+
+	createCommands(): Record<string, (...args: any[]) => Command> {
+		return {
+			toggle: this.toggleCode.bind(this),
+		};
+	}
+
 	createKeyMap(): KeyMap {
 		const keyMapForWin: KeyMap = {
-			[`${FunctionKeys.Ctrl}-${SymbolKeys['`']}`]: toggleMark(this.type),
+			[`${FunctionKeys.Ctrl}-${SymbolKeys['`']}`]: this.toggleCode(),
 		};
 
 		const keyMapForMac: KeyMap = {
-			[`${FunctionKeys.Mod}-${SymbolKeys['`']}`]: toggleMark(this.type),
+			[`${FunctionKeys.Mod}-${SymbolKeys['`']}`]: this.toggleCode(),
 		};
 
 		return environment.isMac ? keyMapForMac : keyMapForWin;
@@ -43,7 +54,11 @@ export class CodeExtension extends MarkExtension {
 }
 
 declare global {
-	interface EditorCommand {
-
+	namespace EditorStore {
+		interface Commands {
+			code: {
+				toggle: () => void;
+			};
+		}
 	}
 }
