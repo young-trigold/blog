@@ -10,7 +10,7 @@ class PasteRuleExtension extends PlainExtension {
 			.map((extension) => extension.createPasteRules?.())
 			.filter(Boolean)
 			.flat();
-		const nodePasteRules = this.editorStore.markExtensions
+		const nodePasteRules = this.editorStore.nodeExtensions
 			.map((extension) => extension.createPasteRules?.())
 			.filter(Boolean)
 			.flat();

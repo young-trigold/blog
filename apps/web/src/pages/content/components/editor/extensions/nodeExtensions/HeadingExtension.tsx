@@ -1,6 +1,7 @@
 import getUniqueId from '@/utils/getUniqueId';
 import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
+import { PasteRule } from 'prosemirror-paste-rules';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { extensionName } from '../decorators/extensionName';
 import { CodeExtension } from '../markExtensions/CodeExtension';
@@ -65,7 +66,7 @@ export class HeadingExtension extends NodeExtension {
 	createInputRules(): InputRule[] {
 		const inputRule = textblockTypeInputRule(
 			new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
-			this.editorStore?.schema?.nodes['heading']!,
+			this.type,
 			(match: RegExpMatchArray) => ({
 				level: match[1].length,
 				headingId: getUniqueId(),
@@ -74,18 +75,16 @@ export class HeadingExtension extends NodeExtension {
 		return [inputRule];
 	}
 
-	// createPasteRules(): PasteRule[] {
-	// 	const pasteRule: PasteRule = {
-	// 		type: 'node',
-	// 		nodeType: this.type,
-	// 		regexp: new RegExp(`^#{1,${HeadingMaxLevel}}\\s([\\s\\w]+)$`),
-	// 		getAttributes(match: RegExpMatchArray) {
-	// 			return { level: match[1].length, headingId: getUniqueId() };
-	// 		},
-	// 		startOfTextBlock: true,
-	// 	};
-	// 	return [pasteRule];
-	// }
+	createPasteRules(): PasteRule[] {
+		const pasteRules: PasteRule[] = Array.from({ length: HeadingMaxLevel }).map((_, i) => ({
+			type: 'node',
+			nodeType: this.type,
+			regexp: new RegExp(`^#{${i + 1}}\\s([\\s\\w]+)$`),
+			getAttributes: () => ({ level: i + 1 }),
+			startOfTextBlock: true,
+		}));
+		return pasteRules;
+	}
 
 	createPlugin(): void | Plugin<any> {
 		const key = new PluginKey('addHeadingId');
