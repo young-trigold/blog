@@ -73,7 +73,7 @@ const HeadingDecoration = () => {
 	const toggleHeadingLevel2 = useCallback(() => {
 		if (!editorStore?.view) return;
 		const { commands } = editorStore;
-		commands.heading.toggle(3);
+		commands.heading.toggle(2);
 	}, [editorStore]);
 
 	const toggleHeadingLevel3 = useCallback(() => {
