@@ -1,5 +1,5 @@
 import { Node as ProseMirrorNode, Schema } from 'prosemirror-model';
-import { EditorState, Plugin as ProseMirrorPlugin, Selection } from 'prosemirror-state';
+import { Command, EditorState, Plugin as ProseMirrorPlugin, Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Extension, MarkExtension, NodeExtension, PlainExtension } from '../extensions/type';
 
@@ -21,6 +21,7 @@ class EditorStore {
 	status: EditorStoreStatus = EditorStoreStatus.Init;
 	view: EditorView | null = null;
 	schema: Schema | null = null;
+	commands: EditorStore.Commands = {} as any;
 	plugins: ProseMirrorPlugin[] = [];
 	markExtensions: MarkExtension[] = [];
 	nodeExtensions: NodeExtension[] = [];
@@ -74,9 +75,12 @@ class EditorStore {
 			handleDOMEvents: props.handleDOMEvents,
 		});
 
-		if (props.autoFocus) editorView.focus();
-
 		this.view = editorView;
+
+		if (props.autoFocus) this.view.focus();
+		this.markExtensions.forEach((markExtension) => markExtension.onEditorViewCreate?.());
+		this.nodeExtensions.forEach((nodeExtension) => nodeExtension.onEditorViewCreate?.());
+		this.plainExtensions.forEach((plainExtension) => plainExtension.onEditorViewCreate?.());
 		if (this.status === EditorStoreStatus.EditorStateCreated)
 			this.status = EditorStoreStatus.EditorViewCreated;
 		return editorView;
@@ -84,3 +88,13 @@ class EditorStore {
 }
 
 export default EditorStore;
+
+declare global {
+	namespace EditorStore {
+		interface Commands {
+			[extensionName: string]: {
+				[commandName: string]: (...args: any[]) => void;
+			};
+		}
+	}
+}

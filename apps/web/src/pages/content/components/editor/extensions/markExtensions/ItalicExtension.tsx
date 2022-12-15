@@ -1,6 +1,8 @@
 import { toggleMark } from 'prosemirror-commands';
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
+import { MarkPasteRule } from 'prosemirror-paste-rules';
+import { Command } from 'prosemirror-state';
 import { environment } from '../../utils/enviroment';
 import markInputRule from '../../utils/markInputRule';
 import { extensionName } from '../decorators/extensionName';
@@ -31,15 +33,42 @@ export class ItalicExtension extends MarkExtension {
 		return [markInputRule(/_(\S(?:|.*?\S))_$/, this.type)];
 	}
 
+	createPasteRules(): MarkPasteRule[] {
+		return [
+			{ type: 'mark', markType: this.type, regexp: /(?:^|\W)_([^_]+)_/g },
+			{ type: 'mark', markType: this.type, regexp: /\*([^*]+)\*/g },
+		];
+	}
+
+	toggleItalic() {
+		return toggleMark(this.type);
+	}
+
+	createCommands(): Record<string, (...args: any[]) => Command> {
+		return {
+			toggle: this.toggleItalic.bind(this),
+		};
+	}
+
 	createKeyMap(): KeyMap {
 		const keyMapForWin: KeyMap = {
-			[`${FunctionKeys.Ctrl}-${LetterKeys.i}`]: toggleMark(this.type),
+			[`${FunctionKeys.Ctrl}-${LetterKeys.i}`]: this.toggleItalic(),
 		};
 
 		const keyMapForMac: KeyMap = {
-			[`${FunctionKeys.Mod}-${LetterKeys.i}`]: toggleMark(this.type),
+			[`${FunctionKeys.Mod}-${LetterKeys.i}`]: this.toggleItalic(),
 		};
 
 		return environment.isMac ? keyMapForMac : keyMapForWin;
+	}
+}
+
+declare global {
+	namespace EditorStore {
+		interface Commands {
+			italic: {
+				toggle: () => void;
+			};
+		}
 	}
 }

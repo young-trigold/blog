@@ -1,7 +1,9 @@
 import getUniqueId from '@/utils/getUniqueId';
 import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { PasteRule } from 'prosemirror-paste-rules';
+import { Command, Plugin, PluginKey } from 'prosemirror-state';
+import { toggleBlockItem } from '../../utils/command';
 import { extensionName } from '../decorators/extensionName';
 import { CodeExtension } from '../markExtensions/CodeExtension';
 import { ItalicExtension } from '../markExtensions/ItalicExtension';
@@ -65,7 +67,7 @@ export class HeadingExtension extends NodeExtension {
 	createInputRules(): InputRule[] {
 		const inputRule = textblockTypeInputRule(
 			new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
-			this.editorStore?.schema?.nodes['heading']!,
+			this.type,
 			(match: RegExpMatchArray) => ({
 				level: match[1].length,
 				headingId: getUniqueId(),
@@ -74,18 +76,31 @@ export class HeadingExtension extends NodeExtension {
 		return [inputRule];
 	}
 
-	// createPasteRules(): PasteRule[] {
-	// 	const pasteRule: PasteRule = {
-	// 		type: 'node',
-	// 		nodeType: this.type,
-	// 		regexp: new RegExp(`^#{1,${HeadingMaxLevel}}\\s([\\s\\w]+)$`),
-	// 		getAttributes(match: RegExpMatchArray) {
-	// 			return { level: match[1].length, headingId: getUniqueId() };
-	// 		},
-	// 		startOfTextBlock: true,
-	// 	};
-	// 	return [pasteRule];
-	// }
+	createPasteRules(): PasteRule[] {
+		const pasteRules: PasteRule[] = Array.from({ length: HeadingMaxLevel }).map((_, i) => ({
+			type: 'node',
+			nodeType: this.type,
+			regexp: new RegExp(`^#{${i + 1}}\\s([\\s\\w]+)$`),
+			getAttributes: () => ({ level: i + 1 }),
+			startOfTextBlock: true,
+		}));
+		return pasteRules;
+	}
+
+	toggleHeading(level: number) {
+		return toggleBlockItem({
+			type: this.type,
+			attrs: {
+				level,
+			},
+		});
+	}
+
+	createCommands(): Record<string, (...args: any[]) => Command> {
+		return {
+			toggle: this.toggleHeading.bind(this),
+		};
+	}
 
 	createPlugin(): void | Plugin<any> {
 		const key = new PluginKey('addHeadingId');
@@ -112,5 +127,15 @@ export class HeadingExtension extends NodeExtension {
 			},
 		});
 		return plugin;
+	}
+}
+
+declare global {
+	namespace EditorStore {
+		interface Commands {
+			heading: {
+				toggle: (level: number) => void;
+			};
+		}
 	}
 }
