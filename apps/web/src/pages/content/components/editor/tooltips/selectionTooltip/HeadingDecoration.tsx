@@ -1,8 +1,6 @@
 import { useAppSelector } from '@/app/store';
-import getUniqueId from '@/utils/getUniqueId';
 import { memo, useCallback, useState } from 'react';
 import styled from 'styled-components';
-import EditorStore from '../../store';
 
 const StyledHeadingDecoration = styled.div`
 	display: flex;
@@ -61,37 +59,34 @@ const StyledSpan = styled.span`
 	}
 `;
 
-const getSetFunctionByLevel = (level: number, editorStore: EditorStore | null) => {
-	return () => {
-		if (!editorStore) return;
-		const { view: editorView, schema } = editorStore;
-		if (!editorView || !schema) return;
-		const { state: editorState } = editorView;
-		const { selection } = editorState;
-
-		const transaction = editorState.tr.setBlockType(
-			selection.from,
-			selection.to,
-			schema.nodes.heading,
-			{ level, headingId: getUniqueId() },
-		);
-
-		editorView.dispatch(transaction);
-	};
-};
-
 const HeadingDecoration = () => {
 	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 	const [styledHeadingOptionContainerVisible, setStyledHeadingOptionContainerVisible] =
 		useState(false);
 
-	const toggleHeadingLevel1 = useCallback(getSetFunctionByLevel(1, editorStore), [editorStore]);
-	const toggleHeadingLevel2 = useCallback(getSetFunctionByLevel(2, editorStore), [editorStore]);
-	const toggleHeadingLevel3 = useCallback(getSetFunctionByLevel(3, editorStore), [editorStore]);
+	const toggleHeadingLevel1 = useCallback(() => {
+		if (!editorStore?.view) return;
+		const { commands } = editorStore;
+		commands.heading.toggle(1);
+	}, [editorStore]);
+
+	const toggleHeadingLevel2 = useCallback(() => {
+		if (!editorStore?.view) return;
+		const { commands } = editorStore;
+		commands.heading.toggle(3);
+	}, [editorStore]);
+
+	const toggleHeadingLevel3 = useCallback(() => {
+		if (!editorStore?.view) return;
+		const { commands } = editorStore;
+		commands.heading.toggle(3);
+	}, [editorStore]);
+
+	const preventDefault: React.MouseEventHandler<HTMLElement> = (event) => event.preventDefault();
 
 	return (
 		<StyledHeadingDecoration
-			onMouseDown={(event) => event.preventDefault()}
+			onMouseDown={preventDefault}
 			onMouseLeave={() => setStyledHeadingOptionContainerVisible(false)}
 		>
 			<StyledSpan onMouseEnter={() => setStyledHeadingOptionContainerVisible(true)}>
@@ -100,22 +95,13 @@ const HeadingDecoration = () => {
 			<StyledHeadingOptionContainer
 				styledHeadingOptionContainerVisible={styledHeadingOptionContainerVisible}
 			>
-				<StyledHeadingOption
-					onMouseDown={(event) => event.preventDefault()}
-					onClick={toggleHeadingLevel1}
-				>
+				<StyledHeadingOption onMouseDown={preventDefault} onClick={toggleHeadingLevel1}>
 					<span>1 级标题</span>
 				</StyledHeadingOption>
-				<StyledHeadingOption
-					onMouseDown={(event) => event.preventDefault()}
-					onClick={toggleHeadingLevel2}
-				>
+				<StyledHeadingOption onMouseDown={preventDefault} onClick={toggleHeadingLevel2}>
 					<span>2 级标题</span>
 				</StyledHeadingOption>
-				<StyledHeadingOption
-					onMouseDown={(event) => event.preventDefault()}
-					onClick={toggleHeadingLevel3}
-				>
+				<StyledHeadingOption onMouseDown={preventDefault} onClick={toggleHeadingLevel3}>
 					<span>3 级标题</span>
 				</StyledHeadingOption>
 			</StyledHeadingOptionContainer>

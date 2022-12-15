@@ -2,7 +2,8 @@ import getUniqueId from '@/utils/getUniqueId';
 import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { PasteRule } from 'prosemirror-paste-rules';
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { Command, Plugin, PluginKey } from 'prosemirror-state';
+import { toggleBlockItem } from '../../utils/command';
 import { extensionName } from '../decorators/extensionName';
 import { CodeExtension } from '../markExtensions/CodeExtension';
 import { ItalicExtension } from '../markExtensions/ItalicExtension';
@@ -86,6 +87,21 @@ export class HeadingExtension extends NodeExtension {
 		return pasteRules;
 	}
 
+	toggleHeading(level: number) {
+		return toggleBlockItem({
+			type: this.type,
+			attrs: {
+				level,
+			},
+		});
+	}
+
+	createCommands(): Record<string, (...args: any[]) => Command> {
+		return {
+			toggle: this.toggleHeading.bind(this),
+		};
+	}
+
 	createPlugin(): void | Plugin<any> {
 		const key = new PluginKey('addHeadingId');
 		const plugin = new Plugin({
@@ -111,5 +127,15 @@ export class HeadingExtension extends NodeExtension {
 			},
 		});
 		return plugin;
+	}
+}
+
+declare global {
+	namespace EditorStore {
+		interface Commands {
+			heading: {
+				toggle: (level: number) => void;
+			};
+		}
 	}
 }
