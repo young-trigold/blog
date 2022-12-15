@@ -1,6 +1,7 @@
 import { toggleMark } from 'prosemirror-commands';
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
+import { MarkPasteRule } from 'prosemirror-paste-rules';
 import { Command } from 'prosemirror-state';
 import { environment } from '../../utils/enviroment';
 import markInputRule from '../../utils/markInputRule';
@@ -30,6 +31,13 @@ export class ItalicExtension extends MarkExtension {
 
 	createInputRules(): InputRule[] {
 		return [markInputRule(/_(\S(?:|.*?\S))_$/, this.type)];
+	}
+
+	createPasteRules(): MarkPasteRule[] {
+		return [
+			{ type: 'mark', markType: this.type, regexp: /(?:^|\W)_([^_]+)_/g },
+			{ type: 'mark', markType: this.type, regexp: /\*([^*]+)\*/g },
+		];
 	}
 
 	toggleItalic() {

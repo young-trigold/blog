@@ -1,6 +1,7 @@
 import { toggleMark } from 'prosemirror-commands';
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
+import { MarkPasteRule } from 'prosemirror-paste-rules';
 import { environment } from '../../utils/enviroment';
 import markInputRule from '../../utils/markInputRule';
 import { extensionName } from '../decorators/extensionName';
@@ -29,6 +30,13 @@ export class BoldExtension extends MarkExtension {
 
 	createInputRules(): InputRule[] {
 		return [markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, this.type)];
+	}
+
+	createPasteRules(): MarkPasteRule[] {
+		return [
+			{ type: 'mark', markType: this.type, regexp: /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g },
+			{ type: 'mark', markType: this.type, regexp: /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g },
+		];
 	}
 
 	toggleBold() {

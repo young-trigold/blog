@@ -1,6 +1,7 @@
 import { toggleMark } from 'prosemirror-commands';
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
+import { MarkPasteRule } from 'prosemirror-paste-rules';
 import { Command } from 'prosemirror-state';
 import { environment } from '../../utils/enviroment';
 import markInputRule from '../../utils/markInputRule';
@@ -27,7 +28,11 @@ export class CodeExtension extends MarkExtension {
 	}
 
 	createInputRules(): InputRule[] {
-		return [markInputRule(/`([^`\n\r]+)`$/, this.type)];
+		return [markInputRule(new RegExp(`(?:\`)([^\`\uFFFC]+)(?:\`)$`), this.type)];
+	}
+
+	createPasteRules(): MarkPasteRule[] {
+		return [{ type: 'mark', markType: this.type, regexp: /(?:^|\s)((?:`)((?:[^`]+))(?:`))/g }];
 	}
 
 	toggleCode() {
