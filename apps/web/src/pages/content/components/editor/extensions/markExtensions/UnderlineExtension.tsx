@@ -1,5 +1,4 @@
 import { toggleMark } from 'prosemirror-commands';
-import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
 import { environment } from '../../utils/enviroment';
 import { extensionName } from '../decorators/extensionName';

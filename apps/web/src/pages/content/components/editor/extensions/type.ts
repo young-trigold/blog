@@ -26,6 +26,7 @@ export abstract class MarkExtension extends Extension {
 	abstract createMarkSpec(): MarkSpec;
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
+	createCommands?(): Record<string, (...args: any[]) => Command>;;
 }
 
 export abstract class NodeExtension extends Extension {
@@ -36,6 +37,7 @@ export abstract class NodeExtension extends Extension {
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
 	createNodeView?(): NodeViewConstructor;
+	createCommands?(): Record<string, (...args: any[]) => Command>;
 }
 
 export abstract class PlainExtension extends Extension {

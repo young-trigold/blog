@@ -74,10 +74,10 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
 	const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(
 		(event) => {
 			if (!editorStore) return;
-			const { view: editorView, schema } = editorStore;
+			const { view: editorView, schema, commands } = editorStore;
 			if (!editorView || !schema) return;
-			const command = toggleMark(schema.marks['bold']);
-			command(editorView.state, editorView.dispatch, editorView);
+			const { bold } = commands;
+			bold.toggle();
 			event.stopPropagation();
 		},
 		[editorStore],

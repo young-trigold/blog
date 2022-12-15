@@ -41,3 +41,9 @@ export class CodeExtension extends MarkExtension {
 		return environment.isMac ? keyMapForMac : keyMapForWin;
 	}
 }
+
+declare global {
+	interface EditorCommand {
+
+	}
+}

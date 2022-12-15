@@ -31,15 +31,34 @@ export class BoldExtension extends MarkExtension {
 		return [markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, this.type)];
 	}
 
+	toggleBold() {
+		return toggleMark(this.type);
+	}
+
+	createCommands() {
+		return {
+			toggle: this.toggleBold.bind(this),
+		};
+	}
+
 	createKeyMap(): KeyMap {
 		const keyMapForWin: KeyMap = {
-			[`${FunctionKeys.Ctrl}-${LetterKeys.b}`]: toggleMark(this.type),
+			[`${FunctionKeys.Ctrl}-${LetterKeys.b}`]: this.toggleBold(),
 		};
 
 		const keyMapForMac: KeyMap = {
-			[`${FunctionKeys.Mod}-${LetterKeys.b}`]: toggleMark(this.type),
+			[`${FunctionKeys.Mod}-${LetterKeys.b}`]: this.toggleBold(),
 		};
 
 		return environment.isMac ? keyMapForMac : keyMapForWin;
+	}
+}
+declare global {
+	namespace EditorStore {
+		interface Commands {
+			bold: {
+				toggle: () => void;
+			};
+		}
 	}
 }

@@ -21,10 +21,10 @@ export const presetPlainExtensions = [
 	PasteRuleExtension,
 	NodeViewExtension,
 	CommandExtension,
-	KeyMapExtension,
-	DecorationExtension,
 	HistoryExtension,
 	TrailingNodeExtension,
+	KeyMapExtension,
+	DecorationExtension,
 	PluginExtension,
 ];
 
