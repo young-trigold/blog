@@ -32,6 +32,7 @@ export class CodeBlockExtension extends NodeExtension {
 			},
 		};
 	}
+	
 	createNodeView(): NodeViewConstructor {
 		const nodeViewConstructor: NodeViewConstructor = (node, view, getPos) =>
 			new CodeBlockView(node, view, getPos);
