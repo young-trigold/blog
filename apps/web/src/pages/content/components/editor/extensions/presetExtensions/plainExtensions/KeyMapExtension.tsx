@@ -4,7 +4,7 @@ import { Plugin } from 'prosemirror-state';
 import { extensionName } from '../../decorators/extensionName';
 import { Extension, KeyMap, PlainExtension } from '../../type';
 
-@extensionName('key_map')
+@extensionName('keymap')
 class KeyMapExtension extends PlainExtension {
 	createPlugin(): void | Plugin<any> {
 		if (!this.editorStore) return;

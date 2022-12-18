@@ -10,7 +10,7 @@ export class UnorderedListExtension extends NodeExtension {
 		const unorderedListSpec: NodeSpec = {
 			defining: true,
 			draggable: false,
-			group: [ExtensionTag.Block].join(' '),
+			group:[ExtensionTag.Block, ExtensionTag.ListContainerNode].join(' '),
 			content: `${ListItemExtension.extensionName}+`,
 			parseDOM: [{ tag: 'ul' }],
 			toDOM() {

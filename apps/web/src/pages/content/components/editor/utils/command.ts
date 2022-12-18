@@ -1,7 +1,15 @@
 import { setBlockType } from 'prosemirror-commands';
-import { Node, NodeType } from 'prosemirror-model';
-import { Command, EditorState, NodeSelection, Selection } from 'prosemirror-state';
+import { Fragment, Node, NodeRange, NodeType, Slice } from 'prosemirror-model';
+import {
+	Command,
+	EditorState,
+	NodeSelection,
+	Selection,
+	TextSelection,
+	Transaction,
+} from 'prosemirror-state';
 import ParagraphExtension from '../extensions/presetExtensions/nodeExtensions/ParagraphExtension';
+import { ExtensionTag } from '../extensions/type';
 
 type FindSelectedNodeOfTypeProps = {
 	type: NodeType;
@@ -96,4 +104,98 @@ export function toggleBlockItem(toggleProps: ToggleBlockItemProps): Command {
 			view,
 		);
 	};
+}
+
+export function isList(type: NodeType): boolean {
+	return !!type.spec.group?.includes(ExtensionTag.ListContainerNode);
+}
+
+export function isListItem(type: NodeType): boolean {
+	return !!type.spec.group?.includes(ExtensionTag.ListItemNode);
+}
+
+export function isListNode(node: Node): boolean {
+	return isList(node.type);
+}
+
+export function isListItemNode(node: Node): boolean {
+	return isListItem(node.type);
+}
+
+export function calculateItemRange(selection: Selection): NodeRange | null {
+	const { $from, $to } = selection;
+	return $from.blockRange($to, isListNode) ?? null;
+}
+
+function wrapItems({
+	listType,
+	itemType,
+	tr,
+	range,
+}: {
+	listType: NodeType;
+	itemType: NodeType;
+	tr: Transaction;
+	range: NodeRange;
+}): boolean {
+	const oldList = range.parent;
+
+	// A slice that contianes all selected list items
+	const slice: Slice = tr.doc.slice(range.start, range.end);
+
+	if (oldList.type === listType && slice.content.firstChild?.type === itemType) {
+		return false;
+	}
+
+	const newItems: Node[] = [];
+
+	for (let i = 0; i < slice.content.childCount; i++) {
+		const oldItem = slice.content.child(i);
+
+		if (!itemType.validContent(oldItem.content)) {
+			return false;
+		}
+
+		const newItem = itemType.createChecked(null, oldItem.content);
+		newItems.push(newItem);
+	}
+
+	const newList = listType.createChecked(null, newItems);
+
+	tr.replaceRange(range.start, range.end, new Slice(Fragment.from(newList), 0, 0));
+	return true;
+}
+
+export function wrapSelectedItems({
+	listType,
+	itemType,
+	tr,
+}: {
+	listType: NodeType;
+	itemType: NodeType;
+	tr: Transaction;
+}): boolean {
+	const range = calculateItemRange(tr.selection);
+
+	if (!range) {
+		return false;
+	}
+
+	const atStart = range.startIndex === 0;
+
+	const { from, to } = tr.selection;
+
+	if (!wrapItems({ listType, itemType, tr, range })) {
+		return false;
+	}
+
+	tr.setSelection(
+		TextSelection.between(
+			tr.doc.resolve(atStart ? from : from + 2),
+			tr.doc.resolve(atStart ? to : to + 2),
+		),
+	);
+	tr.scrollIntoView();
+
+	return true;
 }

@@ -1,5 +1,6 @@
 import { InputRule, wrappingInputRule } from 'prosemirror-inputrules';
 import { NodeSpec } from 'prosemirror-model';
+import { findParentNode, wrapSelectedItems } from '../../../utils/command';
 import { extensionName } from '../../decorators/extensionName';
 import { ExtensionTag, NodeExtension } from '../../type';
 import { ListItemExtension } from './ListItemExtension';
@@ -15,11 +16,19 @@ export class OrderedListExtension extends NodeExtension {
 					default: 1,
 				},
 			},
-			group: [ExtensionTag.Block].join(' '),
+			group: [ExtensionTag.Block, ExtensionTag.ListContainerNode].join(' '),
 			content: `${ListItemExtension.extensionName}+`,
-			parseDOM: [{ tag: 'ol' }],
-			toDOM() {
-				return ['ol', 0];
+			parseDOM: [
+				{
+					tag: 'ol',
+					getAttrs(node) {
+						if (!(node instanceof HTMLOListElement)) return false;
+						return { order: Number.parseInt(node.getAttribute('data-start') ?? '1', 10) };
+					},
+				},
+			],
+			toDOM(node) {
+				return node.attrs.order === 1 ? ['ol', 0] : ['ol', { 'data-start': node.attrs.order }, 0];
 			},
 		};
 
@@ -54,7 +63,10 @@ export class OrderedListExtension extends NodeExtension {
 				const order = Number.parseInt(match[1], 10);
 
 				if (order !== 1) {
-					const found = findParentNodeOfType({ selection: tr.selection, types: this.type });
+					const found = findParentNode({
+						predicate: (node) => node.type.name === this.type.name,
+						selection: tr.selection,
+					});
 
 					if (found) {
 						tr.setNodeMarkup(found.pos, undefined, { order });
