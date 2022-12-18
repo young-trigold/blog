@@ -8,7 +8,7 @@ export class ImageExtension extends NodeExtension {
 		const imageSpec: NodeSpec = {
 			inline: true,
 			draggable: true,
-			selectable: false,
+			marks: '',
 			group: [ExtensionTag.Inline, ExtensionTag.Media].join(' '),
 			attrs: {
 				src: {

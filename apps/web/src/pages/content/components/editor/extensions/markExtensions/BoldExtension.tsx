@@ -3,7 +3,7 @@ import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
 import { MarkPasteRule } from 'prosemirror-paste-rules';
 import { environment } from '../../utils/enviroment';
-import markInputRule from '../../utils/markInputRule';
+import { markInputRule } from '../../utils/inputRule';
 import { extensionName } from '../decorators/extensionName';
 import { ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
 
