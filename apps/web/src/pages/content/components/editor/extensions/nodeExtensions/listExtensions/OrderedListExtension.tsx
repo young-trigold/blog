@@ -9,7 +9,6 @@ import { ListItemExtension } from './ListItemExtension';
 export class OrderedListExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
 		const orderedListSpec: NodeSpec = {
-			defining: true,
 			draggable: false,
 			attrs: {
 				order: {

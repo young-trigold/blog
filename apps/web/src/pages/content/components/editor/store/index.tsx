@@ -32,14 +32,14 @@ class EditorStore {
 			if (extension instanceof MarkExtension) this.markExtensions.push(extension);
 			else if (extension instanceof NodeExtension) this.nodeExtensions.push(extension);
 			else this.plainExtensions.push(extension);
+			extension.editorStore = this;
 		};
 
 		extensions.forEach(onCreate);
+		if (this.status === EditorStoreStatus.Init) this.status = EditorStoreStatus.EditorStateCreated;
 		extensions.forEach((extension: Extension) => {
-			extension.editorStore = this;
 			extension.onEditorStoreCreate?.();
 		});
-		if (this.status === EditorStoreStatus.Init) this.status = EditorStoreStatus.EditorStateCreated;
 	}
 
 	createEditorState(doc?: string, selection?: Selection) {

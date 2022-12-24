@@ -8,7 +8,6 @@ import { ListItemExtension } from './ListItemExtension';
 export class UnorderedListExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
 		const unorderedListSpec: NodeSpec = {
-			defining: true,
 			draggable: false,
 			group:[ExtensionTag.Block, ExtensionTag.ListContainerNode].join(' '),
 			content: `${ListItemExtension.extensionName}+`,
