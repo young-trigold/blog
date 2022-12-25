@@ -5,8 +5,6 @@ import { Command, Plugin as ProseMirrorPlugin } from 'prosemirror-state';
 import { NodeViewConstructor } from 'prosemirror-view';
 import EditorStore from '../store';
 
-
-
 export abstract class Extension {
 	editorStore: EditorStore | null = null;
 	static extensionName: string;

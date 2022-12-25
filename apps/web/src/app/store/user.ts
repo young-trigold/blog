@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import watchedLocalStorage from '@/app/store/watchedLocalStorage';
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import axios from 'axios';
