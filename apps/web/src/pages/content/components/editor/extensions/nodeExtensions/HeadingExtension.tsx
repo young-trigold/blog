@@ -11,7 +11,7 @@ import { LinkExtension } from '../markExtensions/LinkExtension';
 import { SubExtension } from '../markExtensions/SubExtension';
 import { SupExtension } from '../markExtensions/SupExtension';
 import { UnderlineExtension } from '../markExtensions/UnderlineExtension';
-import { ExtensionTag, NodeExtension } from '../type';
+import { CommandType, ExtensionTag, NodeExtension } from '../type';
 
 export const HeadingMaxLevel = 4;
 
@@ -96,7 +96,7 @@ export class HeadingExtension extends NodeExtension {
 		});
 	}
 
-	createCommands(): Record<string, (...args: any[]) => Command> {
+	createCommands() {
 		return {
 			toggle: this.toggleHeading.bind(this),
 		};
@@ -133,9 +133,7 @@ export class HeadingExtension extends NodeExtension {
 declare global {
 	namespace EditorStore {
 		interface Commands {
-			heading: {
-				toggle: (level: number) => void;
-			};
+			heading: CommandType<HeadingExtension>;
 		}
 	}
 }

@@ -5,6 +5,8 @@ import { Command, Plugin as ProseMirrorPlugin } from 'prosemirror-state';
 import { NodeViewConstructor } from 'prosemirror-view';
 import EditorStore from '../store';
 
+
+
 export abstract class Extension {
 	editorStore: EditorStore | null = null;
 	static extensionName: string;
@@ -16,7 +18,16 @@ export abstract class Extension {
 	onEditorViewCreate?(): void;
 	createPlugin?(): ProseMirrorPlugin | void;
 	createKeyMap?(): KeyMap;
+	createCommands?(): {
+    [commandName: string]: (...args: any[]) => Command;
+  };
 }
+
+export type CommandType<T extends Extension> = {
+  [commandName in keyof ReturnType<NonNullable<T['createCommands']>>]: (
+    ...args: Parameters<ReturnType<NonNullable<T['createCommands']>>[commandName]>
+  ) => void;
+};
 
 export abstract class MarkExtension extends Extension {
 	get type() {
@@ -26,7 +37,6 @@ export abstract class MarkExtension extends Extension {
 	abstract createMarkSpec(): MarkSpec;
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
-	createCommands?(): Record<string, (...args: any[]) => Command>;;
 }
 
 export abstract class NodeExtension extends Extension {
@@ -37,7 +47,6 @@ export abstract class NodeExtension extends Extension {
 	createInputRules?(): InputRule[];
 	createPasteRules?(): PasteRule[];
 	createNodeView?(): NodeViewConstructor;
-	createCommands?(): Record<string, (...args: any[]) => Command>;
 }
 
 export abstract class PlainExtension extends Extension {

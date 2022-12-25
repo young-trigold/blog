@@ -44,7 +44,7 @@ const SelectionCommentTooltip = () => {
 
 	const onClick = useCallback(() => {
 		if (!editorStore) return;
-		const { view: editorView } = editorStore;
+		const { view: editorView, commands } = editorStore;
 		if (!editorView) return;
 		const { state: editorState } = editorView;
 		const { selection, doc } = editorState;

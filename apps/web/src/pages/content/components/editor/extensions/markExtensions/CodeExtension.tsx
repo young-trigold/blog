@@ -2,11 +2,10 @@ import { toggleMark } from 'prosemirror-commands';
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec } from 'prosemirror-model';
 import { MarkPasteRule } from 'prosemirror-paste-rules';
-import { Command } from 'prosemirror-state';
 import { environment } from '../../utils/enviroment';
 import { markInputRule } from '../../utils/inputRule';
 import { extensionName } from '../decorators/extensionName';
-import { ExtensionTag, FunctionKeys, KeyMap, MarkExtension, SymbolKeys } from '../type';
+import { CommandType, ExtensionTag, FunctionKeys, KeyMap, MarkExtension, SymbolKeys } from '../type';
 
 @extensionName('code')
 export class CodeExtension extends MarkExtension {
@@ -39,7 +38,7 @@ export class CodeExtension extends MarkExtension {
 		return toggleMark(this.type);
 	}
 
-	createCommands(): Record<string, (...args: any[]) => Command> {
+	createCommands() {
 		return {
 			toggle: this.toggleCode.bind(this),
 		};
@@ -61,9 +60,7 @@ export class CodeExtension extends MarkExtension {
 declare global {
 	namespace EditorStore {
 		interface Commands {
-			code: {
-				toggle: () => void;
-			};
+			code: CommandType<CodeExtension>
 		}
 	}
 }
