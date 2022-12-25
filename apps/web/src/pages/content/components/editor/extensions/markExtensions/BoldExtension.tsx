@@ -5,7 +5,7 @@ import { MarkPasteRule } from 'prosemirror-paste-rules';
 import { environment } from '../../utils/enviroment';
 import { markInputRule } from '../../utils/inputRule';
 import { extensionName } from '../decorators/extensionName';
-import { ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
+import { CommandType, ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
 
 @extensionName('bold')
 export class BoldExtension extends MarkExtension {
@@ -64,9 +64,7 @@ export class BoldExtension extends MarkExtension {
 declare global {
 	namespace EditorStore {
 		interface Commands {
-			bold: {
-				toggle: () => void;
-			};
+			bold: CommandType<BoldExtension>;
 		}
 	}
 }

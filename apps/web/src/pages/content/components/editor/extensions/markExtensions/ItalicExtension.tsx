@@ -6,7 +6,7 @@ import { Command } from 'prosemirror-state';
 import { environment } from '../../utils/enviroment';
 import { markInputRule } from '../../utils/inputRule';
 import { extensionName } from '../decorators/extensionName';
-import { ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
+import { CommandType, ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
 
 @extensionName('italic')
 export class ItalicExtension extends MarkExtension {
@@ -66,9 +66,7 @@ export class ItalicExtension extends MarkExtension {
 declare global {
 	namespace EditorStore {
 		interface Commands {
-			italic: {
-				toggle: () => void;
-			};
+			italic: CommandType<ItalicExtension>;
 		}
 	}
 }

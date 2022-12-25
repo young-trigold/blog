@@ -2,7 +2,7 @@ import { toggleMark } from 'prosemirror-commands';
 import { MarkSpec } from 'prosemirror-model';
 import { Command } from 'prosemirror-state';
 import { extensionName } from '../decorators/extensionName';
-import { ExtensionTag, MarkExtension } from '../type';
+import { CommandType, ExtensionTag, MarkExtension } from '../type';
 import { SubExtension } from './SubExtension';
 
 @extensionName('sup')
@@ -28,7 +28,7 @@ export class SupExtension extends MarkExtension {
 		return toggleMark(this.type);
 	}
 
-	createCommands(): Record<string, (...args: any[]) => Command> {
+	createCommands() {
 		return {
 			toggle: this.toggleSup.bind(this),
 		};
@@ -38,9 +38,7 @@ export class SupExtension extends MarkExtension {
 declare global {
 	namespace EditorStore {
 		interface Commands {
-			sup: {
-				toggle: () => void;
-			};
+			sup: CommandType<SupExtension>;
 		}
 	}
 }
