@@ -4,8 +4,8 @@ import { PlainExtension } from '../../type';
 
 @extensionName('paste_rule')
 class PasteRuleExtension extends PlainExtension {
-	createPlugin() {
-		if (!this.editorStore) return;
+	createPlugins() {
+		if (!this.editorStore) return [];
 		const markPasteRules = this.editorStore.markExtensions
 			.map((extension) => extension.createPasteRules?.())
 			.filter(Boolean)
@@ -16,7 +16,7 @@ class PasteRuleExtension extends PlainExtension {
 			.flat();
 		const pasteRules = [...markPasteRules, ...nodePasteRules] as PasteRule[];
 		const pasteRulesPlugin = createPasteRulesPlugin(pasteRules);
-		return pasteRulesPlugin;
+		return [pasteRulesPlugin];
 	}
 }
 

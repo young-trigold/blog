@@ -16,7 +16,7 @@ export abstract class Extension {
 
 	onEditorStoreCreate?(): void;
 	onEditorViewCreate?(): void;
-	createPlugin?(): ProseMirrorPlugin | void;
+	createPlugins?(): ProseMirrorPlugin[];
 	createKeyMap?(): KeyMap;
 	createCommands?(): {
     [commandName: string]: (...args: any[]) => Command;

@@ -38,4 +38,3 @@ export { SupExtension } from './markExtensions/SupExtension';
 export { UnderlineExtension } from './markExtensions/UnderlineExtension';
 export { CodeBlockExtension } from './nodeExtensions/CodeBlockExtension';
 export { HeadingExtension, HeadingMaxLevel } from './nodeExtensions/HeadingExtension';
-

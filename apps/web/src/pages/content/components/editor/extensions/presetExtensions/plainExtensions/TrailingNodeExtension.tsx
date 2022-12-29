@@ -8,13 +8,13 @@ import ParagraphExtension from '../nodeExtensions/paragraphExtension';
 
 @extensionName('trailing_node')
 export class TrailingNodeExtension extends PlainExtension {
-	createPlugin(): void | Plugin<any> {
+	createPlugins() {
 		const plugin = trailingNode({
 			ignoredNodes: [OrderedListExtension, UnorderedListExtension].map(
 				(Extension) => Extension.extensionName,
 			),
 			nodeName: ParagraphExtension.extensionName,
 		});
-		return plugin;
+		return [plugin];
 	}
 }

@@ -1,5 +1,4 @@
 import { history, redo, undo } from 'prosemirror-history';
-import { Plugin } from 'prosemirror-state';
 import { environment } from '../../../utils/enviroment';
 import { extensionName } from '../../decorators/extensionName';
 import { FunctionKeys, KeyMap, LetterKeys, PlainExtension } from '../../type';
@@ -21,8 +20,8 @@ class HistoryExtension extends PlainExtension {
 		return finalKeyMap;
 	}
 
-	createPlugin(): void | Plugin<any> {
-		return history();
+	createPlugins() {
+		return [history()];
 	}
 }
 

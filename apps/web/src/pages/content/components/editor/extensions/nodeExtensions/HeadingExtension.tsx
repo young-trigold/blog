@@ -2,7 +2,7 @@ import getUniqueId from '@/utils/getUniqueId';
 import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { PasteRule } from 'prosemirror-paste-rules';
-import { Command, Plugin, PluginKey } from 'prosemirror-state';
+import { Plugin, PluginKey } from 'prosemirror-state';
 import { toggleBlockItem } from '../../utils/command';
 import { extensionName } from '../decorators/extensionName';
 import { CodeExtension } from '../markExtensions/CodeExtension';
@@ -102,8 +102,8 @@ export class HeadingExtension extends NodeExtension {
 		};
 	}
 
-	createPlugin(): void | Plugin<any> {
-		const key = new PluginKey('addHeadingId');
+	createPlugins() {
+		const key = new PluginKey('add_heading_id');
 		const plugin = new Plugin({
 			key,
 			appendTransaction: (transactions, oldState, newState) => {
@@ -126,7 +126,7 @@ export class HeadingExtension extends NodeExtension {
 				return tr;
 			},
 		});
-		return plugin;
+		return [plugin];
 	}
 }
 

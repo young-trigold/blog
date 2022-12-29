@@ -1,13 +1,13 @@
 import { baseKeymap } from 'prosemirror-commands';
-import { keymap } from 'prosemirror-keymap';
-import { Plugin } from 'prosemirror-state';
+import { keydownHandler } from 'prosemirror-keymap';
+import { Plugin, PluginKey } from 'prosemirror-state';
 import { extensionName } from '../../decorators/extensionName';
 import { Extension, KeyMap, PlainExtension } from '../../type';
 
-@extensionName('keymap')
+@extensionName('key_map')
 class KeyMapExtension extends PlainExtension {
-	createPlugin(): void | Plugin<any> {
-		if (!this.editorStore) return;
+	createPlugins() {
+		if (!this.editorStore) return [];
 		const createKeyMap = (result: KeyMap, extension: Extension) => {
 			if (extension.createKeyMap)
 				result = {
@@ -25,8 +25,16 @@ class KeyMapExtension extends PlainExtension {
 			...nodeKeyMap,
 			...pluginKeyMap,
 		};
-		const keyMapPlugin = keymap(keyMap);
-		return keyMapPlugin;
+		const key = new PluginKey(KeyMapExtension.extensionName);
+		const plugin = new Plugin({
+			key,
+			props: {
+				handleKeyDown(view, event) {
+					return keydownHandler(keyMap)(view, event);
+				},
+			},
+		});
+		return [plugin];
 	}
 }
 
