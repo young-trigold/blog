@@ -183,7 +183,6 @@ const Editor: React.FC<EditorProps> = (props) => {
 			onChange,
 			handleDOMEvents,
 		});
-		console.debug(editorStore);
 		dispatch(setEditorStore(editorStore));
 
 		return () => {

@@ -1,4 +1,5 @@
 import { NodeSpec } from 'prosemirror-model';
+import { liftListItem, sinkListItem, splitListItem } from 'prosemirror-schema-list';
 import { extensionName } from '../../decorators/extensionName';
 import ParagraphExtension from '../../presetExtensions/nodeExtensions/ParagraphExtension';
 import { ExtensionTag, KeyMap, NodeExtension } from '../../type';
@@ -22,7 +23,15 @@ export class ListItemExtension extends NodeExtension {
 		return {
 			Enter: {
 				priority: 2,
-				command: () => false,
+				command: splitListItem(this.type),
+			},
+			Tab: {
+				priority: 2,
+				command: sinkListItem(this.type),
+			},
+			'Shift-Tab': {
+				priority: 2,
+				command: liftListItem(this.type),
 			},
 		};
 	}
