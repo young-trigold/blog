@@ -1,6 +1,5 @@
 import { toggleMark } from 'prosemirror-commands';
 import { MarkSpec } from 'prosemirror-model';
-import { Command } from 'prosemirror-state';
 import { extensionName } from '../decorators/extensionName';
 import { CommandType, ExtensionTag, MarkExtension } from '../type';
 import { SubExtension } from './SubExtension';
@@ -8,7 +7,7 @@ import { SubExtension } from './SubExtension';
 @extensionName('sup')
 export class SupExtension extends MarkExtension {
 	createMarkSpec(): MarkSpec {
-		const supMarkSpec: MarkSpec = {
+		return {
 			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			excludes: [SubExtension].map((extension) => extension.extensionName).join(' '),
 			parseDOM: [
@@ -20,8 +19,6 @@ export class SupExtension extends MarkExtension {
 				return ['sup', 0];
 			},
 		};
-
-		return supMarkSpec;
 	}
 
 	toggleSup() {

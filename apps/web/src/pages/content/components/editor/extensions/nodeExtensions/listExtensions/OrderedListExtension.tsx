@@ -8,7 +8,7 @@ import { ListItemExtension } from './ListItemExtension';
 @extensionName('ordered_list')
 export class OrderedListExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
-		const orderedListSpec: NodeSpec = {
+		return {
 			draggable: false,
 			attrs: {
 				order: {
@@ -30,8 +30,6 @@ export class OrderedListExtension extends NodeExtension {
 				return node.attrs.order === 1 ? ['ol', 0] : ['ol', { 'data-start': node.attrs.order }, 0];
 			},
 		};
-
-		return orderedListSpec;
 	}
 
 	createInputRules(): InputRule[] {

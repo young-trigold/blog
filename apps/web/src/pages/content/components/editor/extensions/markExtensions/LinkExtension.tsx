@@ -5,7 +5,7 @@ import { MarkExtension } from '../type';
 @extensionName('link')
 export class LinkExtension extends MarkExtension {
 	createMarkSpec(): MarkSpec {
-		const linkMarkSpec: MarkSpec = {
+		return {
 			attrs: {
 				href: {
 					default: '',
@@ -27,7 +27,5 @@ export class LinkExtension extends MarkExtension {
 				return ['a', { href: mark.attrs.href }, 0];
 			},
 		};
-
-		return linkMarkSpec;
 	}
 }

@@ -7,7 +7,7 @@ import { THeadExtension } from './TheadExtension';
 @extensionName('table')
 export class TableExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
-		const tableSpec: NodeSpec = {
+		return {
 			isolating: true,
 			tableRole: 'table',
 			group: [ExtensionTag.Block].join(' '),
@@ -22,7 +22,5 @@ export class TableExtension extends NodeExtension {
 				return ['table', 0];
 			},
 		};
-
-		return tableSpec;
 	}
 }

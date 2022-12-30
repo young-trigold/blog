@@ -17,14 +17,14 @@ export abstract class Extension {
 	createPlugins?(): ProseMirrorPlugin[];
 	createKeyMap?(): KeyMap;
 	createCommands?(): {
-    [commandName: string]: (...args: any[]) => Command;
-  };
+		[commandName: string]: (...args: any[]) => Command;
+	};
 }
 
 export type CommandType<T extends Extension> = {
-  [commandName in keyof ReturnType<NonNullable<T['createCommands']>>]: (
-    ...args: Parameters<ReturnType<NonNullable<T['createCommands']>>[commandName]>
-  ) => void;
+	[commandName in keyof ReturnType<NonNullable<T['createCommands']>>]: (
+		...args: Parameters<ReturnType<NonNullable<T['createCommands']>>[commandName]>
+	) => void;
 };
 
 export abstract class MarkExtension extends Extension {
@@ -58,6 +58,7 @@ export enum FunctionKeys {
 	Alt = 'Alt',
 	Backspace = 'Backspace',
 	Tab = 'Tab',
+	Enter = 'Enter',
 }
 export enum LetterKeys {
 	z = 'z',
@@ -78,10 +79,14 @@ export enum SymbolKeys {
 	'`' = '`',
 }
 
-export type KeyMap = { [key: string]: Command | {
-	priority: number;
-	command: Command;
-}};
+export type KeyMap = {
+	[key: string]:
+		| Command
+		| {
+				priority: number;
+				command: Command;
+		  };
+};
 
 export enum ExtensionTag {
 	LastNodeCompatible = 'lastNodeCompatible',

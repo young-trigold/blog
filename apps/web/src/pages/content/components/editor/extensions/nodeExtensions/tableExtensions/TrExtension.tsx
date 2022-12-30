@@ -7,7 +7,7 @@ import { ThExtension } from './ThExtension';
 @extensionName('tr')
 export class TrExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
-		const trSpec: NodeSpec = {
+		return {
 			tableRole: 'row',
 			content: `(${TdExtension.extensionName}|${ThExtension.extensionName})*`,
 			parseDOM: [
@@ -19,7 +19,5 @@ export class TrExtension extends NodeExtension {
 				return ['tr', 0];
 			},
 		};
-
-		return trSpec;
 	}
 }

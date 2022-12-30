@@ -5,12 +5,19 @@ import { MarkPasteRule } from 'prosemirror-paste-rules';
 import { environment } from '../../utils/enviroment';
 import { markInputRule } from '../../utils/inputRule';
 import { extensionName } from '../decorators/extensionName';
-import { CommandType, ExtensionTag, FunctionKeys, KeyMap, MarkExtension, SymbolKeys } from '../type';
+import {
+	CommandType,
+	ExtensionTag,
+	FunctionKeys,
+	KeyMap,
+	MarkExtension,
+	SymbolKeys,
+} from '../type';
 
 @extensionName('code')
 export class CodeExtension extends MarkExtension {
 	createMarkSpec(): MarkSpec {
-		const codeMarkSpec: MarkSpec = {
+		return {
 			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			excludes: '_',
 			parseDOM: [
@@ -22,8 +29,6 @@ export class CodeExtension extends MarkExtension {
 				return ['code', 0];
 			},
 		};
-
-		return codeMarkSpec;
 	}
 
 	createInputRules(): InputRule[] {
@@ -60,7 +65,7 @@ export class CodeExtension extends MarkExtension {
 declare global {
 	namespace EditorStore {
 		interface Commands {
-			code: CommandType<CodeExtension>
+			code: CommandType<CodeExtension>;
 		}
 	}
 }

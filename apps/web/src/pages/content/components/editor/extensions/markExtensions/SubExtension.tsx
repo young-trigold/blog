@@ -7,7 +7,7 @@ import { SupExtension } from './SupExtension';
 @extensionName('sub')
 export class SubExtension extends MarkExtension {
 	createMarkSpec(): MarkSpec {
-		const subMarkSpec: MarkSpec = {
+		return {
 			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			excludes: [SupExtension].map((extension) => extension.extensionName).join(' '),
 			parseDOM: [
@@ -19,8 +19,6 @@ export class SubExtension extends MarkExtension {
 				return ['sub', 0];
 			},
 		};
-
-		return subMarkSpec;
 	}
 
 	toggleSub() {

@@ -7,7 +7,7 @@ import { cellAttrs, getCellAttrs, setCellAttrs } from './uitls';
 @extensionName('th')
 export class ThExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
-		const thSpec: NodeSpec = {
+		return {
 			attrs: cellAttrs,
 			tableRole: 'header_cell',
 			isolating: true,
@@ -22,7 +22,5 @@ export class ThExtension extends NodeExtension {
 				return ['th', setCellAttrs(node, cellAttrs), 0];
 			},
 		};
-
-		return thSpec;
 	}
 }

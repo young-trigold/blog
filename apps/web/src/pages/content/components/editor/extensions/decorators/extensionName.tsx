@@ -1,4 +1,4 @@
-import { Extension } from "../type";
+import { Extension } from '../type';
 
 export const extensionName = (name: string) => {
 	const decorator = <
@@ -8,14 +8,14 @@ export const extensionName = (name: string) => {
 	>(
 		constructor: F,
 	) => {
-		const Extension = class extends constructor {
+		const ExtensionWithName = class extends constructor {
 			static extensionName = name;
 			get name() {
 				return name;
 			}
 		};
 
-		return Extension;
+		return ExtensionWithName;
 	};
 
 	return decorator;

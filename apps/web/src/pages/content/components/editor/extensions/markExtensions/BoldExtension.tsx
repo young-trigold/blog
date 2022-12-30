@@ -5,12 +5,19 @@ import { MarkPasteRule } from 'prosemirror-paste-rules';
 import { environment } from '../../utils/enviroment';
 import { markInputRule } from '../../utils/inputRule';
 import { extensionName } from '../decorators/extensionName';
-import { CommandType, ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
+import {
+	CommandType,
+	ExtensionTag,
+	FunctionKeys,
+	KeyMap,
+	LetterKeys,
+	MarkExtension,
+} from '../type';
 
 @extensionName('bold')
 export class BoldExtension extends MarkExtension {
 	createMarkSpec(): MarkSpec {
-		const boldMarkSpec: MarkSpec = {
+		return {
 			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			parseDOM: [
 				{
@@ -24,8 +31,6 @@ export class BoldExtension extends MarkExtension {
 				return ['strong', 0];
 			},
 		};
-
-		return boldMarkSpec;
 	}
 
 	createInputRules(): InputRule[] {
