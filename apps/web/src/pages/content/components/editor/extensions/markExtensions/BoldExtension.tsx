@@ -66,6 +66,7 @@ export class BoldExtension extends MarkExtension {
 		return environment.isMac ? keyMapForMac : keyMapForWin;
 	}
 }
+
 declare global {
 	namespace EditorStore {
 		interface Commands {

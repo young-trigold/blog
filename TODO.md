@@ -1,53 +1,130 @@
-# ~~编辑器插件化(已实现)~~
+# 编辑器插件化架构(已实现)
 
-- 将每一个编辑功能点（如 bold，加粗）的 scheme(mark/node), inputrules, shortcuts, commands, plugin 逻辑集中到一个对象上。这个对象就称为 extension。
+富文本编辑器插件化的 idea 如下：
+
+- 将每一个编辑功能点（如 bold，加粗）的 scheme(mark/node), inputrules, pasteRule, keymap, commands, nodeview, plugin 等逻辑集中到一个对象上。这个对象就称为 extension。
 - extension 可以配置化地安装到一个编辑器。
 
-以下是一个实际例子。
-
-BoldExtension
+以下例子展示了标题编辑功能点的插件：**HeadingExtension**：
 
 ```tsx
-@extensionName('bold')
-export class BoldExtension extends MarkExtension {
-	createMarkSpec(): MarkSpec {
-		const boldMarkSpec: MarkSpec = {
-			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
-			parseDOM: [
-				{
-					tag: 'strong',
+@extensionName('heading')
+export class HeadingExtension extends NodeExtension {
+	createNodeSpec(): NodeSpec {
+		return {
+			attrs: {
+				level: {
+					default: 1,
 				},
-				{
-					tag: 'b',
+				headingId: {
+					default: null,
 				},
-			],
-			toDOM() {
-				return ['strong', 0];
+			},
+			content: `${ExtensionTag.Inline}*`,
+			marks: [
+				ItalicExtension,
+				CodeExtension,
+				LinkExtension,
+				SubExtension,
+				SupExtension,
+				UnderlineExtension,
+			]
+				.map((Extension) => Extension.extensionName)
+				.join(' '),
+			group: [ExtensionTag.Block, ExtensionTag.TextBlock, ExtensionTag.FormattingNode].join(' '),
+			draggable: false,
+			defining: true,
+			parseDOM: Array.from({ length: HeadingMaxLevel }).map(
+				(_, i) =>
+					({
+						tag: `h${i + 1}`,
+						getAttrs(node) {
+							if (!(node instanceof HTMLHeadingElement)) return false;
+							const headingId = node.getAttribute('data-heading-id');
+							return { headingId, level: i + 1 };
+						},
+					} as ParseRule),
+			),
+			toDOM(node) {
+				return [
+					`h${node.attrs.level}`,
+					{
+						'data-heading-id': node.attrs.headingId,
+					},
+					0,
+				];
 			},
 		};
-
-		return boldMarkSpec;
 	}
 
 	createInputRules(): InputRule[] {
-		return [markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, this.type)];
+		const inputRule = textblockTypeInputRule(
+			new RegExp(`^(#{1,${HeadingMaxLevel}})\\s$`),
+			this.type,
+			(match: RegExpMatchArray) => ({
+				level: match[1].length,
+				headingId: getUniqueId(),
+			}),
+		);
+		return [inputRule];
 	}
 
-	createKeyMap(): KeyMap {
-		const keyMapForWin: KeyMap = {
-			[`${FunctionKeys.Ctrl}-${LetterKeys.b}`]: toggleMark(this.type),
-		};
+	createPasteRules(): PasteRule[] {
+		const pasteRules: PasteRule[] = Array.from({ length: HeadingMaxLevel }).map((_, i) => ({
+			type: 'node',
+			nodeType: this.type,
+			regexp: new RegExp(`^#{${i + 1}}\\s([\\s\\w]+)$`),
+			getAttributes: () => ({ level: i + 1 }),
+			startOfTextBlock: true,
+		}));
+		return pasteRules;
+	}
 
-		const keyMapForMac: KeyMap = {
-			[`${FunctionKeys.Mod}-${LetterKeys.b}`]: toggleMark(this.type),
-		};
+	toggleHeading(level: number) {
+		return toggleBlockItem({
+			type: this.type,
+			attrs: {
+				level,
+			},
+		});
+	}
 
-		return environment.isMac ? keyMapForMac : keyMapForWin;
+	createCommands() {
+		return {
+			toggle: this.toggleHeading.bind(this),
+		};
+	}
+
+	createPlugins() {
+		const key = new PluginKey('add_heading_id');
+		const plugin = new Plugin({
+			key,
+			appendTransaction: (transactions, oldState, newState) => {
+				let tr = newState.tr;
+				const headingIdCache = new Set();
+				newState.doc.descendants((node, position) => {
+					if (!(node.type.name === HeadingExtension.extensionName)) return;
+					const headingId = node.attrs.headingId;
+					if (!headingId || headingIdCache.has(headingId)) {
+						const newHeadingId = getUniqueId();
+						tr = tr.setNodeMarkup(position, node.type, {
+							...node.attrs,
+							headingId: newHeadingId,
+						});
+					} else {
+						headingIdCache.add(headingId);
+					}
+				});
+
+				return tr;
+			},
+		});
+		return [plugin];
 	}
 }
 ```
 
-配置化地安装到一个编辑器。
+插件可以配置化地安装到一个编辑器：
 
 ```tsx
 const extensions = [
@@ -75,4 +152,4 @@ const extensions = [
 />;
 ```
 
-# 渲染方式迁移至 Nextjs SSR
+# 迁移至 NextJS + NestJS 框架
