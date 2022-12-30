@@ -6,7 +6,7 @@ import { TrExtension } from './TrExtension';
 @extensionName('tbody')
 export class TBodyExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
-		const tbodySpec: NodeSpec = {
+		return {
 			isolating: true,
 			tableRole: 'table_body',
 			group: [ExtensionTag.Block].join(' '),
@@ -21,7 +21,5 @@ export class TBodyExtension extends NodeExtension {
 				return ['tbody', 0];
 			},
 		};
-
-		return tbodySpec;
 	}
 }

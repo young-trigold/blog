@@ -1,12 +1,13 @@
 import { NodeSpec } from 'prosemirror-model';
+import { liftListItem, sinkListItem, splitListItem } from 'prosemirror-schema-list';
 import { extensionName } from '../../decorators/extensionName';
 import ParagraphExtension from '../../presetExtensions/nodeExtensions/ParagraphExtension';
-import { ExtensionTag, NodeExtension } from '../../type';
+import { ExtensionTag, FunctionKeys, KeyMap, NodeExtension } from '../../type';
 
 @extensionName('list_item')
 export class ListItemExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
-		const listItemSpec: NodeSpec = {
+		return {
 			defining: true,
 			content: `${ParagraphExtension.extensionName} ${ExtensionTag.Block}*`,
 			parseDOM: [{ tag: 'li' }],
@@ -14,7 +15,22 @@ export class ListItemExtension extends NodeExtension {
 				return ['li', 0];
 			},
 		};
+	}
 
-		return listItemSpec;
+	createKeyMap(): KeyMap {
+		return {
+			[`${FunctionKeys.Enter}`]: {
+				priority: 2,
+				command: splitListItem(this.type),
+			},
+			[`${FunctionKeys.Tab}`]: {
+				priority: 2,
+				command: sinkListItem(this.type),
+			},
+			[`${FunctionKeys.Shift}-${FunctionKeys.Tab}`]: {
+				priority: 2,
+				command: liftListItem(this.type),
+			},
+		};
 	}
 }

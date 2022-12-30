@@ -170,9 +170,9 @@ const Editor: React.FC<EditorProps> = (props) => {
 	const dispatch = useAppDispatch();
 	useEffect(() => {
 		const finalExtensions = [
+			...presetPlainExtensions.map((Extension) => new Extension()),
 			...presetNodeExtensions.map((Extension) => new Extension()),
 			...extensions,
-			...presetPlainExtensions.map((Extension) => new Extension()),
 		];
 		const editorStore = new EditorStore(finalExtensions);
 		const state = editorStore.createEditorState(doc);

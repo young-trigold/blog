@@ -6,12 +6,19 @@ import { Command } from 'prosemirror-state';
 import { environment } from '../../utils/enviroment';
 import { markInputRule } from '../../utils/inputRule';
 import { extensionName } from '../decorators/extensionName';
-import { CommandType, ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
+import {
+	CommandType,
+	ExtensionTag,
+	FunctionKeys,
+	KeyMap,
+	LetterKeys,
+	MarkExtension,
+} from '../type';
 
 @extensionName('italic')
 export class ItalicExtension extends MarkExtension {
 	createMarkSpec(): MarkSpec {
-		const italicMarkSpec: MarkSpec = {
+		return {
 			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			parseDOM: [
 				{
@@ -25,8 +32,6 @@ export class ItalicExtension extends MarkExtension {
 				return ['em', 0];
 			},
 		};
-
-		return italicMarkSpec;
 	}
 
 	createInputRules(): InputRule[] {

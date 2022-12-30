@@ -6,11 +6,11 @@ import { Extension, PlainExtension } from '../../type';
 class PluginExtension extends PlainExtension {
 	onEditorStoreCreate(): void {
 		if (!this.editorStore) return;
-		const createPlugin = (extension: Extension) => extension.createPlugin?.();
-		const markPlugins = this.editorStore.markExtensions.map(createPlugin);
-		const nodePlugins = this.editorStore.nodeExtensions.map(createPlugin);
-		const plainPlugins = this.editorStore.plainExtensions.map(createPlugin);
-		const plugins = [...markPlugins, ...nodePlugins, ...plainPlugins].filter(Boolean);
+		const createPlugins = (extension: Extension) => extension.createPlugins?.();
+		const markPlugins = this.editorStore.markExtensions.map(createPlugins);
+		const nodePlugins = this.editorStore.nodeExtensions.map(createPlugins);
+		const plainPlugins = this.editorStore.plainExtensions.map(createPlugins);
+		const plugins = [...markPlugins, ...nodePlugins, ...plainPlugins].flat().filter(Boolean);
 		this.editorStore.plugins = plugins as ProseMirrorPlugin[];
 	}
 }

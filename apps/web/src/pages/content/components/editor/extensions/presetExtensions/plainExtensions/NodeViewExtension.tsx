@@ -5,8 +5,8 @@ import { PlainExtension } from '../../type';
 
 @extensionName('node_view')
 class NodeViewExtension extends PlainExtension {
-	createPlugin(): void | Plugin<any> {
-		if (!this.editorStore) return;
+	createPlugins() {
+		if (!this.editorStore) return [];
 		const key = new PluginKey(NodeViewExtension.extensionName);
 		const nodeViews = this.editorStore.nodeExtensions.reduce((result, extension) => {
 			if (extension.createNodeView) result[extension.name] = extension.createNodeView();
@@ -20,7 +20,7 @@ class NodeViewExtension extends PlainExtension {
 			},
 		});
 
-		return plugin;
+		return [plugin];
 	}
 }
 

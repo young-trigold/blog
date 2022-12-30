@@ -5,7 +5,7 @@ import { ExtensionTag, NodeExtension } from '../type';
 @extensionName('image')
 export class ImageExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
-		const imageSpec: NodeSpec = {
+		return {
 			inline: true,
 			draggable: true,
 			marks: '',
@@ -30,7 +30,5 @@ export class ImageExtension extends NodeExtension {
 				return ['img', { src }];
 			},
 		};
-
-		return imageSpec;
 	}
 }

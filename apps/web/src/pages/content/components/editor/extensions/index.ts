@@ -12,20 +12,21 @@ import PluginExtension from './presetExtensions/plainExtensions/PluginExtension'
 import SchemaExtension from './presetExtensions/plainExtensions/SchemaExtension';
 import { TrailingNodeExtension } from './presetExtensions/plainExtensions/trailingNodeExtension';
 
-// 预置插件的顺序不可变动
 export const presetNodeExtensions = [DocExtension, TextExtension, ParagraphExtension];
 
+// 以下顺序不可变动
+// SchemaExtension > PluginExtension > CommandExtension
 export const presetPlainExtensions = [
 	SchemaExtension,
+	PluginExtension,
+	CommandExtension,
 	InputRuleExtension,
 	PasteRuleExtension,
+	KeyMapExtension,
 	NodeViewExtension,
-	CommandExtension,
+	DecorationExtension,
 	HistoryExtension,
 	TrailingNodeExtension,
-	KeyMapExtension,
-	DecorationExtension,
-	PluginExtension,
 ];
 
 export { BoldExtension } from './markExtensions/BoldExtension';

@@ -6,7 +6,7 @@ import { TrExtension } from './TrExtension';
 @extensionName('thead')
 export class THeadExtension extends NodeExtension {
 	createNodeSpec(): NodeSpec {
-		const theadSpec: NodeSpec = {
+		return {
 			tableRole: 'table_head',
 			isolating: true,
 			group: [ExtensionTag.Block].join(' '),
@@ -21,7 +21,5 @@ export class THeadExtension extends NodeExtension {
 				return ['thead', 0];
 			},
 		};
-
-		return theadSpec;
 	}
 }

@@ -3,12 +3,19 @@ import { MarkSpec } from 'prosemirror-model';
 import { Command } from 'prosemirror-state';
 import { environment } from '../../utils/enviroment';
 import { extensionName } from '../decorators/extensionName';
-import { CommandType, ExtensionTag, FunctionKeys, KeyMap, LetterKeys, MarkExtension } from '../type';
+import {
+	CommandType,
+	ExtensionTag,
+	FunctionKeys,
+	KeyMap,
+	LetterKeys,
+	MarkExtension,
+} from '../type';
 
 @extensionName('underline')
 export class UnderlineExtension extends MarkExtension {
 	createMarkSpec(): MarkSpec {
-		const underlineMarkSpec: MarkSpec = {
+		return {
 			group: [ExtensionTag.FormattingMark, ExtensionTag.FontStyle].join(' '),
 			parseDOM: [
 				{
@@ -19,8 +26,6 @@ export class UnderlineExtension extends MarkExtension {
 				return ['u', 0];
 			},
 		};
-
-		return underlineMarkSpec;
 	}
 
 	toggleUnderline() {
