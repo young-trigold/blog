@@ -199,3 +199,51 @@ export function wrapSelectedItems({
 
 	return true;
 }
+
+// export function toggleList(listType: NodeType, itemType: NodeType): CommandFunction {
+//   return (props) => {
+//     const { dispatch, tr } = props;
+//     const state = chainableEditorState(tr, props.state);
+//     const { $from, $to } = tr.selection;
+//     const range = $from.blockRange($to);
+
+//     if (!range) {
+//       return false;
+//     }
+
+//     const parentList = findParentNode({
+//       predicate: (node) => isList(node.type),
+//       selection: tr.selection,
+//     });
+
+//     if (
+//       // the selection range is right inside the list
+//       parentList &&
+//       range.depth - parentList.depth <= 1 &&
+//       // the selectron range is the first child of the list
+//       range.startIndex === 0
+//     ) {
+//       if (parentList.node.type === listType) {
+//         return liftListItemOutOfList(itemType)(props);
+//       }
+
+//       if (isList(parentList.node.type)) {
+//         if (listType.validContent(parentList.node.content)) {
+//           dispatch?.(tr.setNodeMarkup(parentList.pos, listType));
+//           return true;
+//         }
+
+//         // When you try to toggle a bullet list into a task list or vice versa, since these two lists
+//         // use different type of list items, you can't directly change the list type.
+//         if (deepChangeListType(tr, parentList, listType, itemType)) {
+//           dispatch?.(tr.scrollIntoView());
+//           return true;
+//         }
+
+//         return false;
+//       }
+//     }
+
+//     return wrapInList(listType)(state, dispatch);
+//   };
+// }
