@@ -57,7 +57,6 @@ const EditorContainer = styled.article`
 
   // 段落
   p {
-    text-indent: 2em;
 
     & img {
       display: block;
@@ -81,12 +80,6 @@ const EditorContainer = styled.article`
   ol,
   ul {
     padding-left: 2em;
-
-    & > li {
-      & > p {
-        text-indent: 0;
-      }
-    }
   }
 
   // 代码块
