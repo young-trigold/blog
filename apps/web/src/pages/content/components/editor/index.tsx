@@ -57,6 +57,7 @@ const EditorContainer = styled.article`
 
   // 段落
   p {
+    text-indent: 2em;
 
     & img {
       display: block;
@@ -79,22 +80,19 @@ const EditorContainer = styled.article`
   // 列表
   ol,
   ul {
-    padding-left: 2em;
+    & p {
+      text-indent: unset;
+    }
   }
 
   // 代码块
   .cm-editor {
-    font-size: 16px;
-    line-height: 1.5em;
+    font-size: 14px;
     border-radius: 6.4px;
     box-shadow: 0 0 4px ${(props) => props.theme.shadowColor};
     background-color: ${(props) => props.theme.foregroundColor};
     transition: ${(props) => props.theme.transition};
 
-    @media (max-width: 400px) {
-      font-size: 14px;
-      line-height: 1.3em;
-    }
 
     &.cm-focused {
       outline: none;
@@ -110,31 +108,8 @@ const EditorContainer = styled.article`
       border-right-color: ${(props) => props.theme.borderColor};
       user-select: none;
 
-      .cm-lineNumbers {
-      }
-
-      .cm-foldGutter {
-      }
-
       .cm-gutterElement.cm-activeLineGutter {
-        color: ${(props) => props.theme.foregroundColor};
-        background-color: ${(props) => props.theme.activeColor};
-      }
-    }
-
-    // content
-    .cm-content {
-      .cm-line {
-      }
-
-      .cm-line.cm-activeLine {
-        color: ${(props) => props.theme.foregroundColor};
-        background-color: ${(props) => props.theme.hoverColor};
-      }
-
-      ::selection {
-        color: ${(props) => props.theme.foregroundColor} !important;
-        background-color: ${(props) => props.theme.activeColor} !important;
+        color: ${(props) => props.theme.primaryColor};
       }
     }
   }

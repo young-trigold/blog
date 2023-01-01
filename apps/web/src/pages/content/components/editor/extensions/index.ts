@@ -17,16 +17,16 @@ export const presetNodeExtensions = [DocExtension, TextExtension, ParagraphExten
 // 以下顺序不可变动
 // SchemaExtension > PluginExtension > CommandExtension
 export const presetPlainExtensions = [
-	SchemaExtension,
-	PluginExtension,
-	CommandExtension,
-	InputRuleExtension,
-	PasteRuleExtension,
-	KeyMapExtension,
-	NodeViewExtension,
-	DecorationExtension,
-	HistoryExtension,
-	TrailingNodeExtension,
+  SchemaExtension,
+  PluginExtension,
+  CommandExtension,
+  InputRuleExtension,
+  PasteRuleExtension,
+  KeyMapExtension,
+  NodeViewExtension,
+  DecorationExtension,
+  HistoryExtension,
+  TrailingNodeExtension,
 ];
 
 export { BoldExtension } from './markExtensions/BoldExtension';
@@ -36,5 +36,5 @@ export { LinkExtension } from './markExtensions/LinkExtension';
 export { SubExtension } from './markExtensions/SubExtension';
 export { SupExtension } from './markExtensions/SupExtension';
 export { UnderlineExtension } from './markExtensions/UnderlineExtension';
-export { CodeBlockExtension } from './nodeExtensions/CodeBlockExtension';
+export { CodeBlockExtension } from './nodeExtensions/codeBlockExtension';
 export { HeadingExtension, HeadingMaxLevel } from './nodeExtensions/HeadingExtension';
