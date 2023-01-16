@@ -67,7 +67,7 @@ const StyledTime = styled.time`
   bottom: 3em;
 `;
 
-export interface ArticleProps {
+interface ArticleProps {
   article: ArticleInfo;
 }
 

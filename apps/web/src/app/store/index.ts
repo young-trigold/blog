@@ -6,25 +6,23 @@ import modalContainerReducer from './modals';
 import adminPageReducer from './pages/adminPage';
 import contentPageReducer from './pages/contentPage';
 import homePageReducer from './pages/homePage';
-import notePageReducer from './pages/notePage';
 import themeModeReducer from './themeMode';
 import userReducer from './user';
 
 const store = configureStore({
-	reducer: {
-		themeMode: themeModeReducer,
-		messages: messagesReducer,
-		modal: modalContainerReducer,
-		user: userReducer,
-		contentPage: contentPageReducer,
-		homePage: homePageReducer,
-		notePage: notePageReducer,
-		adminPage: adminPageReducer,
-	},
-	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware({
-			serializableCheck: false,
-		}),
+  reducer: {
+    themeMode: themeModeReducer,
+    messages: messagesReducer,
+    modal: modalContainerReducer,
+    contentPage: contentPageReducer,
+    homePage: homePageReducer,
+    adminPage: adminPageReducer,
+    user: userReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type AppState = ReturnType<typeof store.getState>;

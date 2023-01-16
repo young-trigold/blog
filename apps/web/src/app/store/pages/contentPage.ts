@@ -26,7 +26,6 @@ export type SelectionTooltipState = {
 };
 
 interface ContentPageState {
-	title: string;
 	catalog: {
 		visible: boolean;
 		headings: HeadingInfo[];
@@ -37,19 +36,15 @@ interface ContentPageState {
 		comments: CommentInfo[];
 	};
 	editor: {
-		editorContent: string | undefined;
 		editorStore: EditorStore | null;
 		plugin: {
 			insertTooltip: InsertTooltipState;
 			selectionTooltip: SelectionTooltipState;
 		};
 	};
-	loading: boolean;
-	error: null | SerializedError;
 }
 
 export const initialState: ContentPageState = {
-	title: '',
 	catalog: {
 		visible: false,
 		headings: [],
@@ -60,7 +55,6 @@ export const initialState: ContentPageState = {
 		comments: [],
 	},
 	editor: {
-		editorContent: undefined,
 		editorStore: null,
 		plugin: {
 			insertTooltip: {
@@ -80,28 +74,7 @@ export const initialState: ContentPageState = {
 			},
 		},
 	},
-	error: null,
-	loading: false,
 };
-
-interface ItemInfo {
-	title: string;
-	content: string;
-	comments: CommentInfo[];
-}
-
-export const fetchContentPageDataById = createAsyncThunk(
-	'fetchContentPageDataByIdStatus',
-	async (fetchOption: { itemId: string | undefined; isChapter: boolean }, { rejectWithValue }) => {
-		try {
-			const url = `/api/${fetchOption.isChapter ? 'notes' : 'articles'}/${fetchOption.itemId}`;
-			const res = await axios.get<ItemInfo>(url);
-			return res.data;
-		} catch (error) {
-			return rejectWithValue(error);
-		}
-	},
-);
 
 const ContentPageSlice = createSlice({
 	name: 'contentPage',
@@ -137,37 +110,15 @@ const ContentPageSlice = createSlice({
 		) => {
 			state.editor.plugin.selectionTooltip.visible = action.payload;
 		},
-		setEditorContent: (state, action: PayloadAction<string>) => {
-			state.editor.editorContent = action.payload;
-		},
 		setEditorStore: (state, action: PayloadAction<EditorStore | null>) => {
 			state.editor.editorStore = action.payload as any;
 		},
 		resetContentPage: (state) => {
-			const { catalog, comment, editor, title, error, loading } = initialState;
+			const { catalog, comment, editor } = initialState;
 			state.catalog = catalog;
 			state.comment = comment;
 			state.editor = editor as any;
-			state.title = title;
-			state.error = error;
-			state.loading = loading;
 		},
-	},
-	extraReducers(builder) {
-		builder
-			.addCase(fetchContentPageDataById.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(fetchContentPageDataById.fulfilled, (state, action) => {
-				state.title = action.payload.title;
-				state.comment.comments = action.payload.comments;
-				state.editor.editorContent = action.payload.content;
-				state.loading = false;
-			})
-			.addCase(fetchContentPageDataById.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.error;
-			});
 	},
 });
 
@@ -181,7 +132,6 @@ export const {
 	setInsertTooltip,
 	setSelectionTooltip,
 	setSelectionTooltipVisible,
-	setEditorContent,
 	setEditorStore,
 	resetContentPage,
 } = ContentPageSlice.actions;

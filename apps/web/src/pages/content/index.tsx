@@ -5,17 +5,16 @@ import styled from 'styled-components';
 
 import { AppState, useAppDispatch } from '@/app/store';
 import {
-	ContentPageContext,
-	fetchContentPageDataById,
-	resetContentPage,
-	setCurrentHeadingId,
-	setInsertTooltip,
-	setInsertTooltipVisible,
-	setSelectionTooltip,
-	setSelectionTooltipVisible,
+  ContentPageContext,
+  resetContentPage,
+  setCurrentHeadingId,
+  setInsertTooltip,
+  setInsertTooltipVisible,
+  setSelectionTooltip,
+  setSelectionTooltipVisible,
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
-import { message } from '@/components/Message';
+import { useGetArticle } from '@/hooks/articles/useGetArticle';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { EditorView } from 'prosemirror-view';
 import Footer from '../../components/Footer';
@@ -26,15 +25,15 @@ import CommentList from './components/comment/CommentList';
 import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
 import {
-	BoldExtension,
-	CodeBlockExtension,
-	CodeExtension,
-	HeadingExtension,
-	ItalicExtension,
-	LinkExtension,
-	SubExtension,
-	SupExtension,
-	UnderlineExtension,
+  BoldExtension,
+  CodeBlockExtension,
+  CodeExtension,
+  HeadingExtension,
+  ItalicExtension,
+  LinkExtension,
+  SubExtension,
+  SupExtension,
+  UnderlineExtension,
 } from './components/editor/extensions';
 import { ImageExtension } from './components/editor/extensions/nodeExtensions/ImageExtension';
 import { ListExtensions } from './components/editor/extensions/nodeExtensions/listExtensions';
@@ -43,154 +42,147 @@ import { HandleDOMEvents } from './components/editor/store';
 import findHeadingElementById from './components/editor/utils/findHeadingElementById';
 
 const StyledContentPage = styled.div`
-	max-height: 100%;
-	position: relative;
-	white-space: pre-wrap;
-	background-color: ${(props) => props.theme.backgroundColor};
-	transition: ${(props) => props.theme.transition};
+  max-height: 100%;
+  position: relative;
+  white-space: pre-wrap;
+  background-color: ${(props) => props.theme.backgroundColor};
+  transition: ${(props) => props.theme.transition};
 `;
 
 const MainContainer = styled.main`
-	position: relative;
-	display: flex;
-	align-items: flex-start;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
 `;
 
 interface ContentPageProps {
-	isChapter: boolean;
-	editable: boolean;
+  isChapter: boolean;
+  editable: boolean;
 }
 
 const ContentPage: React.FC<ContentPageProps> = (props) => {
-	const { isChapter, editable } = props;
-	const { itemId } = useParams();
-	const dispatch = useAppDispatch();
+  const { isChapter, editable } = props;
+  const { itemId } = useParams();
+  const dispatch = useAppDispatch();
 
-	const contentPageContext: ContentPageContext = useMemo(() => ({ isChapter }), []);
+  const contentPageContext: ContentPageContext = useMemo(() => ({ isChapter }), []);
 
-	const { loading, editor, error, catalog, title } = useSelector(
-		(state: AppState) => state.contentPage,
-	);
+  const { catalog } = useSelector((state: AppState) => state.contentPage);
+  const [currentHeadingIdSearchParam, setCurrentHeadingIdSearchParam] = useSearchParams();
+  const isFirstRef = useRef(true);
+  useEffect(() => {
+    if (!isFirstRef.current) return;
+    const initialHeadingIdFromURL = currentHeadingIdSearchParam.get('currentHeadingId');
+    const currentHeadingElement = findHeadingElementById(initialHeadingIdFromURL ?? '');
+    if (currentHeadingElement) {
+      currentHeadingElement.scrollIntoView();
+      isFirstRef.current = false;
+      dispatch(setCurrentHeadingId(initialHeadingIdFromURL!));
+    }
+  });
 
-	const { editorContent } = editor;
+  useEffect(() => {
+    const { currentHeadingId } = catalog;
+    if (!currentHeadingId) return;
+    setCurrentHeadingIdSearchParam({ currentHeadingId }, { replace: true });
+  }, [catalog.currentHeadingId]);
 
-	if (error) message.error(error.message ?? '');
-	useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${title}`, [title]);
+  // unmount
+  useEffect(() => {
+    return () => {
+      dispatch(resetContentPage());
+    };
+  }, []);
 
-	useEffect(() => {
-		dispatch(fetchContentPageDataById({ itemId, isChapter }));
-	}, [itemId, isChapter]);
+  const onChange = useCallback((view: EditorView) => {
+    const { state } = view;
+    // 更新 insert tooltip
+    const { selection } = state;
+    const { $head, empty } = selection;
+    const { nodeAfter, nodeBefore } = $head;
+    const canInsertBlock = nodeAfter === null || nodeBefore === null;
+    const cursorPositionToViewPort = view.coordsAtPos($head.pos);
+    const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
+    dispatch(
+      setInsertTooltip({
+        visible: empty,
+        canInsertBlock,
+        position: {
+          left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+          top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
+        },
+      }),
+    );
 
-	const [currentHeadingIdSearchParam, setCurrentHeadingIdSearchParam] = useSearchParams();
-	const isFirstRef = useRef(true);
-	useEffect(() => {
-		if (!isFirstRef.current) return;
-		const initialHeadingIdFromURL = currentHeadingIdSearchParam.get('currentHeadingId');
-		const currentHeadingElement = findHeadingElementById(initialHeadingIdFromURL ?? '');
-		if (currentHeadingElement) {
-			currentHeadingElement.scrollIntoView();
-			isFirstRef.current = false;
-			dispatch(setCurrentHeadingId(initialHeadingIdFromURL!));
-		}
-	});
+    dispatch(
+      setSelectionTooltip({
+        visible: !empty,
+        position: {
+          left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+          top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
+        },
+      }),
+    );
+  }, []);
 
-	useEffect(() => {
-		const { currentHeadingId } = catalog;
-		if (!currentHeadingId) return;
-		setCurrentHeadingIdSearchParam({ currentHeadingId }, { replace: true });
-	}, [catalog.currentHeadingId]);
+  const handleDOMEvents: HandleDOMEvents = useMemo(
+    () => ({
+      blur: () => {
+        dispatch(setInsertTooltipVisible(false));
+        dispatch(setSelectionTooltipVisible(false));
+      },
+    }),
+    [],
+  );
 
-	// unmount
-	useEffect(() => {
-		return () => {
-			dispatch(resetContentPage());
-		};
-	}, []);
+  const extensions = useMemo(
+    () => [
+      new BoldExtension(),
+      new ItalicExtension(),
+      new UnderlineExtension(),
+      new LinkExtension(),
+      new SubExtension(),
+      new SupExtension(),
+      new CodeExtension(),
+      new HeadingExtension(),
+      new CodeBlockExtension(),
+      new ImageExtension(),
+      ...ListExtensions.map((Extension) => new Extension()),
+      ...TableExtensions.map((Extension) => new Extension()),
+    ],
+    [],
+  );
 
-	const onChange = useCallback((view: EditorView) => {
-		const { state } = view;
-		// 更新 insert tooltip
-		const { selection } = state;
-		const { $head, empty } = selection;
-		const { nodeAfter, nodeBefore } = $head;
-		const canInsertBlock = nodeAfter === null || nodeBefore === null;
-		const cursorPositionToViewPort = view.coordsAtPos($head.pos);
-		const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
-		dispatch(
-			setInsertTooltip({
-				visible: empty,
-				canInsertBlock,
-				position: {
-					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-					top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
-				},
-			}),
-		);
+  const { isLoading, isError, error, data: item } = useGetArticle(itemId, isChapter);
+  useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${item?.title}`, [item?.title]);
 
-		dispatch(
-			setSelectionTooltip({
-				visible: !empty,
-				position: {
-					left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-					top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
-				},
-			}),
-		);
-	}, []);
+  if (isLoading) return <LoadingIndicator />;
+  if (isError) return <span>{(error as Error).message}</span>;
 
-	const handleDOMEvents: HandleDOMEvents = useMemo(
-		() => ({
-			blur: () => {
-				dispatch(setInsertTooltipVisible(false));
-				dispatch(setSelectionTooltipVisible(false));
-			},
-		}),
-		[],
-	);
-
-	const extensions = useMemo(
-		() => [
-			new BoldExtension(),
-			new ItalicExtension(),
-			new UnderlineExtension(),
-			new LinkExtension(),
-			new SubExtension(),
-			new SupExtension(),
-			new CodeExtension(),
-			new HeadingExtension(),
-			new CodeBlockExtension(),
-			new ImageExtension(),
-			...ListExtensions.map((Extension) => new Extension()),
-			...TableExtensions.map((Extension) => new Extension()),
-		],
-		[],
-	);
-
-	if (loading) return <LoadingIndicator />;
-	return (
-		<ContentPageContext.Provider value={contentPageContext}>
-			<StyledContentPage>
-				<Header />
-				<ContentContainer>
-					<MainContainer>
-						<Catalog />
-						<Editor
-							extensions={extensions}
-							doc={editorContent}
-							editable={editable}
-							autoFocus={true}
-							onChange={onChange}
-							handleDOMEvents={handleDOMEvents}
-						/>
-						<CommentList />
-						{editable && <ActionBar />}
-						<CatalogButton />
-					</MainContainer>
-					<Footer />
-				</ContentContainer>
-			</StyledContentPage>
-		</ContentPageContext.Provider>
-	);
+  return (
+    <ContentPageContext.Provider value={contentPageContext}>
+      <StyledContentPage>
+        <Header />
+        <ContentContainer>
+          <MainContainer>
+            <Catalog />
+            <Editor
+              extensions={extensions}
+              doc={item?.content}
+              editable={editable}
+              autoFocus={true}
+              onChange={onChange}
+              handleDOMEvents={handleDOMEvents}
+            />
+            <CommentList />
+            {editable && <ActionBar />}
+            <CatalogButton />
+          </MainContainer>
+          <Footer />
+        </ContentContainer>
+      </StyledContentPage>
+    </ContentPageContext.Provider>
+  );
 };
 
 export default ContentPage;
