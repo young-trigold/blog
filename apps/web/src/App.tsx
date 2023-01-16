@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from 'styled-components';
 
 import RouterPart from './app/routes';
-import { useAppSelector } from './app/store';
+import { useAppDispatch, useAppSelector } from './app/store';
+import { getUserInfo } from './app/store/user';
+import watchedLocalStorage from './app/store/watchedLocalStorage';
 import GlobalStyle from './app/theme/GlobalStyle';
 import themes from './app/theme/themes';
 import { MessageContainer } from './components/Message';
@@ -24,6 +26,12 @@ const client = new QueryClient({
 const App = () => {
   const themeMode = useAppSelector((state) => state.themeMode.themeMode);
   const theme = useMemo(() => themes[themeMode], [themeMode]);
+  const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		const user = watchedLocalStorage.getItem<{ token: string }>('user');
+		if (user) dispatch(getUserInfo());
+	}, []);
 
   return (
     <QueryClientProvider client={client}>
