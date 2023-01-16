@@ -1,12 +1,11 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { useAppSelector } from '@/app/store';
 import Footer from '@/components/Footer';
 import Header, { HeaderHeight } from '@/components/Header';
 import LoadingIndicator from '@/components/LodingIndicator';
+import { useGetNotes } from '@/hooks/notes/useGetNotes';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
-import { useMemo } from 'react';
 import { CommentInfo } from '../content/components/comment/CommentList';
 import Chapter from './components/Chapter';
 
@@ -46,11 +45,14 @@ export interface ChapterInfo {
 
 const ChapterListPage: React.FC = () => {
 	const { noteTitle } = useParams();
-	const { notes } = useAppSelector((state) => state.notePage);
-	const chapters = useMemo(() => notes.find((note) => note.title === noteTitle)?.chapters, [notes]);
-
 	useDocumentTitle(`笔记 - ${noteTitle}`, [noteTitle]);
 
+  const { isLoading, isError, error, data: notes } = useGetNotes();
+  const chapters = notes?.find((note) => note.title === noteTitle)?.chapters;
+  
+  if (isLoading) return <LoadingIndicator />;
+  if (isError) return <span>{(error as Error).message}</span>;
+	
 	return (
 		<StyledChapterListPage>
 			<Header />
