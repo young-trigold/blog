@@ -87,6 +87,12 @@ const StyledDeleteButton = styled.button`
   background-size: cover;
   cursor: pointer;
   transform: translate(50%, -50%);
+  z-index: 1;
+  transition: ${(props) => props.theme.transition};
+
+  &:active {
+    transform: translate(50%, -50%) scale(0.9);
+  }
 `;
 
 interface ArticleProps {
@@ -101,7 +107,8 @@ const Article = (props: ArticleProps) => {
     navigate(`/articles/${article._id}`);
   };
 
-  const handleDelete = async () => {
+  const handleDelete: React.MouseEventHandler = async (event) => {
+    event.stopPropagation();
     const userToken = getUserToken();
     if (!userToken) return message.warn('请先登录!');
     const { _id: articleId } = article;
@@ -112,7 +119,6 @@ const Article = (props: ArticleProps) => {
         },
       });
       message.success('删除成功!');
-      window.location.reload();
     } catch (error) {
       if (axios.isAxiosError(error))
         return message.error((error.response?.data as { message: string })?.message);

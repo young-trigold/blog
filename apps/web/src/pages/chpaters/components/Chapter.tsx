@@ -1,5 +1,3 @@
-import { debounce } from 'lodash';
-import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -10,6 +8,7 @@ import EyeOpen from '@/static/icon/eye-open.png';
 import LikeIcon from '@/static/icon/like.png';
 import getUserToken from '@/utils/getUserToken';
 import axios from 'axios';
+import { useRef } from 'react';
 import { ChapterInfo } from '..';
 
 const StyledChapter = styled.article`
@@ -36,7 +35,6 @@ const StyledChapter = styled.article`
 
   &:active {
     box-shadow: 3px 0px 5px ${(props) => props.theme.shadowColor};
-    transform: scale(0.9);
   }
 `;
 
@@ -63,6 +61,12 @@ const StyledDeleteButton = styled.button`
   background-size: cover;
   cursor: pointer;
   transform: translate(50%, -50%);
+  z-index: 1;
+  transition: ${(props) => props.theme.transition};
+
+  &:active {
+    transform: translate(50%, -50%) scale(0.9);
+  }
 `;
 
 interface ChapterProps {
@@ -72,21 +76,14 @@ interface ChapterProps {
 
 const Chapter: React.FC<ChapterProps> = (props) => {
   const { chapter, noteId } = props;
-
   const navigate = useNavigate();
 
-  const handleClick = useCallback(
-    debounce(
-      () => {
-        navigate(`/chapters/${chapter._id}`);
-      },
-      200,
-      { leading: true },
-    ),
-    [chapter._id],
-  );
+  const handleClick: React.MouseEventHandler = async (event) => {
+    navigate(`/chapters/${chapter._id}`);
+  };
 
-  const handleDelete = async () => {
+  const handleDelete: React.MouseEventHandler = async (event) => {
+    event.stopPropagation();
     const userToken = getUserToken();
     if (!userToken) return message.warn('请先登录!');
     try {
@@ -119,7 +116,11 @@ const Chapter: React.FC<ChapterProps> = (props) => {
         </div>
       </StyledInfoBar>
 
-      {info?.role === 'admin' && <StyledDeleteButton onClick={handleDelete} />}
+      {info?.role === 'admin' && (
+        <StyledDeleteButton
+          onClick={handleDelete}
+        />
+      )}
     </StyledChapter>
   );
 };
