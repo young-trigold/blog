@@ -3,8 +3,7 @@ import React, { memo, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
 import Modal from '@/components/Modal';
-import { NoteOption } from 'src/pages/admin/components/AdminPage';
-import AddChapterForm from './AddChapterForm';
+import AddChapterForm, { NoteOption } from './AddChapterForm';
 
 export interface AddChapterModalProps {
 	currentOption: NoteOption;

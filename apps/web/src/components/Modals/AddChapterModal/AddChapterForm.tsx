@@ -5,8 +5,12 @@ import { useAppDispatch } from '@/app/store';
 import { Button, ButtonBar } from '@/components/Button';
 import Input from '@/components/Input';
 import { message } from '@/components/Message';
-import { NoteOption } from 'src/pages/admin/components/AdminPage';
 import { closeModal, CurrentModal, openModal } from '@/app/store/modals';
+
+export interface NoteOption {
+  _id: string;
+  title: string;
+}
 
 interface AddChapterFormProps {
 	currentOption: NoteOption;
