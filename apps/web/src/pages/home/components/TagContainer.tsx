@@ -15,11 +15,13 @@ const StyledTagContainer = styled.nav<StyledTagContainerProps>`
   z-index: 2;
   background-color: transparent;
   user-select: none;
-  display: flex;
-  flex-wrap: wrap;
   background-color: ${(props) => props.theme.foregroundColor};
-  justify-content: center;
   box-shadow: 0 0 2px ${(props) => props.theme.shadowColor};
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 4em);
+  grid-gap: 1em;
+  justify-content: space-between;
+  padding: 0.5em 1em;
 
   & > button:nth-of-type(${(props) => props.tagIndex + 1}) {
     color: ${(props) => props.theme.backgroundColor};
@@ -29,12 +31,15 @@ const StyledTagContainer = styled.nav<StyledTagContainerProps>`
 `;
 
 const StyledTag = styled.button`
+  width: 4em;
   user-select: none;
   font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: no-wrap;
   color: ${(props) => props.theme.textColor};
   border: none;
   border-radius: 1em;
-  margin: 0.5em;
   cursor: pointer;
   background-color: ${(props) => props.theme.foregroundColor};
 
