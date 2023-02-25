@@ -55,7 +55,7 @@ const Footer: React.FC = () => {
 					<span>by Trigold. All rights reserved.</span>
 				</p>
 				<p>
-					<a href="https://beian.miit.gov.cn/#/Integrated/index">陕ICP备2022000714号</a>
+					<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">陕ICP备2022000714号</a>
 				</p>
 			</section>
 			<Divider type={notWide ? DividerType.Horizontal : DividerType.Vertical} />
@@ -63,20 +63,20 @@ const Footer: React.FC = () => {
 				<h2>联系方式</h2>
 				<address>
 					<span>Gmail:</span>
-					<a href="mailto:cluscandlot@gmail.com">cluscandlot@gmail.com</a>
+					<a href="mailto:cluscandlot63@gmail.com" target="_blank">cluscandlot63@gmail.com</a>
 				</address>
 				<address>
-					<a href="https://github.com/young-trigold">我的 Github</a>
+					<a href="https://github.com/young-trigold" target="_blank">我的 Github</a>
 				</address>
 			</StyledContact>
 			<Divider type={notWide ? DividerType.Horizontal : DividerType.Vertical} />
 			<nav>
 				<h2>站外链接</h2>
 				<li>
-					<a href="https://developer.mozilla.org/zh-CN/">MDN 文档</a>
+					<a href="https://developer.mozilla.org/zh-CN/" target="_blank">MDN 文档</a>
 				</li>
 				<li>
-					<a href="https://zh-hans.reactjs.org/">React 官网</a>
+					<a href="https://zh-hans.reactjs.org/" target="_blank">React 官网</a>
 				</li>
 			</nav>
 		</StyledFooter>
