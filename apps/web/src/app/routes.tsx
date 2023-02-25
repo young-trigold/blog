@@ -8,7 +8,6 @@ import HomePage from '../pages/home';
 const NotePage = React.lazy(() => import('../pages/notes'));
 const ContentPage = React.lazy(() => import('../pages/content'));
 const ChapterListPage = React.lazy(() => import('../pages/chpaters'));
-const ProtectPage = React.lazy(() => import('../pages/admin'));
 const UserPage = React.lazy(() => import('../pages/users'));
 
 const RouterPart = () => {
@@ -67,15 +66,6 @@ const RouterPart = () => {
 					element={
 						<Suspense fallback={<LoadingPage />}>
 							<ContentPage isChapter editable />
-						</Suspense>
-					}
-				/>
-
-				<Route
-					path="/admin"
-					element={
-						<Suspense fallback={<LoadingPage />}>
-							<ProtectPage />
 						</Suspense>
 					}
 				/>

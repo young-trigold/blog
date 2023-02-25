@@ -3,8 +3,12 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { message } from '@/components/Message';
+import DeleteIcon from '@/static/icon/cancel.png';
 import EyeOpen from '@/static/icon/eye-open.png';
 import LikeIcon from '@/static/icon/like.png';
+import getUserToken from '@/utils/getUserToken';
+import axios from 'axios';
 import { ChapterInfo } from '..';
 
 const StyledChapter = styled.article`
@@ -43,8 +47,30 @@ const StyledInfoBar = styled.div`
   justify-content: space-around;
 `;
 
-function Chapter(props: { chapter: ChapterInfo }) {
-  const { chapter } = props;
+const StyledDeleteButton = styled.button`
+  position: absolute;
+  top: -0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  margin: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: ${(props) => props.theme.dangeColor};
+  background-image: ${() => `url(${DeleteIcon})`};
+  background-size: cover;
+  cursor: pointer;
+  transform: translate(50%, -50%);
+`;
+
+interface ChapterProps {
+  chapter: ChapterInfo;
+  noteId: string;
+}
+
+const Chapter: React.FC<ChapterProps> = (props) => {
+  const { chapter, noteId } = props;
 
   const navigate = useNavigate();
 
@@ -56,8 +82,27 @@ function Chapter(props: { chapter: ChapterInfo }) {
       200,
       { leading: true },
     ),
-    [navigate, chapter, debounce],
+    [chapter._id],
   );
+
+  const handleDelete = async () => {
+    const userToken = getUserToken();
+    if (!userToken) return message.warn('请先登录!');
+    try {
+      await axios.delete(`/api/notes/${noteId}/${chapter._id}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      message.success('删除成功!');
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        return message.error((error.response?.data as { message: string })?.message);
+      if (error instanceof Error) return message.error(error.message);
+      return message.error(JSON.stringify(error));
+    }
+  };
 
   return (
     <StyledChapter onClick={handleClick}>
@@ -72,8 +117,9 @@ function Chapter(props: { chapter: ChapterInfo }) {
           <span>{chapter.views}</span>
         </div>
       </StyledInfoBar>
+      <StyledDeleteButton onClick={handleDelete} />
     </StyledChapter>
   );
-}
+};
 
 export default Chapter;

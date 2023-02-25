@@ -9,7 +9,9 @@ root.style.position = 'relative';
 document.body.appendChild(root);
 
 ReactDOM.createRoot(root).render(
-	<Provider store={appStore}>
-		<App />
-	</Provider>,
+  <Provider store={appStore}>
+    <App />
+  </Provider>,
 );
+
+// const { hasLogin, info } = useAppSelector((state) => state.user);

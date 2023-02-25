@@ -1,9 +1,12 @@
 import styled from 'styled-components';
-
 import { useNavigate } from 'react-router-dom';
 
+import { message } from '@/components/Message';
 import EyeOpen from '@/static/icon/eye-open.png';
 import LikeIcon from '@/static/icon/like.png';
+import DeleteIcon from '@/static/icon/cancel.png';
+import getUserToken from '@/utils/getUserToken';
+import axios from 'axios';
 import { ArticleInfo } from '..';
 
 const StyledArticle = styled.article`
@@ -20,10 +23,11 @@ const StyledArticle = styled.article`
   user-select: none;
   box-shadow: 0 0 4px ${(props) => props.theme.shadowColor};
   border: 1px solid ${(props) => props.theme.borderColor};
+  cursor: pointer;
 
   &:hover {
     box-shadow: 0 0 15px ${(props) => props.theme.shadowColor};
-    transform: translateY(-1em);
+    transform: scale(1.05);
   }
 
   @media (max-width: 400px) {
@@ -67,6 +71,23 @@ const StyledTime = styled.time`
   bottom: 3em;
 `;
 
+const StyledDeleteButton = styled.button`
+  position: absolute;
+  top: -0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  margin: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: ${(props) => props.theme.dangeColor};
+  background-image: ${() => `url(${DeleteIcon})`};
+  background-size: cover;
+  cursor: pointer;
+  transform: translate(50%, -50%);
+`;
+
 interface ArticleProps {
   article: ArticleInfo;
 }
@@ -77,6 +98,26 @@ const Article = (props: ArticleProps) => {
 
   const handleClick = () => {
     navigate(`/articles/${article._id}`);
+  };
+
+  const handleDelete = async () => {
+    const userToken = getUserToken();
+    if (!userToken) return message.warn('请先登录!');
+    const { _id: articleId } = article;
+    try {
+      await axios.delete(`/api/articles/${articleId}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+      message.success('删除成功!');
+      window.location.reload();
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        return message.error((error.response?.data as { message: string })?.message);
+      if (error instanceof Error) return message.error(error.message);
+      return message.error(JSON.stringify(error));
+    }
   };
 
   return (
@@ -100,6 +141,9 @@ const Article = (props: ArticleProps) => {
       <StyledTime dateTime={new Date(article.createdAt).toLocaleDateString()}>
         {new Date(article.createdAt).toLocaleDateString()}
       </StyledTime>
+
+      <StyledDeleteButton onClick={handleDelete}>
+      </StyledDeleteButton>
     </StyledArticle>
   );
 };

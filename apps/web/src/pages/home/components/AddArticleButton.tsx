@@ -8,7 +8,7 @@ const AddArticleButton = () => {
 	const dispatch = useAppDispatch();
 
 	const onClick = useCallback(() => {
-		dispatch(openModal(CurrentModal.AddArticle));
+		dispatch(openModal(CurrentModal.AddArticleTag));
 	}, []);
 
 	return (

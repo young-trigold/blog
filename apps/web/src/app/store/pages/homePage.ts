@@ -1,23 +1,21 @@
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { ArticlesByTag } from 'src/pages/home';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface HomePageState {
-	tagIndex: number;
+  tagIndex: number;
 }
 
 const initialState: HomePageState = {
-	tagIndex: 0,
+  tagIndex: 0,
 };
 
 const HomePageSlice = createSlice({
-	name: 'homePage',
-	initialState,
-	reducers: {
-		setTagIndex: (state, action) => {
-			state.tagIndex = action.payload;
-		},
-	},
+  name: 'homePage',
+  initialState,
+  reducers: {
+    setTagIndex: (state, action: PayloadAction<number>) => {
+      state.tagIndex = action.payload;
+    },
+  },
 });
 
 export const { setTagIndex } = HomePageSlice.actions;

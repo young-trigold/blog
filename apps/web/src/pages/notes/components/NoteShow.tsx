@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { useGetNotes } from '@/hooks/notes/useGetNotes';
 import Note from './Note';
+import AddNoteModal from '@/components/Modals/AddNoteModal';
+import AddNoteButton from './AddNoteButton';
 
 const StyledNoteShow = styled.section`
   padding: 2em 1em;
@@ -31,6 +33,8 @@ const NoteShow: React.FC = () => {
           <Note note={note} />
         </StyledNoteContainer>
       ))}
+      <AddNoteButton />
+      <AddNoteModal />
     </StyledNoteShow>
   );
 };

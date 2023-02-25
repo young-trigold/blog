@@ -1,10 +1,13 @@
 import { AppState, useAppDispatch } from '@/app/store';
 import { setTagIndex } from '@/app/store/pages/homePage';
 import LoadingIndicator from '@/components/LodingIndicator';
+import AddArticleModal from '@/components/Modals/AddArticleModal';
 import { useGetArticles } from '@/hooks/articles/useGetArticles';
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import AddArticleButton from './AddArticleButton';
+import AddArticleTagModal from '@/components/Modals/AddArticleTagModal';
 
 interface StyledTagContainerProps {
   tagIndex: number;
@@ -77,6 +80,9 @@ const TagContainer: React.FC = () => {
       {tags?.map((tag, currentIndex) => (
         <Tag key={tag} tag={tag} currentIndex={currentIndex}></Tag>
       ))}
+
+      <AddArticleButton />
+      <AddArticleTagModal />
     </StyledTagContainer>
   );
 };

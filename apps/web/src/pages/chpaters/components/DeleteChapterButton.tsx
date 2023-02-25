@@ -16,7 +16,6 @@ const DeleteChapterButton: React.FC<DeleteChapterButtonProps> = (props) => {
 	const onClick = () => {
 		const deleteItem = (chapterId: string) => {
 			const userToken = getUserToken();
-
 			if (!userToken) return message.warn('请先登录!');
 
 			const deleteChapter = async () => {
@@ -28,7 +27,7 @@ const DeleteChapterButton: React.FC<DeleteChapterButtonProps> = (props) => {
 					});
 
 					message.success('删除成功!');
-					window.location.reload();
+					// window.location.reload();
 				} catch (error) {
 					if (axios.isAxiosError(error))
 						return message.error((error.response?.data as { message: string })?.message);
