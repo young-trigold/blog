@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
+import { useAppSelector } from '@/app/store';
 import LoadingIndicator from '@/components/LodingIndicator';
-import { useGetNotes } from '@/hooks/notes/useGetNotes';
-import Note from './Note';
 import AddNoteModal from '@/components/Modals/AddNoteModal';
+import { useGetNotes } from '@/hooks/notes/useGetNotes';
 import AddNoteButton from './AddNoteButton';
+import Note from './Note';
 
 const StyledNoteShow = styled.section`
   padding: 2em 1em;
@@ -22,7 +23,7 @@ const StyledNoteContainer = styled.div`
 
 const NoteShow: React.FC = () => {
   const { isLoading, isError, error, data: notes } = useGetNotes();
-
+  const { info } = useAppSelector((state) => state.user);
   if (isLoading) return <LoadingIndicator />;
   if (isError) return <span>{(error as Error).message}</span>;
 
@@ -33,8 +34,12 @@ const NoteShow: React.FC = () => {
           <Note note={note} />
         </StyledNoteContainer>
       ))}
-      <AddNoteButton />
-      <AddNoteModal />
+      {info?.role === 'admin' && (
+        <>
+          <AddNoteButton />
+          <AddNoteModal />
+        </>
+      )}
     </StyledNoteShow>
   );
 };

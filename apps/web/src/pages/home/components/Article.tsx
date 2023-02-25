@@ -1,10 +1,11 @@
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
+import { useAppSelector } from '@/app/store';
 import { message } from '@/components/Message';
+import DeleteIcon from '@/static/icon/cancel.png';
 import EyeOpen from '@/static/icon/eye-open.png';
 import LikeIcon from '@/static/icon/like.png';
-import DeleteIcon from '@/static/icon/cancel.png';
 import getUserToken from '@/utils/getUserToken';
 import axios from 'axios';
 import { ArticleInfo } from '..';
@@ -120,6 +121,8 @@ const Article = (props: ArticleProps) => {
     }
   };
 
+  const { info } = useAppSelector((state) => state.user);
+
   return (
     <StyledArticle onClick={handleClick}>
       <StyledArticleTitle>
@@ -141,9 +144,7 @@ const Article = (props: ArticleProps) => {
       <StyledTime dateTime={new Date(article.createdAt).toLocaleDateString()}>
         {new Date(article.createdAt).toLocaleDateString()}
       </StyledTime>
-
-      <StyledDeleteButton onClick={handleDelete}>
-      </StyledDeleteButton>
+      {info?.role === 'admin' && <StyledDeleteButton onClick={handleDelete} />}
     </StyledArticle>
   );
 };

@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { useAppSelector } from '@/app/store';
 import { message } from '@/components/Message';
 import DeleteIcon from '@/static/icon/cancel.png';
 import EyeOpen from '@/static/icon/eye-open.png';
@@ -103,7 +104,7 @@ const Chapter: React.FC<ChapterProps> = (props) => {
       return message.error(JSON.stringify(error));
     }
   };
-
+  const { info } = useAppSelector((state) => state.user);
   return (
     <StyledChapter onClick={handleClick}>
       <div>{chapter.title}</div>
@@ -117,7 +118,8 @@ const Chapter: React.FC<ChapterProps> = (props) => {
           <span>{chapter.views}</span>
         </div>
       </StyledInfoBar>
-      <StyledDeleteButton onClick={handleDelete} />
+
+      {info?.role === 'admin' && <StyledDeleteButton onClick={handleDelete} />}
     </StyledChapter>
   );
 };

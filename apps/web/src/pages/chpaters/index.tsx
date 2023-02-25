@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { useAppSelector } from '@/app/store';
 import Footer from '@/components/Footer';
 import Header, { HeaderHeight } from '@/components/Header';
 import LoadingIndicator from '@/components/LodingIndicator';
@@ -51,7 +52,7 @@ const ChapterListPage: React.FC = () => {
 
   const { isLoading, isError, error, data: notes } = useGetNotes();
   const chapters = notes?.find((note) => note.title === noteTitle)?.chapters;
-
+  const { info } = useAppSelector((state) => state.user);
   if (isLoading) return <LoadingIndicator />;
   if (isError) return <span>{(error as Error).message}</span>;
 
@@ -64,7 +65,11 @@ const ChapterListPage: React.FC = () => {
           {chapters ? (
             <ChaptersContainer>
               {chapters.map((chapter) => (
-                <Chapter key={chapter._id} noteId={notes?.find((note) => note.title === noteTitle)!._id} chapter={chapter as ChapterInfo} />
+                <Chapter
+                  key={chapter._id}
+                  noteId={notes?.find((note) => note.title === noteTitle)!._id}
+                  chapter={chapter as ChapterInfo}
+                />
               ))}
             </ChaptersContainer>
           ) : (
@@ -73,8 +78,12 @@ const ChapterListPage: React.FC = () => {
         </main>
         <Footer />
       </StyledContentContainer>
-      <AddChapterButton />
-      <AddChapterModal currentOption={notes?.find((note) => note.title === noteTitle)!} />
+      {info?.role === 'admin' && (
+        <>
+          <AddChapterButton />
+          <AddChapterModal currentOption={notes?.find((note) => note.title === noteTitle)!} />
+        </>
+      )}
     </StyledChapterListPage>
   );
 };

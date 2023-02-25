@@ -13,5 +13,3 @@ ReactDOM.createRoot(root).render(
     <App />
   </Provider>,
 );
-
-// const { hasLogin, info } = useAppSelector((state) => state.user);

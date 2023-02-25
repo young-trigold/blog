@@ -1,13 +1,11 @@
-import { AppState, useAppDispatch } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setTagIndex } from '@/app/store/pages/homePage';
 import LoadingIndicator from '@/components/LodingIndicator';
-import AddArticleModal from '@/components/Modals/AddArticleModal';
+import AddArticleTagModal from '@/components/Modals/AddArticleTagModal';
 import { useGetArticles } from '@/hooks/articles/useGetArticles';
 import React, { useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import AddArticleButton from './AddArticleButton';
-import AddArticleTagModal from '@/components/Modals/AddArticleTagModal';
 
 interface StyledTagContainerProps {
   tagIndex: number;
@@ -67,11 +65,11 @@ const Tag: React.FC<TagProps> = (props) => {
 };
 
 const TagContainer: React.FC = () => {
-  const { tagIndex } = useSelector((state: AppState) => state.homePage);
+  const { tagIndex } = useAppSelector((state) => state.homePage);
   const { isLoading, isError, error, data: articlesByTag } = useGetArticles();
 
   const tags = articlesByTag?.map((tag) => tag._id);
-
+  const { info } = useAppSelector((state) => state.user);
   if (isLoading) return <LoadingIndicator />;
   if (isError) return <span>{(error as Error).message}</span>;
 
@@ -80,9 +78,12 @@ const TagContainer: React.FC = () => {
       {tags?.map((tag, currentIndex) => (
         <Tag key={tag} tag={tag} currentIndex={currentIndex}></Tag>
       ))}
-
-      <AddArticleButton />
-      <AddArticleTagModal />
+      {info?.role === 'admin' && (
+        <>
+          <AddArticleButton />
+          <AddArticleTagModal />
+        </>
+      )}
     </StyledTagContainer>
   );
 };
