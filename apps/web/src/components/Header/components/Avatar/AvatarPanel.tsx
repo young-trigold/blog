@@ -55,11 +55,6 @@ const AvatarPanel: React.FC<AvatarPanelProps> = (props) => {
 	const { info } = useAppSelector((state) => state.user);
 
 	const navigate = useNavigate();
-
-	const enterAdminPage = () => {
-		navigate('/admin');
-	};
-
 	const dispatch = useAppDispatch();
 	const logout = () => {
 		dispatch(openModal(CurrentModal.Logout));
@@ -101,9 +96,6 @@ const AvatarPanel: React.FC<AvatarPanelProps> = (props) => {
 			<Divider />
 			<section style={{ margin: '0.5em 0' }}>
 				<StyledOption onClick={toUserPage}>个人主页</StyledOption>
-				{info?.role === 'admin' ? (
-					<StyledOption onClick={enterAdminPage}>进入后台</StyledOption>
-				) : null}
 				<Divider />
 				<StyledOption onClick={logout}>退出登录</StyledOption>
 			</section>
