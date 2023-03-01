@@ -6,14 +6,14 @@ const articleScheme = new Schema(
   {
     title: {
       type: String,
-      required: [true, '请添加文章标题'],
+      required: true,
     },
     content: {
       type: String,
     },
     tag: {
       type: String,
-      required: [true, '请添加文章标签'],
+      required: true,
     },
     likes: Number,
     views: Number,

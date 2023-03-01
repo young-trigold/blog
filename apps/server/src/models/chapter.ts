@@ -6,7 +6,7 @@ const chapterScheme = new Schema(
   {
     title: {
       type: String,
-      required: [true, '请添加章节标题'],
+      required: true,
     },
     content: {
       type: String,

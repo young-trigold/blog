@@ -14,6 +14,8 @@ const Nav: React.FC = () => {
       <Link to="/articles">首页</Link>
       <div style={{ width: '1em', height: '0.5em' }} />
       <Link to="/notes">前端笔记</Link>
+      <div style={{ width: '1em', height: '0.5em' }} />
+      <Link to="/utils/calculator">计算器</Link>
     </NavContainer>
   );
 };
