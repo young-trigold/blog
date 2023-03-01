@@ -33,9 +33,10 @@ export const HeaderContext = createContext({
   notWide: false,
 });
 
+const getNotWide = () => window.matchMedia('(max-width: 760px)').matches;
+
 const Header: React.FC = () => {
   const user = useAppSelector((state) => state.user);
-  const getNotWide = () => window.matchMedia('(max-width: 666px)').matches;
   const [notWide, setNotWide] = useState(getNotWide);
 
   useEffect(() => {

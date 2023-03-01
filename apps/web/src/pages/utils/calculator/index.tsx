@@ -1,5 +1,6 @@
 import Header, { HeaderHeight } from '@/components/Header';
 import { Calculator } from './components/Calculator';
+import CalculatorBackgroundImageURL from '@/static/image/calculator_background_image.jpg';
 
 const CalculatorPage = () => {
   return (
@@ -11,6 +12,8 @@ const CalculatorPage = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          backgroundImage: `url(${CalculatorBackgroundImageURL})`,
+          backgroundSize: 'cover',
         }}
       >
         <Calculator />

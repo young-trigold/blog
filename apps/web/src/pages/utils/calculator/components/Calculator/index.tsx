@@ -4,41 +4,16 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { calculate } from './calculator';
 
-const StyledItem = styled.div`
-  border-radius: 50%;
-  font-size: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: ${({ theme }) => theme.transition};
-
-  &:active {
-    background-color: ${({ theme }) => theme.surfaceColor};
-    transform: scale(0.9);
-  }
-`;
-
-const StyledOperator = styled(StyledItem)`
-  color: ${({ theme }) => theme.primaryColor};
-`;
-
 const StyledMain = styled.main`
+  color: #eeeeee;
   width: 350px;
   padding: 8px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 3px 10px ${({ theme }) => theme.shadowColor};
   border-radius: 10px;
-  background-color: ${({ theme }) => theme.foregroundColor};
-  backdrop-filter: blur(5px);
+  background-color: transparent;
+  backdrop-filter: blur(10px);
 `;
 
 const StyledInput = styled.input`
@@ -65,6 +40,32 @@ const StyledKeyboard = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 84px);
   grid-template-rows: repeat(5, 84px);
+`;
+
+const StyledItem = styled.div`
+  border-radius: 50%;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: ${({ theme }) => theme.transition};
+
+  &:active {
+    filter: ${({ theme }) => `drop-shadow(16px 16px 20px ${theme.primaryColor}) invert(75%)`};
+    transform: scale(0.9);
+  }
+`;
+
+const StyledOperator = styled(StyledItem)`
+  color: ${({ theme }) => theme.primaryColor};
 `;
 
 const keyboardItems: {

@@ -61,6 +61,9 @@ const Menu: React.FC<MenuProps> = (props) => {
         <Link to="/notes">前端笔记</Link>
       </Option>
       <Option>
+        <Link to="/utils/calculator">计算器</Link>
+      </Option>
+      <Option>
         <ToggleThemeButton />
       </Option>
     </StyledMenu>
