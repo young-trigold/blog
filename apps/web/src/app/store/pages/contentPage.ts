@@ -110,6 +110,9 @@ const ContentPageSlice = createSlice({
 		) => {
 			state.editor.plugin.selectionTooltip.visible = action.payload;
 		},
+    setSelectionTooltipPosition: (state, action: PayloadAction<Pick<DOMRect, "left" | "top">>) => {
+      state.editor.plugin.selectionTooltip.position = action.payload;
+    },
 		setEditorStore: (state, action: PayloadAction<EditorStore | null>) => {
 			state.editor.editorStore = action.payload as any;
 		},
@@ -131,6 +134,7 @@ export const {
 	setInsertTooltipVisible,
 	setInsertTooltip,
 	setSelectionTooltip,
+  setSelectionTooltipPosition,
 	setSelectionTooltipVisible,
 	setEditorStore,
 	resetContentPage,

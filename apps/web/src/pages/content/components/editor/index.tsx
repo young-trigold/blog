@@ -11,6 +11,7 @@ import EditorStore, { HandleDOMEvents } from './store';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
 import SelectionTooltip from './tooltips/selectionTooltip';
+import { Transaction } from 'prosemirror-state';
 
 const EditorContainer = styled.article`
   flex: 1 1 760px;
@@ -118,7 +119,7 @@ const EditorContainer = styled.article`
 interface EditorProps {
   editable: boolean;
   autoFocus?: boolean;
-  onChange?: (view: EditorView) => void;
+  onChange?: (view: EditorView, tr: Transaction) => void;
   extensions?: Extension[];
   doc?: string;
   handleDOMEvents?: HandleDOMEvents;

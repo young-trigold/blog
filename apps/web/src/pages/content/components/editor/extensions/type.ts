@@ -1,7 +1,7 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
 import { PasteRule } from 'prosemirror-paste-rules';
-import { Command, Plugin as ProseMirrorPlugin } from 'prosemirror-state';
+import { Command, PluginKey, Plugin as ProseMirrorPlugin } from 'prosemirror-state';
 import { NodeView, NodeViewConstructor } from 'prosemirror-view';
 import EditorStore from '../store';
 

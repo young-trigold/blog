@@ -19,10 +19,10 @@ import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { EditorView } from 'prosemirror-view';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
+import ContentContainer from './components/ContentContainer';
 import ActionBar from './components/actionBar';
 import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';
-import ContentContainer from './components/ContentContainer';
 import Editor from './components/editor';
 import {
   BoldExtension,
@@ -38,8 +38,10 @@ import {
 import { ImageExtension } from './components/editor/extensions/nodeExtensions/ImageExtension';
 import { ListExtensions } from './components/editor/extensions/nodeExtensions/listExtensions';
 import { TableExtensions } from './components/editor/extensions/nodeExtensions/tableExtensions';
+import { SelectionTooltipExtension } from './components/editor/extensions/plainExtensions/SelectionTooltipExtension';
 import { HandleDOMEvents } from './components/editor/store';
 import findHeadingElementById from './components/editor/utils/findHeadingElementById';
+import { Transaction } from 'prosemirror-state';
 
 const StyledContentPage = styled.div`
   max-height: 100%;
@@ -94,7 +96,28 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
     };
   }, []);
 
-  const onChange = useCallback((view: EditorView) => {
+  const selectionTooltipExtension = useMemo(() => new SelectionTooltipExtension(), []);
+
+  const extensions = useMemo(
+    () => [
+      new BoldExtension(),
+      new ItalicExtension(),
+      new UnderlineExtension(),
+      new LinkExtension(),
+      new SubExtension(),
+      new SupExtension(),
+      new CodeExtension(),
+      new HeadingExtension(),
+      new CodeBlockExtension(),
+      new ImageExtension(),
+      ...ListExtensions.map((Extension) => new Extension()),
+      ...TableExtensions.map((Extension) => new Extension()),
+      selectionTooltipExtension,
+    ],
+    [],
+  );
+
+  const onChange = useCallback((view: EditorView, tr: Transaction) => {
     const { state } = view;
     // 更新 insert tooltip
     const { selection } = state;
@@ -116,13 +139,15 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 
     dispatch(
       setSelectionTooltip({
-        visible: !empty,
         position: {
           left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
           top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
         },
+        visible: !empty && tr.getMeta(selectionTooltipExtension.pluginKey)?.selectionTooltipVisible,
       }),
     );
+
+    view.updateState(view.state.apply(tr));
   }, []);
 
   const handleDOMEvents: HandleDOMEvents = useMemo(
@@ -132,24 +157,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
         dispatch(setSelectionTooltipVisible(false));
       },
     }),
-    [],
-  );
-
-  const extensions = useMemo(
-    () => [
-      new BoldExtension(),
-      new ItalicExtension(),
-      new UnderlineExtension(),
-      new LinkExtension(),
-      new SubExtension(),
-      new SupExtension(),
-      new CodeExtension(),
-      new HeadingExtension(),
-      new CodeBlockExtension(),
-      new ImageExtension(),
-      ...ListExtensions.map((Extension) => new Extension()),
-      ...TableExtensions.map((Extension) => new Extension()),
-    ],
     [],
   );
 

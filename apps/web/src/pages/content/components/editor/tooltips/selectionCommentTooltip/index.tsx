@@ -42,7 +42,7 @@ const SelectionCommentTooltip = () => {
 	);
 	const { editorStore } = useAppSelector((state) => state.contentPage.editor);
 
-	const onClick = useCallback(() => {
+	const onClick = () => {
 		if (!editorStore) return;
 		const { view: editorView, commands } = editorStore;
 		if (!editorView) return;
@@ -52,7 +52,7 @@ const SelectionCommentTooltip = () => {
 			const { from, to } = selection;
 			console.debug(doc.content.textBetween(from, to));
 		}
-	}, [editorStore]);
+	};
 
 	return (
 		<StyledSelectionCommentTooltip visible={visible} position={position} onClick={onClick}>

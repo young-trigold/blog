@@ -2,7 +2,7 @@ import Divider from '@/components/Divider';
 import addMediaEffect from '@/utils/addMediaEffect';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { calculate } from './calculator';
+import { calculate } from './calculate';
 
 const StyledMain = styled.main`
   color: #eeeeee;

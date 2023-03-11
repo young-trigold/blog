@@ -1,5 +1,5 @@
 import { Node as ProseMirrorNode, Schema } from 'prosemirror-model';
-import { EditorState, Plugin as ProseMirrorPlugin, Selection } from 'prosemirror-state';
+import { EditorState, Plugin as ProseMirrorPlugin, Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Extension, MarkExtension, NodeExtension, PlainExtension } from '../extensions/type';
 
@@ -32,7 +32,8 @@ class EditorStore {
 		const onCreate = (extension: Extension) => {
 			if (extension instanceof MarkExtension) this.markExtensions.push(extension);
 			else if (extension instanceof NodeExtension) this.nodeExtensions.push(extension);
-			else this.plainExtensions.push(extension);
+			else if (extension instanceof PlainExtension) this.plainExtensions.push(extension);
+      else {}
 			extension.editorStore = this;
 		};
 
@@ -61,7 +62,7 @@ class EditorStore {
 			state: EditorState;
 			editable: boolean;
 			autoFocus: boolean;
-			onChange?: (view: EditorView) => void;
+			onChange?: (view: EditorView, tr: Transaction) => void;
 			handleDOMEvents?: HandleDOMEvents;
 		},
 	) {
@@ -69,9 +70,7 @@ class EditorStore {
 			state: props.state,
 			editable: () => props.editable,
 			dispatchTransaction(tr) {
-				const newEditorState = editorView.state.apply(tr);
-				editorView.updateState(newEditorState);
-				props.onChange?.(editorView);
+				props.onChange?.(editorView, tr);
 			},
 			handleDOMEvents: props.handleDOMEvents,
 		});
