@@ -16,6 +16,7 @@ import { Transaction } from 'prosemirror-state';
 const EditorContainer = styled.article`
   flex: 1 1 760px;
   min-width: 350px;
+  min-height: calc(100vh - 300px);
   z-index: 2;
   transition: ${(props) => props.theme.transition};
   position: relative;
@@ -165,7 +166,7 @@ const Editor: React.FC<EditorProps> = (props) => {
       {editable && (
         <>
           <InsertTooltip />
-          <SelectionTooltip />
+          {/* <SelectionTooltip /> */}
         </>
       )}
       {!editable && <SelectionCommentTooltip />}

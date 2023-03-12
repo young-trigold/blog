@@ -1,8 +1,7 @@
-import { memo, useCallback } from 'react';
+import store from '@/app/store';
+import { useCallback } from 'react';
 import styled from 'styled-components';
-
-import { useAppSelector } from '@/app/store';
-import HeadingDecoration from './HeadingDecoration';
+import { HeadingDecoration } from './components/HeadingDecoration';
 
 interface StyledSelectionTooltipProps {
   visible: boolean;
@@ -61,14 +60,15 @@ const StyledOption = styled.div`
   }
 `;
 
-interface SelectionTooltipProps {}
+interface SelectionTooltipProps {
+  position: Pick<DOMRect, 'left' | 'top'>;
+  visible: boolean;
+}
 
-const SelectionTooltip = (props: SelectionTooltipProps) => {
-  const { position, visible } = useAppSelector(
-    (state) => state.contentPage.editor.plugin.selectionTooltip,
-  );
-
-  const { editorStore } = useAppSelector((state) => state.contentPage.editor);
+export const SelectionTooltip = (props: SelectionTooltipProps) => {
+  const { position, visible } = props;
+  // console.debug(props);
+  const { editorStore } = store.getState().contentPage.editor;
 
   const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;
@@ -125,6 +125,7 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
   return (
     <StyledSelectionTooltip
       onMouseDown={(event) => event.stopPropagation()}
+      onMouseUp={preventDefault}
       visible={visible}
       position={position}
     >
@@ -173,5 +174,3 @@ const SelectionTooltip = (props: SelectionTooltipProps) => {
     </StyledSelectionTooltip>
   );
 };
-
-export default memo(SelectionTooltip);
