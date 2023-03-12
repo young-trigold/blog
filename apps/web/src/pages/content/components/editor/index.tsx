@@ -4,14 +4,13 @@ import styled from 'styled-components';
 import { useAppDispatch } from '@/app/store';
 import { setEditorStore } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
+import { Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { presetNodeExtensions, presetPlainExtensions } from './extensions';
 import { Extension } from './extensions/type';
 import EditorStore, { HandleDOMEvents } from './store';
 import InsertTooltip from './tooltips/InsertTooltip';
 import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
-import SelectionTooltip from './tooltips/selectionTooltip';
-import { Transaction } from 'prosemirror-state';
 
 const EditorContainer = styled.article`
   flex: 1 1 760px;
@@ -95,7 +94,6 @@ const EditorContainer = styled.article`
     background-color: ${(props) => props.theme.foregroundColor};
     transition: ${(props) => props.theme.transition};
 
-
     &.cm-focused {
       outline: none;
     }
@@ -166,7 +164,6 @@ const Editor: React.FC<EditorProps> = (props) => {
       {editable && (
         <>
           <InsertTooltip />
-          {/* <SelectionTooltip /> */}
         </>
       )}
       {!editable && <SelectionCommentTooltip />}
