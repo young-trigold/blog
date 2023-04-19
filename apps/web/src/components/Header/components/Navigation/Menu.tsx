@@ -60,9 +60,9 @@ const Menu: React.FC<MenuProps> = (props) => {
       <Option>
         <Link to="/notes">前端笔记</Link>
       </Option>
-      <Option>
+      {/* <Option>
         <Link to="/utils/calculator">计算器</Link>
-      </Option>
+      </Option> */}
       <Option>
         <ToggleThemeButton />
       </Option>

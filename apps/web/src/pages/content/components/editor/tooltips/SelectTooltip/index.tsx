@@ -1,28 +1,29 @@
-import store from '@/app/store';
-import { useCallback } from 'react';
+import { useAppSelector } from '@/app/store';
+import { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { HeadingDecoration } from './components/HeadingDecoration';
+import { selectionTooltipExtension } from '../../../../';
+import { HeadingDecoration } from './HeadingDecoration';
 
-interface StyledSelectionTooltipProps {
+interface StyledSelectTooltipProps {
   visible: boolean;
   position: Pick<DOMRect, 'left' | 'top'>;
 }
 
-export const SelectionTooltipWidth = 300;
-export const SelectionTooltipHeight = 34;
+export const SelectTooltipWidth = 300;
+export const SelectTooltipHeight = 34;
 
-const StyledSelectionTooltip = styled.div<StyledSelectionTooltipProps>`
+const StyledSelectTooltip = styled.div<StyledSelectTooltipProps>`
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: ${() => `${SelectionTooltipWidth}px`};
-  height: ${() => `${SelectionTooltipHeight}px`};
+  width: ${() => `${SelectTooltipWidth}px`};
+  height: ${() => `${SelectTooltipHeight}px`};
   top: 0;
   left: 0;
   transform: ${(props) =>
-    `translate(${props.position.left - SelectionTooltipWidth / 2}px, ${
-      props.position.top - SelectionTooltipHeight - 4
+    `translate(${props.position.left - SelectTooltipWidth / 2}px, ${
+      props.position.top - SelectTooltipHeight - 4
     }px)`};
   visibility: ${(props) => (props.visible ? 'unset' : 'hidden')};
   opacity: ${(props) => (props.visible ? 1 : 0)};
@@ -60,15 +61,34 @@ const StyledOption = styled.div`
   }
 `;
 
-interface SelectionTooltipProps {
+interface SelectTooltipProps {
   position: Pick<DOMRect, 'left' | 'top'>;
   visible: boolean;
 }
 
-export const SelectionTooltip = (props: SelectionTooltipProps) => {
-  const { position, visible } = props;
-  // console.debug(props);
-  const { editorStore } = store.getState().contentPage.editor;
+export const SelectTooltip: React.FC = (props) => {
+  const { editorStore } = useAppSelector((appState) => appState.contentPage.editor);
+  const { position, visible } = useMemo(() => {
+    const initialState = {
+      position: { left: 0, top: 0 },
+      visible: false,
+    };
+    const view = editorStore?.view;
+    if (!view) return initialState;
+    const { state } = view;
+    const { selection, tr } = state;
+    const { $head, empty } = selection;
+    const cursorPositionToViewPort = view.coordsAtPos($head.pos);
+    const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
+    
+    return {
+      position: {
+        left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+        top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
+      },
+      visible: !empty,
+    };
+  }, [editorStore?.view?.state]);
 
   const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;
@@ -76,54 +96,54 @@ export const SelectionTooltip = (props: SelectionTooltipProps) => {
     if (!editorView || !schema) return;
     const { bold } = commands;
     bold.toggle();
-  }, [editorStore]);
+  }, [editorStore?.view?.state]);
 
   const handleToggleEm: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     commands.italic.toggle();
-  }, [editorStore]);
+  }, [editorStore?.view?.state]);
 
   const handleToggleUnderline: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     commands.underline.toggle();
-  }, [editorStore]);
+  }, [editorStore?.view?.state]);
 
   const handleToggleSup: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     commands.sup.toggle();
-  }, [editorStore]);
+  }, [editorStore?.view?.state]);
 
   const handleToggleSub: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     commands.sub.toggle();
-  }, [editorStore]);
+  }, [editorStore?.view?.state]);
 
   const handleToggleOrderedList: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;
     const { view: editorView, commands } = editorStore;
     if (!editorView) return;
     commands.ordered_list.toggle();
-  }, [editorStore]);
+  }, [editorStore?.view?.state]);
 
   const handleToggleUnorderedList: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;
     const { view: editorView, commands } = editorStore;
     if (!editorView) return;
     commands.unordered_list.toggle();
-  }, [editorStore]);
+  }, [editorStore?.view?.state]);
 
   const preventDefault: React.MouseEventHandler<HTMLElement> = (event) => event.preventDefault();
 
   return (
-    <StyledSelectionTooltip
+    <StyledSelectTooltip
       onMouseDown={(event) => event.stopPropagation()}
       onMouseUp={preventDefault}
       visible={visible}
@@ -171,6 +191,6 @@ export const SelectionTooltip = (props: SelectionTooltipProps) => {
           </svg>
         </span>
       </StyledOption>
-    </StyledSelectionTooltip>
+    </StyledSelectTooltip>
   );
 };

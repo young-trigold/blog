@@ -10,7 +10,8 @@ import { presetNodeExtensions, presetPlainExtensions } from './extensions';
 import { Extension } from './extensions/type';
 import EditorStore, { HandleDOMEvents } from './store';
 import InsertTooltip from './tooltips/InsertTooltip';
-import SelectionCommentTooltip from './tooltips/selectionCommentTooltip';
+import {CommentTooltip} from './tooltips/CommentTooltip';
+import { SelectTooltip } from './tooltips/SelectTooltip';
 
 const EditorContainer = styled.article`
   flex: 1 1 760px;
@@ -124,7 +125,7 @@ interface EditorProps {
   handleDOMEvents?: HandleDOMEvents;
 }
 
-const Editor: React.FC<EditorProps> = (props) => {
+export const Editor: React.FC<EditorProps> = (props) => {
   const {
     extensions = [],
     editable = false,
@@ -136,6 +137,7 @@ const Editor: React.FC<EditorProps> = (props) => {
 
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     const finalExtensions = [
       ...presetPlainExtensions.map((Extension) => new Extension()),
@@ -163,12 +165,11 @@ const Editor: React.FC<EditorProps> = (props) => {
     <EditorContainer ref={editorContainerRef}>
       {editable && (
         <>
+          <SelectTooltip />
           <InsertTooltip />
         </>
       )}
-      {!editable && <SelectionCommentTooltip />}
+      {!editable && <CommentTooltip />}
     </EditorContainer>
   );
 };
-
-export default memo(Editor);

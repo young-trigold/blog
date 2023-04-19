@@ -46,12 +46,13 @@ export const StyledOption = styled.div`
 	}
 `;
 
-interface InsertOptionContainerProps {}
+interface InsertOptionContainerProps {
+  canInsertBlock: boolean;
+  position: Pick<DOMRect, 'left' | 'top'>;
+}
 
-const InsertOptionContainer = (props: InsertOptionContainerProps) => {
-	const { canInsertBlock, position } = useSelector(
-		(state: AppState) => state.contentPage.editor.plugin.insertTooltip,
-	);
+const InsertOptionContainer: React.FC<InsertOptionContainerProps> = (props) => {
+	const { canInsertBlock, position } = props;
 
 	const onClick: React.MouseEventHandler = (event) => {
 		event.stopPropagation();

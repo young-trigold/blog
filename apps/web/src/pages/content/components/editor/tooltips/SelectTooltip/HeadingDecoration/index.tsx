@@ -1,4 +1,4 @@
-import store from '@/app/store';
+import store, { useAppSelector } from '@/app/store';
 import { useCallback } from 'react';
 import styled from 'styled-components';
 
@@ -66,7 +66,7 @@ const StyledSpan = styled.span`
 `;
 
 export const HeadingDecoration = () => {
-  const { editorStore } = store.getState().contentPage.editor;
+  const { editorStore } = useAppSelector((appState) => appState.contentPage.editor);
 
   const toggleHeadingLevel1 = useCallback(() => {
     if (!editorStore?.view) return;

@@ -25,7 +25,7 @@ const InsertLinkForm = () => {
 	const handleCancel = useCallback(() => {
 		setTitle('');
 		setLink('');
-		dispatch(openModal(CurrentModal.InsertLink));
+		dispatch(closeModal());
 	}, []);
 
 	const { editorStore } = useAppSelector((state) => state.contentPage.editor);

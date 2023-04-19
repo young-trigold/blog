@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,14 +8,11 @@ import {
   ContentPageContext,
   resetContentPage,
   setCurrentHeadingId,
-  setInsertTooltip,
-  setInsertTooltipVisible,
-  setSelectionTooltip,
-  setSelectionTooltipVisible,
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { useGetArticle } from '@/hooks/articles/useGetArticle';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
+import { Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
@@ -23,7 +20,7 @@ import ContentContainer from './components/ContentContainer';
 import ActionBar from './components/actionBar';
 import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';
-import Editor from './components/editor';
+import { Editor } from './components/editor';
 import {
   BoldExtension,
   CodeBlockExtension,
@@ -41,7 +38,8 @@ import { TableExtensions } from './components/editor/extensions/nodeExtensions/t
 import { SelectionTooltipExtension } from './components/editor/extensions/plainExtensions/SelectionTooltipExtension';
 import { HandleDOMEvents } from './components/editor/store';
 import findHeadingElementById from './components/editor/utils/findHeadingElementById';
-import { Transaction } from 'prosemirror-state';
+
+export const selectionTooltipExtension = new SelectionTooltipExtension();
 
 const StyledContentPage = styled.div`
   max-height: 100%;
@@ -96,8 +94,6 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
     };
   }, []);
 
-  const selectionTooltipExtension = useMemo(() => new SelectionTooltipExtension(), []);
-
   const extensions = useMemo(
     () => [
       new BoldExtension(),
@@ -117,48 +113,11 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
     [],
   );
 
-  const onChange = useCallback((view: EditorView, tr: Transaction) => {
-    const { state } = view;
-    // 更新 insert tooltip
-    const { selection } = state;
-    const { $head, empty } = selection;
-    const { nodeAfter, nodeBefore } = $head;
-    const canInsertBlock = nodeAfter === null || nodeBefore === null;
-    const cursorPositionToViewPort = view.coordsAtPos($head.pos);
-    const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
-    dispatch(
-      setInsertTooltip({
-        visible: empty,
-        canInsertBlock,
-        position: {
-          left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-          top: cursorPositionToViewPort.bottom - editorContainerPositionToViewPort.top,
-        },
-      }),
-    );
-
-    dispatch(
-      setSelectionTooltip({
-        position: {
-          left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
-          top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
-        },
-        visible: !empty && tr.getMeta(selectionTooltipExtension.pluginKey)?.selectionTooltipVisible,
-      }),
-    );
-
+  const onChange = (view: EditorView, tr: Transaction) => {
     view.updateState(view.state.apply(tr));
-  }, []);
+  };
 
-  const handleDOMEvents: HandleDOMEvents = useMemo(
-    () => ({
-      blur: () => {
-        dispatch(setInsertTooltipVisible(false));
-        dispatch(setSelectionTooltipVisible(false));
-      },
-    }),
-    [],
-  );
+  const handleDOMEvents: HandleDOMEvents = useMemo(() => ({}), []);
 
   const { isLoading, isError, error, data: item } = useGetArticle(itemId, isChapter);
   useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${item?.title}`, [item?.title]);

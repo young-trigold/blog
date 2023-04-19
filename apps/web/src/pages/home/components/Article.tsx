@@ -103,10 +103,6 @@ const Article = (props: ArticleProps) => {
   const { article } = props;
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate(`/articles/${article._id}`);
-  };
-
   const handleDelete: React.MouseEventHandler = async (event) => {
     event.stopPropagation();
     const userToken = getUserToken();
@@ -128,6 +124,10 @@ const Article = (props: ArticleProps) => {
   };
 
   const { info } = useAppSelector((state) => state.user);
+
+  const handleClick = () => {
+    navigate(`${info?.role === 'admin' ? '/edit' : ''}/articles/${article._id}`);
+  };
 
   return (
     <StyledArticle onClick={handleClick}>
