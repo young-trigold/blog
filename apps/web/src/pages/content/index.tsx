@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo } from 'react';
+import { Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -6,16 +8,16 @@ import { useAppDispatch } from '@/app/store';
 import {
   ContentPageContext,
   resetContentPage,
+  setCurrentHeadingId,
   setEditorState,
 } from '@/app/store/pages/contentPage';
+import { HeaderHeight } from '@/components/Header';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { useGetArticle } from '@/hooks/articles/useGetArticle';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
-import { Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import ContentContainer from './components/ContentContainer';
 import ActionBar from './components/actionBar';
 import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';
@@ -36,6 +38,7 @@ import { ListExtensions } from './components/editor/extensions/nodeExtensions/li
 import { TableExtensions } from './components/editor/extensions/nodeExtensions/tableExtensions';
 import { SelectionTooltipExtension } from './components/editor/extensions/plainExtensions/SelectionTooltipExtension';
 import { HandleDOMEvents } from './components/editor/store';
+import getCurrentHeadingId from './components/editor/utils/getCurrentHeadingId';
 
 export const selectionTooltipExtension = new SelectionTooltipExtension();
 
@@ -51,6 +54,12 @@ const MainContainer = styled.main`
   position: relative;
   display: flex;
   align-items: flex-start;
+`;
+
+const StyledContentContainer = styled.div`
+  max-height: ${() => `calc(100vh - ${HeaderHeight}px)`};
+  overflow: overlay;
+  scroll-padding-top: 2em;
 `;
 
 interface ContentPageProps {
@@ -84,6 +93,13 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
     [],
   );
 
+  const onScroll: React.UIEventHandler<HTMLDivElement> = (event) => {
+    const { target } = event;
+    if (!(target instanceof HTMLDivElement)) return;
+    const currentHeadingId = getCurrentHeadingId(target);
+    if (currentHeadingId) dispatch(setCurrentHeadingId(currentHeadingId));
+  };
+
   const onChange = (view: EditorView, tr: Transaction) => {
     const newState = view.state.apply(tr);
     dispatch(setEditorState(newState));
@@ -109,7 +125,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
     <ContentPageContext.Provider value={contentPageContext}>
       <StyledContentPage>
         <Header />
-        <ContentContainer>
+        <StyledContentContainer onScroll={onScroll}>
           <MainContainer>
             <Catalog />
             <Editor
@@ -125,7 +141,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
             <CatalogButton />
           </MainContainer>
           <Footer />
-        </ContentContainer>
+        </StyledContentContainer>
       </StyledContentPage>
     </ContentPageContext.Provider>
   );

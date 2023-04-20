@@ -56,6 +56,7 @@ export class HeadingExtension extends NodeExtension {
 				return [
 					`h${node.attrs.level}`,
 					{
+            id: node.attrs.headingId,
 						'data-heading-id': node.attrs.headingId,
 					},
 					0,

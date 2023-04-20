@@ -1,12 +1,8 @@
 import styled from 'styled-components';
 
-import { useAppDispatch, useAppSelector } from '@/app/store';
-import { setCurrentHeadingId } from '@/app/store/pages/contentPage';
-import { memo, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useAppSelector } from '@/app/store';
 import { HeadingExtension } from '../editor/extensions';
-import findHeadingElementById from '../editor/utils/findHeadingElementById';
-import CatalogItem from './CatalogItem';
+import { CatalogItem } from './CatalogItem';
 
 export interface HeadingInfo {
   level: number;
@@ -27,7 +23,7 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
   user-select: none;
   position: sticky;
   transition: ${(props) => props.theme.transition};
-  overflow-y: auto;
+  overflow: auto;
   margin: 0 1em;
   top: 2em;
   overscroll-behavior: contain;
@@ -48,13 +44,11 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
   }
 `;
 
-interface CatalogProps {}
-
-export const Catalog: React.FC<CatalogProps> = (props) => {
+export const Catalog: React.FC = (props) => {
   // =============================== heading ===============================
-  const { visible, headings } = useAppSelector((appState) => {
+  const { visible, headings, currentHeadingId, state } = useAppSelector((appState) => {
     const { catalog, editor } = appState.contentPage;
-    const { visible } = catalog;
+    const { visible, currentHeadingId } = catalog;
     const { state } = editor;
     const headings: HeadingInfo[] = [];
     state?.doc.content.forEach((node) => {
@@ -63,46 +57,25 @@ export const Catalog: React.FC<CatalogProps> = (props) => {
         headings.push({ level, headingId, content: node.textContent });
       }
     });
-    return { visible, headings };
+    return { visible, headings, currentHeadingId, state };
   });
-
-  // const [first, setFirst] = useState(true);
-	// useEffect(() => {
-	// 	if (!new window.URL(window.location.href).searchParams.get('currentHeadingId') && first) {
-	// 		if (headings.length) {
-	// 			dispatch(setCurrentHeadingId(headings[0].headingId));
-	// 			setFirst(false);
-	// 		}
-	// 	}
-	// }, [headings]);
-
-  // const dispatch = useAppDispatch();
-
-  // const [currentHeadingIdSearchParam, setCurrentHeadingIdSearchParam] = useSearchParams();
-  // const isFirstRef = useRef(true);
-
-  // useEffect(() => {
-  //   if (!isFirstRef.current) return;
-  //   const initialHeadingIdFromURL = currentHeadingIdSearchParam.get('currentHeadingId');
-  //   const currentHeadingElement = findHeadingElementById(initialHeadingIdFromURL ?? '');
-  //   if (currentHeadingElement) {
-  //     currentHeadingElement.scrollIntoView();
-  //     isFirstRef.current = false;
-  //     dispatch(setCurrentHeadingId(initialHeadingIdFromURL!));
-  //   }
-  // });
-
-  useEffect(() => {
-
-  }, []);
 
   return (
     <StyledCatalog catalogVisible={visible}>
       {headings
-        .filter((heading) => heading.content)
-        .map((heading) => (
-          <CatalogItem heading={heading} key={heading.headingId} />
-        ))}
+        .filter((heading) => Boolean(heading.content))
+        .map((heading) => {
+          const { headingId, level, content } = heading;
+          return (
+            <CatalogItem
+              key={headingId}
+              headingId={headingId}
+              level={level}
+              content={content}
+              isCurrent={currentHeadingId === headingId}
+            />
+          );
+        })}
     </StyledCatalog>
   );
 };
