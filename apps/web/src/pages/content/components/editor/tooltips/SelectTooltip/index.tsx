@@ -1,7 +1,5 @@
 import { useAppSelector } from '@/app/store';
-import { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { selectionTooltipExtension } from '../../../../';
 import { HeadingDecoration } from './HeadingDecoration';
 
 interface StyledSelectTooltipProps {
@@ -68,19 +66,20 @@ interface SelectTooltipProps {
 
 export const SelectTooltip: React.FC = (props) => {
   const { editorStore } = useAppSelector((appState) => appState.contentPage.editor);
-  const { position, visible } = useMemo(() => {
+  const { position, visible } = useAppSelector((appState) => {
     const initialState = {
       position: { left: 0, top: 0 },
       visible: false,
     };
-    const view = editorStore?.view;
-    if (!view) return initialState;
-    const { state } = view;
+    const view = appState.contentPage.editor.editorStore?.view;
+    const { state } = appState.contentPage.editor;
+
+    if (!view || !state) return initialState;
     const { selection } = state;
     const { $head, empty } = selection;
     const cursorPositionToViewPort = view.coordsAtPos($head.pos);
     const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
-    
+
     return {
       position: {
         left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
@@ -88,58 +87,57 @@ export const SelectTooltip: React.FC = (props) => {
       },
       visible: !empty,
     };
-  }, [editorStore?.view?.state]);
-  console.debug(editorStore);
+  });
 
-  const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+  const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = () => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     const { bold } = commands;
     bold.toggle();
-  }, [editorStore?.view?.state]);
+  };
 
-  const handleToggleEm: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+  const handleToggleEm: React.MouseEventHandler<HTMLDivElement> = () => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     commands.italic.toggle();
-  }, [editorStore?.view?.state]);
+  };
 
-  const handleToggleUnderline: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+  const handleToggleUnderline: React.MouseEventHandler<HTMLDivElement> = () => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     commands.underline.toggle();
-  }, [editorStore?.view?.state]);
+  };
 
-  const handleToggleSup: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+  const handleToggleSup: React.MouseEventHandler<HTMLDivElement> = () => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     commands.sup.toggle();
-  }, [editorStore?.view?.state]);
+  };
 
-  const handleToggleSub: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+  const handleToggleSub: React.MouseEventHandler<HTMLDivElement> = () => {
     if (!editorStore) return;
     const { view: editorView, schema, commands } = editorStore;
     if (!editorView || !schema) return;
     commands.sub.toggle();
-  }, [editorStore?.view?.state]);
+  };
 
-  const handleToggleOrderedList: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+  const handleToggleOrderedList: React.MouseEventHandler<HTMLDivElement> = () => {
     if (!editorStore) return;
     const { view: editorView, commands } = editorStore;
     if (!editorView) return;
     commands.ordered_list.toggle();
-  }, [editorStore?.view?.state]);
+  };
 
-  const handleToggleUnorderedList: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+  const handleToggleUnorderedList: React.MouseEventHandler<HTMLDivElement> = () => {
     if (!editorStore) return;
     const { view: editorView, commands } = editorStore;
     if (!editorView) return;
     commands.unordered_list.toggle();
-  }, [editorStore?.view?.state]);
+  };
 
   const preventDefault: React.MouseEventHandler<HTMLElement> = (event) => event.preventDefault();
 

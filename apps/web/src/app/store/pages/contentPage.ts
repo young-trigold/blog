@@ -5,6 +5,7 @@ import EditorStore from 'src/pages/content/components/editor/store';
 
 import { HeadingInfo } from '../../../pages/content/components/catalog/Catalog';
 import { CommentInfo } from '../../../pages/content/components/comment/CommentList';
+import { EditorState } from 'prosemirror-state';
 
 export interface ContentPageContext {
 	isChapter: boolean;
@@ -26,6 +27,7 @@ interface ContentPageState {
 	};
 	editor: {
 		editorStore: EditorStore | null;
+    state: EditorState | null;
 	};
 }
 
@@ -41,6 +43,7 @@ export const initialState: ContentPageState = {
 	},
 	editor: {
 		editorStore: null,
+    state: null,
 	},
 };
 
@@ -66,6 +69,9 @@ const ContentPageSlice = createSlice({
 		setEditorStore: (state, action: PayloadAction<EditorStore | null>) => {
 			state.editor.editorStore = action.payload as any;
 		},
+    setEditorState: (state, action: PayloadAction<EditorState | null>) => {
+			state.editor.state = action.payload as any;
+		},
 		resetContentPage: (state) => {
 			const { catalog, comment, editor } = initialState;
 			state.catalog = catalog;
@@ -82,6 +88,7 @@ export const {
 	setHeadings,
 	setCurrentHeadingId,
 	setEditorStore,
+  setEditorState,
 	resetContentPage,
 } = ContentPageSlice.actions;
 

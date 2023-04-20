@@ -8,6 +8,7 @@ import {
   ContentPageContext,
   resetContentPage,
   setCurrentHeadingId,
+  setEditorState,
   setEditorStore,
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
@@ -115,8 +116,9 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
   );
 
   const onChange = (view: EditorView, tr: Transaction) => {
-    view.updateState(view.state.apply(tr));
-    
+    const newState = view.state.apply(tr);
+    dispatch(setEditorState(newState));
+    view.updateState(newState);
   };
 
   const handleDOMEvents: HandleDOMEvents = useMemo(() => ({}), []);

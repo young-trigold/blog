@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/app/store';
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import InsertOptionContainer from './InsertOptionContainer';
@@ -39,6 +39,7 @@ const StyledInsertTooltip = styled.div<StyledInsertTooltipProps>`
 interface InsertTooltipProps {}
 
 export const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
+  const view = useAppSelector((appState) => appState.contentPage.editor.editorStore?.view);
   const { visible, position, canInsertBlock } = useAppSelector((appState) => {
     const initialState = {
       visible: false,
@@ -48,10 +49,8 @@ export const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
         top: 0,
       },
     };
-    const { editorStore } = appState.contentPage.editor;
-    const view = editorStore?.view;
-    if (!view) return initialState;
-    const { state } = view;
+    const { state } = appState.contentPage.editor;
+    if (!state || !view) return initialState;
     const { selection } = state;
     const { $head, empty } = selection;
     const { nodeAfter, nodeBefore } = $head;

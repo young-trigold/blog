@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/app/store';
 import CommentIcon from '@/static/icon/comment.png';
 import { TextSelection } from 'prosemirror-state';
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 interface StyledCommentTooltipProps {
@@ -36,16 +36,16 @@ const StyledCommentTooltip = styled.div<StyledCommentTooltipProps>`
 `;
 
 export const CommentTooltip: React.FC = () => {
-  const { editorStore } = useAppSelector((state) => state.contentPage.editor);
-
-  const { position, visible } = useMemo(() => {
+  const { editorStore } = useAppSelector((appState) => appState.contentPage.editor);
+  const { position, visible } = useAppSelector((appState) => {
     const initialState = {
       position: { left: 0, top: 0 },
       visible: false,
     };
-    const view = editorStore?.view;
-    if (!view) return initialState;
-    const { state } = view;
+    const view = appState.contentPage.editor.editorStore?.view;
+    const { state } = appState.contentPage.editor;
+
+    if (!view || !state) return initialState;
     const { selection } = state;
     const { $head, empty } = selection;
     const cursorPositionToViewPort = view.coordsAtPos($head.pos);
@@ -58,7 +58,7 @@ export const CommentTooltip: React.FC = () => {
       },
       visible: !empty,
     };
-  }, [editorStore?.view?.state]);
+  });
 
   const onClick = () => {
     if (!editorStore) return;
