@@ -7,7 +7,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const storage = multer.diskStorage({
 	destination(req, file, callback) {
-		const uploadPath = path.join(__dirname, '../upload');
+		const uploadPath = path.join(__dirname, '../static');
     if(!existsSync(uploadPath)) mkdirSync(uploadPath);
 		callback(null, uploadPath);
 	},

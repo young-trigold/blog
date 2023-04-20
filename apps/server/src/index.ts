@@ -31,7 +31,7 @@ server.use(compression());
 server.use(express.urlencoded({ extended: true, limit: '50mb' }));
 server.use(express.json({ limit: '50mb' }));
 server.use(express.static(path.join(__dirname, 'public')));
-server.use(express.static(path.join(__dirname, 'upload')));
+server.use(express.static(path.join(__dirname, 'static')));
 
 server.use('/api', articleApi);
 server.use('/api', noteApi);
