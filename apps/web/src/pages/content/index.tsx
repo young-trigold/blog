@@ -8,6 +8,7 @@ import {
   ContentPageContext,
   resetContentPage,
   setCurrentHeadingId,
+  setEditorStore,
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { useGetArticle } from '@/hooks/articles/useGetArticle';
@@ -115,6 +116,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 
   const onChange = (view: EditorView, tr: Transaction) => {
     view.updateState(view.state.apply(tr));
+    
   };
 
   const handleDOMEvents: HandleDOMEvents = useMemo(() => ({}), []);

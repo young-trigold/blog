@@ -38,7 +38,7 @@ const StyledInsertTooltip = styled.div<StyledInsertTooltipProps>`
 
 interface InsertTooltipProps {}
 
-const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
+export const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
   const { visible, position, canInsertBlock } = useAppSelector((appState) => {
     const initialState = {
       visible: false,
@@ -67,6 +67,7 @@ const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
       },
     };
   });
+
   const [insertOptionContainerVisible, setInsertOptionContainerVisible] = useState(false);
 
   const handleInsertTooltipClicked: React.MouseEventHandler = (event) => {
@@ -100,5 +101,3 @@ const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
     </>
   );
 };
-
-export default memo(InsertTooltip);

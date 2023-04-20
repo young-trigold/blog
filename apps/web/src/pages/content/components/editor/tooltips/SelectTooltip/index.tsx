@@ -76,7 +76,7 @@ export const SelectTooltip: React.FC = (props) => {
     const view = editorStore?.view;
     if (!view) return initialState;
     const { state } = view;
-    const { selection, tr } = state;
+    const { selection } = state;
     const { $head, empty } = selection;
     const cursorPositionToViewPort = view.coordsAtPos($head.pos);
     const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
@@ -89,6 +89,7 @@ export const SelectTooltip: React.FC = (props) => {
       visible: !empty,
     };
   }, [editorStore?.view?.state]);
+  console.debug(editorStore);
 
   const handleToggleBold: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
     if (!editorStore) return;

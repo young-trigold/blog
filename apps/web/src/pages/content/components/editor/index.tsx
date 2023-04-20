@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from '@/app/store';
@@ -9,8 +9,8 @@ import { EditorView } from 'prosemirror-view';
 import { presetNodeExtensions, presetPlainExtensions } from './extensions';
 import { Extension } from './extensions/type';
 import EditorStore, { HandleDOMEvents } from './store';
-import InsertTooltip from './tooltips/InsertTooltip';
-import {CommentTooltip} from './tooltips/CommentTooltip';
+import { CommentTooltip } from './tooltips/CommentTooltip';
+import { InsertTooltip } from './tooltips/InsertTooltip';
 import { SelectTooltip } from './tooltips/SelectTooltip';
 
 const EditorContainer = styled.article`

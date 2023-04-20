@@ -1,8 +1,7 @@
-import { AppState, useAppSelector } from '@/app/store';
+import { useAppSelector } from '@/app/store';
 import CommentIcon from '@/static/icon/comment.png';
 import { TextSelection } from 'prosemirror-state';
-import { memo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 interface StyledCommentTooltipProps {
@@ -36,11 +35,30 @@ const StyledCommentTooltip = styled.div<StyledCommentTooltipProps>`
   }
 `;
 
-export const CommentTooltip = () => {
-  const { position, visible } = useSelector(
-    (state: AppState) => state.contentPage.editor.plugin.selectionTooltip,
-  );
+export const CommentTooltip: React.FC = () => {
   const { editorStore } = useAppSelector((state) => state.contentPage.editor);
+
+  const { position, visible } = useMemo(() => {
+    const initialState = {
+      position: { left: 0, top: 0 },
+      visible: false,
+    };
+    const view = editorStore?.view;
+    if (!view) return initialState;
+    const { state } = view;
+    const { selection } = state;
+    const { $head, empty } = selection;
+    const cursorPositionToViewPort = view.coordsAtPos($head.pos);
+    const editorContainerPositionToViewPort = view.dom.parentElement!.getBoundingClientRect();
+
+    return {
+      position: {
+        left: cursorPositionToViewPort.left - editorContainerPositionToViewPort.left,
+        top: cursorPositionToViewPort.top - editorContainerPositionToViewPort.top,
+      },
+      visible: !empty,
+    };
+  }, [editorStore?.view?.state]);
 
   const onClick = () => {
     if (!editorStore) return;
