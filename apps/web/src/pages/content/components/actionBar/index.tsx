@@ -10,12 +10,14 @@ import { FloatingActionButton } from '@/components/Button';
 import { message } from '@/components/Message';
 import CancelIcon from '@/static/icon/cancel.png';
 import PublishIcon from '@/static/icon/publish.png';
+import { queryClient } from '../../../../App';
 
 const ActionBar: React.FC = () => {
   const { itemId } = useParams();
   const { isChapter } = useContext(ContentPageContext);
   const { editorStore } = useAppSelector((state) => state.contentPage.editor);
   const { hasLogin, info } = useAppSelector((state) => state.user);
+
   const dispatch = useAppDispatch();
 
   const handlePublish = useCallback(async () => {
@@ -48,6 +50,9 @@ const ActionBar: React.FC = () => {
           },
         },
       );
+      await queryClient.refetchQueries({
+        queryKey: [itemId, isChapter],
+      });
       message.success('发布成功!');
     } catch (error) {
       if (axios.isAxiosError(error))

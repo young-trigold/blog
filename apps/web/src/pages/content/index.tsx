@@ -1,15 +1,12 @@
-import React, { useEffect, useMemo, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { useParams, useSearchParams } from 'react-router-dom';
+import React, { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppState, useAppDispatch } from '@/app/store';
+import { useAppDispatch } from '@/app/store';
 import {
   ContentPageContext,
   resetContentPage,
-  setCurrentHeadingId,
   setEditorState,
-  setEditorStore,
 } from '@/app/store/pages/contentPage';
 import LoadingIndicator from '@/components/LodingIndicator';
 import { useGetArticle } from '@/hooks/articles/useGetArticle';
@@ -39,7 +36,6 @@ import { ListExtensions } from './components/editor/extensions/nodeExtensions/li
 import { TableExtensions } from './components/editor/extensions/nodeExtensions/tableExtensions';
 import { SelectionTooltipExtension } from './components/editor/extensions/plainExtensions/SelectionTooltipExtension';
 import { HandleDOMEvents } from './components/editor/store';
-import findHeadingElementById from './components/editor/utils/findHeadingElementById';
 
 export const selectionTooltipExtension = new SelectionTooltipExtension();
 
@@ -67,34 +63,7 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
   const { itemId } = useParams();
   const dispatch = useAppDispatch();
 
-  const contentPageContext: ContentPageContext = useMemo(() => ({ isChapter }), []);
-
-  const { catalog } = useSelector((state: AppState) => state.contentPage);
-  const [currentHeadingIdSearchParam, setCurrentHeadingIdSearchParam] = useSearchParams();
-  const isFirstRef = useRef(true);
-  useEffect(() => {
-    if (!isFirstRef.current) return;
-    const initialHeadingIdFromURL = currentHeadingIdSearchParam.get('currentHeadingId');
-    const currentHeadingElement = findHeadingElementById(initialHeadingIdFromURL ?? '');
-    if (currentHeadingElement) {
-      currentHeadingElement.scrollIntoView();
-      isFirstRef.current = false;
-      dispatch(setCurrentHeadingId(initialHeadingIdFromURL!));
-    }
-  });
-
-  useEffect(() => {
-    const { currentHeadingId } = catalog;
-    if (!currentHeadingId) return;
-    setCurrentHeadingIdSearchParam({ currentHeadingId }, { replace: true });
-  }, [catalog.currentHeadingId]);
-
-  // unmount
-  useEffect(() => {
-    return () => {
-      dispatch(resetContentPage());
-    };
-  }, []);
+  const contentPageContext: ContentPageContext = useMemo(() => ({ isChapter }), [isChapter]);
 
   const extensions = useMemo(
     () => [
@@ -125,6 +94,13 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 
   const { isLoading, isError, error, data: item } = useGetArticle(itemId, isChapter);
   useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${item?.title}`, [item?.title]);
+
+  // unmount
+  useEffect(() => {
+    return () => {
+      dispatch(resetContentPage());
+    };
+  }, []);
 
   if (isLoading) return <LoadingIndicator />;
   if (isError) return <span>{(error as Error).message}</span>;

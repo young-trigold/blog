@@ -11,7 +11,7 @@ import themes from './app/theme/themes';
 import { MessageContainer } from './components/Message';
 import ModalContainer from './components/Modal/ModalContainer';
 
-const client = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
@@ -34,7 +34,7 @@ const App = () => {
 	}, []);
 
   return (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <MessageContainer />

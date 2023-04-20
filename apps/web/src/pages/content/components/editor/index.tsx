@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from '@/app/store';
-import { setEditorStore } from '@/app/store/pages/contentPage';
+import { setEditorState, setEditorStore } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
 import { Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
@@ -146,6 +146,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
     ];
     const editorStore = new EditorStore(finalExtensions);
     const state = editorStore.createEditorState(doc);
+    dispatch(setEditorState(state));
     const editorView = editorStore.createEditorView(editorContainerRef.current!, {
       state,
       editable,
@@ -158,8 +159,9 @@ export const Editor: React.FC<EditorProps> = (props) => {
     return () => {
       editorView.destroy();
       dispatch(setEditorStore(null));
+      dispatch(setEditorState(null));
     };
-  }, []);
+  }, [extensions, editable, autoFocus, onChange, handleDOMEvents, doc]);
 
   return (
     <EditorContainer ref={editorContainerRef}>
