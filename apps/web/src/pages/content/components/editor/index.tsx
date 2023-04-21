@@ -1,18 +1,17 @@
+import { Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from '@/app/store';
-import { setCurrentHeadingId, setEditorState, setEditorStore } from '@/app/store/pages/contentPage';
+import { setEditorState, setEditorStore } from '@/app/store/pages/contentPage';
 import px from '@/utils/realPixel';
-import { Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import { presetNodeExtensions, presetPlainExtensions } from './extensions';
 import { Extension } from './extensions/type';
 import EditorStore, { HandleDOMEvents } from './store';
 import { CommentTooltip } from './tooltips/CommentTooltip';
 import { InsertTooltip } from './tooltips/InsertTooltip';
 import { SelectTooltip } from './tooltips/SelectTooltip';
-import getCurrentHeadingId from './utils/getCurrentHeadingId';
 
 const EditorContainer = styled.article`
   flex: 1 1 760px;

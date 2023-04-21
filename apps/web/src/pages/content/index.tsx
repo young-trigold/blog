@@ -1,6 +1,6 @@
 import { Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -67,31 +67,29 @@ interface ContentPageProps {
   editable: boolean;
 }
 
+const extensions = [
+  new BoldExtension(),
+  new ItalicExtension(),
+  new UnderlineExtension(),
+  new LinkExtension(),
+  new SubExtension(),
+  new SupExtension(),
+  new CodeExtension(),
+  new HeadingExtension(),
+  new CodeBlockExtension(),
+  new ImageExtension(),
+  ...ListExtensions.map((Extension) => new Extension()),
+  ...TableExtensions.map((Extension) => new Extension()),
+  selectionTooltipExtension,
+];
+
 const ContentPage: React.FC<ContentPageProps> = (props) => {
   const { isChapter, editable } = props;
   const { itemId } = useParams();
-  const dispatch = useAppDispatch();
 
   const contentPageContext: ContentPageContext = useMemo(() => ({ isChapter }), [isChapter]);
 
-  const extensions = useMemo(
-    () => [
-      new BoldExtension(),
-      new ItalicExtension(),
-      new UnderlineExtension(),
-      new LinkExtension(),
-      new SubExtension(),
-      new SupExtension(),
-      new CodeExtension(),
-      new HeadingExtension(),
-      new CodeBlockExtension(),
-      new ImageExtension(),
-      ...ListExtensions.map((Extension) => new Extension()),
-      ...TableExtensions.map((Extension) => new Extension()),
-      selectionTooltipExtension,
-    ],
-    [],
-  );
+  const dispatch = useAppDispatch();
 
   const onScroll: React.UIEventHandler<HTMLDivElement> = (event) => {
     const { target } = event;
@@ -106,17 +104,16 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
     view.updateState(newState);
   };
 
-  const handleDOMEvents: HandleDOMEvents = useMemo(() => ({}), []);
-
-  const { isLoading, isError, error, data: item } = useGetArticle(itemId, isChapter);
-  useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${item?.title}`, [item?.title]);
-
-  // unmount
   useEffect(() => {
     return () => {
       dispatch(resetContentPage());
     };
   }, []);
+
+  const handleDOMEvents: HandleDOMEvents = useMemo(() => ({}), []);
+
+  const { isLoading, isError, error, data: item } = useGetArticle(itemId, isChapter);
+  useDocumentTitle(`${isChapter ? '章节' : '文章'} - ${item?.title}`, [item?.title]);
 
   if (isLoading) return <LoadingIndicator />;
   if (isError) return <span>{(error as Error).message}</span>;

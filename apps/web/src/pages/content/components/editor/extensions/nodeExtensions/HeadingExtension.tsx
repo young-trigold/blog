@@ -2,7 +2,7 @@ import getUniqueId from '@/utils/getUniqueId';
 import { InputRule, textblockTypeInputRule } from 'prosemirror-inputrules';
 import { NodeSpec, ParseRule } from 'prosemirror-model';
 import { PasteRule } from 'prosemirror-paste-rules';
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { Plugin, PluginKey, PluginView } from 'prosemirror-state';
 import { toggleBlockItem } from '../../utils/command';
 import { extensionName } from '../decorators/extensionName';
 import { CodeExtension } from '../markExtensions/CodeExtension';
@@ -12,6 +12,7 @@ import { SubExtension } from '../markExtensions/SubExtension';
 import { SupExtension } from '../markExtensions/SupExtension';
 import { UnderlineExtension } from '../markExtensions/UnderlineExtension';
 import { CommandType, ExtensionTag, NodeExtension } from '../type';
+import { createRoot } from 'react-dom/client';
 
 export const HeadingMaxLevel = 4;
 
@@ -130,7 +131,6 @@ export class HeadingExtension extends NodeExtension {
 		return [plugin];
 	}
 }
-
 declare global {
 	namespace EditorStore {
 		interface Commands {
