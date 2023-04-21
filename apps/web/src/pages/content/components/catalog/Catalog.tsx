@@ -46,7 +46,7 @@ const StyledCatalog = styled.div<StyledCatalogProps>`
 
 export const Catalog: React.FC = (props) => {
   // =============================== heading ===============================
-  const { visible, headings, currentHeadingId, state } = useAppSelector((appState) => {
+  const { visible, headings, currentHeadingId } = useAppSelector((appState) => {
     const { catalog, editor } = appState.contentPage;
     const { visible, currentHeadingId } = catalog;
     const { state } = editor;
@@ -57,7 +57,7 @@ export const Catalog: React.FC = (props) => {
         headings.push({ level, headingId, content: node.textContent });
       }
     });
-    return { visible, headings, currentHeadingId, state };
+    return { visible, headings, currentHeadingId };
   });
 
   return (

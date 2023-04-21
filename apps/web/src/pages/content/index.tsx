@@ -1,6 +1,6 @@
 import { Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -91,18 +91,18 @@ const ContentPage: React.FC<ContentPageProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
-  const onScroll: React.UIEventHandler<HTMLDivElement> = (event) => {
+  const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback((event) => {
     const { target } = event;
     if (!(target instanceof HTMLDivElement)) return;
     const currentHeadingId = getCurrentHeadingId(target);
     if (currentHeadingId) dispatch(setCurrentHeadingId(currentHeadingId));
-  };
+  }, []);
 
-  const onChange = (view: EditorView, tr: Transaction) => {
+  const onChange = useCallback((view: EditorView, tr: Transaction) => {
     const newState = view.state.apply(tr);
     dispatch(setEditorState(newState));
     view.updateState(newState);
-  };
+  }, []);
 
   useEffect(() => {
     return () => {

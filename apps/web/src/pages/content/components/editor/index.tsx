@@ -1,6 +1,6 @@
 import { Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from '@/app/store';
@@ -53,7 +53,7 @@ const EditorContainer = styled.article`
 
   // 下划线
   u {
-    text-decoration-color: ${(props) => props.theme.primaryColor};
+    text-decoration-color: ${(props) => props.theme.warnColor};
     transition: ${(props) => props.theme.transition};
   }
 
@@ -125,7 +125,7 @@ interface EditorProps {
   handleDOMEvents?: HandleDOMEvents;
 }
 
-export const Editor: React.FC<EditorProps> = (props) => {
+export const Editor: React.FC<EditorProps> = memo((props) => {
   const {
     extensions = [],
     editable = false,
@@ -174,4 +174,4 @@ export const Editor: React.FC<EditorProps> = (props) => {
       {!editable && <CommentTooltip />}
     </EditorContainer>
   );
-};
+});

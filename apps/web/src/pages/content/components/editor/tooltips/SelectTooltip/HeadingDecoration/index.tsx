@@ -1,5 +1,4 @@
-import store, { useAppSelector } from '@/app/store';
-import { useCallback } from 'react';
+import { useAppSelector } from '@/app/store';
 import styled from 'styled-components';
 
 const StyledHeadingOptionContainer = styled.div`
@@ -47,7 +46,6 @@ const StyledHeadingDecoration = styled.div`
   font-size: 20px;
   border-radius: 6.4px;
   transition: ${(props) => props.theme.transition};
-  
   font-family: 'Times New Roman';
 
   &:hover {
@@ -59,36 +57,27 @@ const StyledHeadingDecoration = styled.div`
   }
 `;
 
-const StyledSpan = styled.span`
-  :hover {
-    background-color: ${(props) => props.theme.surfaceColor};
-  }
-`;
-
 export const HeadingDecoration = () => {
-  const { editorStore } = useAppSelector((appState) => appState.contentPage.editor);
+  const commands = useAppSelector((appState) => appState.contentPage.editor.editorStore?.commands);
 
-  const toggleHeadingLevel1 = useCallback(() => {
-    if (!editorStore?.view) return;
-    const { commands } = editorStore;
+  const toggleHeadingLevel1 = () => {
+    if (!commands) return;
     commands.heading.toggle(1);
-  }, [editorStore]);
+  };
 
-  const toggleHeadingLevel2 = useCallback(() => {
-    if (!editorStore?.view) return;
-    const { commands } = editorStore;
+  const toggleHeadingLevel2 = () => {
+    if (!commands) return;
     commands.heading.toggle(2);
-  }, [editorStore]);
+  };
 
-  const toggleHeadingLevel3 = useCallback(() => {
-    if (!editorStore?.view) return;
-    const { commands } = editorStore;
+  const toggleHeadingLevel3 = () => {
+    if (!commands) return;
     commands.heading.toggle(3);
-  }, [editorStore]);
+  };
 
   return (
     <StyledHeadingDecoration>
-      <StyledSpan>H</StyledSpan>
+      <span>H</span>
       <StyledHeadingOptionContainer>
         <StyledHeadingOption onClick={toggleHeadingLevel1}>
           <span>1 级标题</span>

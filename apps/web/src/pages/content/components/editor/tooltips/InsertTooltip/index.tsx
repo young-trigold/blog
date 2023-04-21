@@ -39,7 +39,6 @@ const StyledInsertTooltip = styled.div<StyledInsertTooltipProps>`
 interface InsertTooltipProps {}
 
 export const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
-  const view = useAppSelector((appState) => appState.contentPage.editor.editorStore?.view);
   const { visible, position, canInsertBlock } = useAppSelector((appState) => {
     const initialState = {
       visible: false,
@@ -49,6 +48,7 @@ export const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
         top: 0,
       },
     };
+    const view = appState.contentPage.editor.editorStore?.view;
     const { state } = appState.contentPage.editor;
     if (!state || !view) return initialState;
     const { selection } = state;
@@ -69,7 +69,7 @@ export const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
 
   const [insertOptionContainerVisible, setInsertOptionContainerVisible] = useState(false);
 
-  const handleInsertTooltipClicked: React.MouseEventHandler = (event) => {
+  const onCLick: React.MouseEventHandler = (event) => {
     event.stopPropagation();
     setInsertOptionContainerVisible(true);
   };
@@ -87,11 +87,7 @@ export const InsertTooltip: React.FC<InsertTooltipProps> = (props) => {
 
   return (
     <>
-      <StyledInsertTooltip
-        visible={visible}
-        position={position}
-        onClick={handleInsertTooltipClicked}
-      >
+      <StyledInsertTooltip visible={visible} position={position} onClick={onCLick}>
         <span>✛</span>
       </StyledInsertTooltip>
       {insertOptionContainerVisible && (
