@@ -9,7 +9,7 @@ import AddChapterModal from '@/components/Modals/AddChapterModal';
 import { useGetNotes } from '@/hooks/notes/useGetNotes';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { CommentInfo } from '../content/components/comment/CommentList';
-import AddChapterButton from './components/AddChapterButton';
+import { AddChapterButton } from './components/AddChapterButton';
 import Chapter from './components/Chapter';
 
 const StyledChapterListPage = styled.div`

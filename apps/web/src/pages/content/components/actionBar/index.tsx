@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { memo, useCallback, useContext } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/store';
@@ -12,15 +12,15 @@ import CancelIcon from '@/static/icon/cancel.png';
 import PublishIcon from '@/static/icon/publish.png';
 import { queryClient } from '../../../../App';
 
-const ActionBar: React.FC = () => {
+export const ActionBar: React.FC = memo(() => {
   const { itemId } = useParams();
   const { isChapter } = useContext(ContentPageContext);
-  const { editorStore } = useAppSelector((state) => state.contentPage.editor);
+  const { state } = useAppSelector((state) => state.contentPage.editor);
   const { hasLogin, info } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
 
-  const handlePublish = useCallback(async () => {
+  const handlePublish = async () => {
     if (!hasLogin) {
       dispatch(openModal(CurrentModal.Login));
       message.warn('请先登录!');
@@ -31,17 +31,14 @@ const ActionBar: React.FC = () => {
       message.warn('权限不足, 请重新登录!');
       return;
     }
-    if (!editorStore) return;
-    const { view: editorView } = editorStore;
-    if (!editorView) return;
-    const { state: editorState } = editorView;
+    if (!state) return;
     const user = watchedLocalStorage.getItem<{ token: string }>('user');
 
     try {
       await axios.put(
         `/api/${isChapter ? 'notes' : 'articles'}/${itemId}`,
         {
-          content: JSON.stringify(editorState.doc.toJSON()),
+          content: JSON.stringify(state.doc.toJSON()),
         },
         {
           headers: {
@@ -60,7 +57,7 @@ const ActionBar: React.FC = () => {
       if (error instanceof Error) return message.error(error.message);
       return message.error(JSON.stringify(error));
     }
-  }, [editorStore, hasLogin, info, isChapter, itemId]);
+  };
 
   const navigate = useNavigate();
   const handleCancel = useCallback(() => {
@@ -71,18 +68,18 @@ const ActionBar: React.FC = () => {
     <aside>
       <FloatingActionButton
         onClick={handleCancel}
-        rect={{ right: 32, bottom: 230 }}
+        right={32}
+        bottom={230}
         icon={CancelIcon}
         description="取消"
       />
       <FloatingActionButton
         onClick={handlePublish}
-        rect={{ right: 32, bottom: 170 }}
+        right={32}
+        bottom={170}
         icon={PublishIcon}
         description="发布"
       />
     </aside>
   );
-};
-
-export default memo(ActionBar);
+});

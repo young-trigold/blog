@@ -8,7 +8,6 @@ import EyeOpen from '@/static/icon/eye-open.png';
 import LikeIcon from '@/static/icon/like.png';
 import getUserToken from '@/utils/getUserToken';
 import axios from 'axios';
-import { useRef } from 'react';
 import { ChapterInfo } from '..';
 
 const StyledChapter = styled.article`
@@ -48,7 +47,7 @@ const StyledInfoBar = styled.div`
 
 const StyledDeleteButton = styled.button`
   position: absolute;
-  top: -0;
+  top: 0;
   right: 0;
   width: 20px;
   height: 20px;
@@ -116,11 +115,7 @@ const Chapter: React.FC<ChapterProps> = (props) => {
         </div>
       </StyledInfoBar>
 
-      {info?.role === 'admin' && (
-        <StyledDeleteButton
-          onClick={handleDelete}
-        />
-      )}
+      {info?.role === 'admin' && <StyledDeleteButton onClick={handleDelete} />}
     </StyledChapter>
   );
 };

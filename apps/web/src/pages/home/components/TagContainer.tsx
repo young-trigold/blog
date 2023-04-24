@@ -5,7 +5,7 @@ import AddArticleTagModal from '@/components/Modals/AddArticleTagModal';
 import { useGetArticles } from '@/hooks/articles/useGetArticles';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import AddArticleButton from './AddArticleButton';
+import { AddArticleButton } from './AddArticleButton';
 
 interface StyledTagContainerProps {
   tagIndex: number;

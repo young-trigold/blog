@@ -18,7 +18,7 @@ import useDocumentTitle from '@/hooks/useDocumentTitle';
 
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import ActionBar from './components/actionBar';
+import { ActionBar } from './components/actionBar';
 import { Catalog, CatalogButton } from './components/catalog';
 import CommentList from './components/comment/CommentList';
 import { Editor } from './components/editor';

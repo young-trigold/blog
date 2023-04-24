@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import { useAppSelector } from '@/app/store';
 import { HeadingExtension } from '../editor/extensions';
 import { CatalogItem } from './CatalogItem';
+import { useEffect } from 'react';
 
 export interface HeadingInfo {
   level: number;
   content: string;
   headingId: string;
 }
-
 interface StyledCatalogProps {
   catalogVisible: boolean;
 }
@@ -48,6 +48,7 @@ export const Catalog: React.FC = (props) => {
   // =============================== heading ===============================
   const { visible, headings, currentHeadingId } = useAppSelector((appState) => {
     const { catalog, editor } = appState.contentPage;
+    //console.debug(editor);
     const { visible, currentHeadingId } = catalog;
     const { state } = editor;
     const headings: HeadingInfo[] = [];

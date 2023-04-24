@@ -1,10 +1,11 @@
 import { memo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 
 import { toggleCatalogVisible } from '@/app/store/pages/contentPage';
 import { StyledFloatingActionButton } from '@/components/Button/FloatingActionButton';
 import ListIcon from '@/static/icon/list.png';
-import styled from 'styled-components';
+
 
 const StyledCatalogButton = styled(StyledFloatingActionButton)`
 	opacity: 0;
@@ -24,7 +25,7 @@ const CatalogButton: React.FC = () => {
 	}, [toggleCatalogVisible]);
 
 	return (
-		<StyledCatalogButton rect={{ right: 32, bottom: 110 }} onClick={handleClick}>
+		<StyledCatalogButton right={32} bottom={110} onClick={handleClick}>
 			<img alt="目录" src={ListIcon} draggable={false} style={{ width: '100%' }} />
 		</StyledCatalogButton>
 	);
