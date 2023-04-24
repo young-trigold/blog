@@ -4,7 +4,7 @@ import { useAppSelector } from '@/app/store';
 import LoadingIndicator from '@/components/LodingIndicator';
 import AddNoteModal from '@/components/Modals/AddNoteModal';
 import { useGetNotes } from '@/hooks/notes/useGetNotes';
-import AddNoteButton from './AddNoteButton';
+import { AddNoteButton } from './AddNoteButton';
 import Note from './Note';
 
 const StyledNoteShow = styled.section`
